@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>お店のページ管理 | Café & Bar Sereness</title>
+<style>
+  :root{--navy:#14213A;--orange:#C8703E;--gold:#D9B27A;--bg:#F7F3EC;--line:#E2D5BE}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--navy);font-family:"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7;font-size:16px}
+  header{background:var(--navy);color:#fff;padding:18px 16px}
+  header h1{margin:0;font-size:19px;font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+  header p{margin:2px 0 0;font-size:12px;color:#C9D1D4}
+  main{max-width:640px;margin:0 auto;padding:16px 14px 90px}
+  section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+  h2{margin:0 0 10px;font-size:17px;font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+  h2 small{font-size:12px;font-weight:400;color:#7A6A58;margin-left:6px}
+  label{display:block;font-size:13px;font-weight:700;margin:10px 0 4px}
+  input[type=text],input[type=password],input[type=date],select,textarea{width:100%;padding:11px 12px;border:1px solid #D9CBB0;border-radius:12px;background:#fff;font:inherit;font-size:16px;color:var(--navy)}
+  textarea{min-height:64px}
+  .day{display:grid;grid-template-columns:54px 1fr;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+  .day:first-of-type{border-top:0}
+  .day .nm{font-weight:700;font-size:17px}
+  .day .row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .day select{width:auto;min-width:110px}
+  .day.off .times{display:none}
+  .sw{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;margin:0}
+  .sw input{width:20px;height:20px;accent-color:var(--orange)}
+  .exc{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:#FFFBF4}
+  .exc .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .exc .times{display:flex;gap:6px;align-items:center;margin-top:8px}
+  .exc .times select{width:100%}
+  button{font:inherit;cursor:pointer}
+  .btn{display:inline-block;padding:12px 18px;border-radius:999px;border:0;background:var(--orange);color:#fff;font-weight:700}
+  .btn.ghost{background:#fff;color:var(--orange);border:1.5px solid var(--orange)}
+  .btn.small{padding:7px 14px;font-size:13px}
+  .del{float:right;border:0;background:none;color:#B03A4A;font-size:13px;font-weight:700}
+  .warn{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:#FDE7EA;border:1.5px solid #C4304F;color:#8A1F33;font-size:14px;line-height:1.7}
+  .warn[hidden]{display:none}
+  /* 人気メニュー・ギャラリー */
+  .item{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:#FFFBF4}
+  .item-top{display:flex;gap:12px;align-items:center}
+  .thumb{position:relative;flex:none;width:96px;height:96px;border-radius:12px;background:#E9E1D2 center/cover no-repeat;display:grid;place-items:center;text-align:center;font-size:11px;color:#7A6A58;overflow:hidden}
+  .thumb span{padding:4px;line-height:1.4}
+  .thumb.has span{position:absolute;left:0;right:0;bottom:0;background:rgba(20,33,58,.7);color:#fff;font-size:10px;padding:3px}
+  .item-btns{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+  .item-btns b{font-size:15px}
+  .pick{position:relative;overflow:hidden}
+  .pick input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .reset{border:0;background:none;padding:0;color:#7A6A58;font-size:12px;text-decoration:underline}
+  .tiles2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tiles2 .item{margin:0;padding:10px}
+  .tiles2 .item-top{flex-direction:column;align-items:stretch;gap:8px}
+  .tiles2 .thumb{width:100%;height:auto;aspect-ratio:4/5}
+  .tiles2 .item-btns{align-items:stretch}
+  .tiles2 .item-btns b{display:none}
+  .tiles2 .pick{text-align:center}
+  /* カレンダー */
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px}
+  .cal-head b{font-size:18px;font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+  .cal-head button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);font-size:18px}
+  .cal-head button:disabled{opacity:.3}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal .wd{text-align:center;font-size:12px;font-weight:700;color:#7A6A58}
+  .cal .wd.sun{color:#C4304F}.cal .wd.sat{color:#3A63A8}
+  .cal .d{min-width:0;min-height:58px;padding:5px 1px 4px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);display:flex;flex-direction:column;align-items:center;gap:1px;font-size:15px;font-weight:700;line-height:1.2}
+  .cal .d .t{font-size:10px;font-weight:400;color:#7A6A58;white-space:nowrap}
+  .cal .d.off{background:#F0EEEA;color:#A4A4A8}
+  .cal .d.ex-closed{background:#FDE7EA;border-color:#C4304F;color:#C4304F}
+  .cal .d.ex-closed .t{color:#C4304F;font-weight:700}
+  .cal .d.ex-hours{background:#FFF1E4;border-color:var(--orange)}
+  .cal .d.ex-hours .t{color:#B85A12;font-weight:700}
+  .cal .d.today{box-shadow:inset 0 0 0 2px var(--navy)}
+  .cal .d:disabled{opacity:.35;cursor:default}
+  .cal .blank{visibility:hidden}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0 0;font-size:12px;color:#7A6A58}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px;border:1px solid var(--line)}
+  .legend .c{background:#FDE7EA;border-color:#C4304F}.legend .h{background:#FFF1E4;border-color:var(--orange)}.legend .o{background:#F0EEEA}
+  .exlist{list-style:none;margin:12px 0 0;padding:0}
+  .exlist li{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+  .exlist li b{min-width:5.5em}
+  .exlist li span{flex:1;min-width:0}
+  .exlist li button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;font-size:13px;color:var(--navy)}
+  .opt{display:flex;align-items:center;gap:8px;margin:6px 0;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}
+  .opt input{width:18px;height:18px;accent-color:var(--orange)}
+  .opt:has(input:checked){border-color:var(--orange);background:#FFF6EC}
+  #dayTimes{display:flex;gap:6px;align-items:center;margin:4px 0 0}
+  #dayTimes select{flex:1}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 14px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;align-items:center}
+  .bar .btn{width:100%;max-width:420px;font-size:17px;padding:14px;transition:background .25s ease}
+  .bar .btn:disabled{opacity:.7;cursor:default}
+  .bar .btn.done{background:#1B7F4B;opacity:1}
+  #state{font-size:13px;color:#7A6A58;min-height:1.5em;text-align:center}
+  #state.dirty{color:#B85A12;font-weight:700}
+  #state.err{color:#C4304F;font-weight:700}
+  #state.ok{color:#1B7F4B;font-weight:700}
+  .hint{font-size:12px;color:#7A6A58;margin:6px 0 0}
+  main{padding-bottom:120px}
+  /* 保存できたときの大きな表示 */
+  .toast{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(20,33,58,.35);opacity:0;pointer-events:none;transition:opacity .25s ease}
+  .toast.show{opacity:1;pointer-events:auto}
+  .toast-card{width:min(84vw,320px);padding:28px 20px 24px;border-radius:22px;background:#fff;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25);transform:scale(.9);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  .toast.show .toast-card{transform:none}
+  .toast-ico{width:72px;height:72px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#1B7F4B;color:#fff;font-size:40px;line-height:1}
+  .toast.err .toast-ico{background:#C4304F}
+  .toast b{display:block;font-size:20px;margin-bottom:4px}
+  .toast small{display:block;font-size:14px;color:#5A5A62;line-height:1.6}
+  /* 合言葉の入力 */
+  .ask{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:rgba(20,33,58,.45)}
+  .ask[hidden]{display:none}
+  .ask-card{width:min(100%,360px);padding:22px 18px 18px;border-radius:20px;background:#fff}
+  .ask-card h2{margin-bottom:4px}
+  .ask-card .err{color:#C4304F;font-size:13px;min-height:1.4em;margin:6px 0 0}
+  .ask-card .row{display:flex;gap:8px;margin-top:12px}
+  .ask-card .row .btn{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>お店のページ管理</h1>
+  <p>Café &amp; Bar Sereness ・ ここで変更すると、ページに反映されます</p>
+</header>
+
+<main>
+  <p class="warn" id="oldServer" hidden><b>Apps Script が古いバージョンのままです。</b><br>このままだと、人気メニューと店内ギャラリーの変更は保存されません。Apps Script の Code.gs を新しいものに置き換えて、「デプロイを管理」→ 編集 →「新バージョン」でデプロイしてください。</p>
+  <section>
+    <h2>曜日ごとの営業時間</h2>
+    <div id="weekly"></div>
+    <p class="hint">閉店が「翌1:00」なら、閉店の時間に「翌1:00」を選びます。</p>
+  </section>
+
+  <section>
+    <h2>カレンダー <small>(日にちをタップして変更)</small></h2>
+    <div class="cal-head"><button type="button" id="calPrev" aria-label="前の月">‹</button><b id="calTitle"></b><button type="button" id="calNext" aria-label="次の月">›</button></div>
+    <div class="cal" id="cal"></div>
+    <p class="legend"><span><i class="c"></i>臨時休業</span><span><i class="h"></i>時間を変更</span><span><i class="o"></i>定休日</span></p>
+    <ul class="exlist" id="exlist"></ul>
+    <p class="hint">臨時休業や、その日だけ時間を変えたい日をタップして設定します。最後に下の「この内容で保存する」を押すと、ページに反映されます。</p>
+  </section>
+
+  <section>
+    <h2>お知らせ</h2>
+    <label for="notice">ページの一番上に出す文章 <small>(空なら表示しません)</small></label>
+    <textarea id="notice" placeholder="例:11月は毎週水曜日もお休みをいただきます"></textarea>
+    <label for="hoursNote">営業時間の下に出す一文</label>
+    <input type="text" id="hoursNote" placeholder="例:※祝前日も3:00まで営業します">
+  </section>
+
+  <section>
+    <h2>人気メニュー <small>(ランキング)</small></h2>
+    <div id="rankEdit"></div>
+    <p class="hint">写真を変えないときは、今の写真のまま表示されます。説明は改行した位置で、ページでも改行されます。</p>
+  </section>
+
+  <section>
+    <h2>店内ギャラリー</h2>
+    <div id="galHero"></div>
+    <div class="tiles2" id="galTiles"></div>
+  </section>
+</main>
+
+<div class="bar">
+  <p id="state" role="status">読み込み中…</p>
+  <button class="btn" id="save" type="button">この内容で保存する</button>
+</div>
+
+<div class="toast" id="toast" aria-hidden="true">
+  <div class="toast-card"><div class="toast-ico" id="toastIco">✓</div><b id="toastTitle">保存しました</b><small id="toastText"></small></div>
+</div>
+
+<div class="ask" id="daySheet" hidden>
+  <form class="ask-card" id="dayForm">
+    <h2 id="dayTitle"></h2>
+    <p class="hint" id="dayUsual"></p>
+    <label class="opt"><input type="radio" name="dayType" value="normal"> いつも通り</label>
+    <label class="opt"><input type="radio" name="dayType" value="closed"> 臨時休業</label>
+    <label class="opt"><input type="radio" name="dayType" value="hours"> 営業時間を変える</label>
+    <div id="dayTimes"><select id="dayOpen"></select> 〜 <select id="dayClose"></select></div>
+    <label for="dayNote">ひとこと <small>(任意・ページのお知らせに出ます)</small></label>
+    <input type="text" id="dayNote" placeholder="例:貸切のためお休み">
+    <div class="row"><button class="btn ghost" type="button" id="dayCancel">やめる</button><button class="btn" type="submit">決定</button></div>
+  </form>
+</div>
+
+<div class="ask" id="ask" hidden>
+  <form class="ask-card" id="askForm">
+    <h2>合言葉を入れてください</h2>
+    <p class="hint">保存するときに一度だけ聞きます。この端末に覚えておきます。</p>
+    <input type="password" id="pass" autocomplete="current-password" style="margin-top:10px">
+    <p class="err" id="askErr"></p>
+    <div class="row"><button class="btn ghost" type="button" id="askCancel">やめる</button><button class="btn" type="submit">保存する</button></div>
+  </form>
+</div>
+
+<script>
+/* 営業スケジュールを保存している Apps Script のウェブアプリURL */
+var API_URL = 'https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec';
+
+var DAYS = [1,2,3,4,5,6,0];
+var NAMES = ['日','月','火','水','木','金','土'];
+var DEFAULT = {
+  weekly: {'0':{open:'19:00',close:'25:00'},'1':{open:'19:00',close:'25:00'},'2':{open:'19:00',close:'25:00'},'3':null,
+           '4':{open:'19:00',close:'25:00'},'5':{open:'19:00',close:'27:00'},'6':{open:'19:00',close:'27:00'}},
+  exceptions: [], notice: '', hoursNote: '※祝前日も3:00まで営業します'
+};
+var state = JSON.parse(JSON.stringify(DEFAULT));
+
+var $ = function(id){ return document.getElementById(id); };
+function two(n){ return (n < 10 ? '0' : '') + n; }
+function timeLabel(h, m){ return (h >= 24 ? '翌' + (h - 24) : h) + ':' + two(m); }
+function opts(fromH, toH, selected){
+  var out = '';
+  for (var t = fromH * 60; t <= toH * 60; t += 30) {
+    var h = Math.floor(t / 60), m = t % 60, v = two(h) + ':' + two(m), v2 = h + ':' + two(m);
+    var sel = (selected === v || selected === v2) ? ' selected' : '';
+    out += '<option value="' + v + '"' + sel + '>' + timeLabel(h, m) + '</option>';
+  }
+  return out;
+}
+/* Apps Script の中で開いたとき(…/exec?page=admin)は、google.script.run で直接やりとりする */
+var GAS = (typeof google !== 'undefined' && google.script && google.script.run) ? google.script.run : null;
+function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+function stamp(iso){
+  var d = iso ? new Date(iso) : new Date();
+  return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + two(d.getMinutes());
+}
+var lastSaved = '';
+function setState(t, cls){ var s = $('state'); s.textContent = t || ''; s.className = cls || ''; }
+function showSaved(sch){
+  lastSaved = stamp(sch && sch.updatedAt);
+  setState('最終保存: ' + lastSaved + ' ・ ページに反映済み', 'ok');
+  var b = $('save'); b.classList.add('done'); b.textContent = '✓ 保存しました';
+  toast(true, '保存しました', lastSaved + ' にページへ反映しました。');
+  setTimeout(function(){ b.classList.remove('done'); b.textContent = 'この内容で保存する'; }, 3000);
+}
+function toast(ok, title, text){
+  var t = $('toast');
+  t.classList.toggle('err', !ok);
+  $('toastIco').textContent = ok ? '✓' : '!';
+  $('toastTitle').textContent = title; $('toastText').textContent = text;
+  t.classList.add('show');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(function(){ t.classList.remove('show'); }, ok ? 2200 : 4000);
+}
+function failed(text){
+  setState('保存できませんでした', 'err');
+  toast(false, '保存できませんでした', text);
+}
+function apiUrl(){ return (API_URL || '').trim(); }
+function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function renderWeekly(){
+  var box = $('weekly'); box.innerHTML = '';
+  DAYS.forEach(function(d){
+    var w = state.weekly[d] || state.weekly[String(d)];
+    var el = document.createElement('div');
+    el.className = 'day' + (w ? '' : ' off');
+    el.innerHTML =
+      '<div class="nm">' + NAMES[d] + '</div>' +
+      '<div><label class="sw"><input type="checkbox" data-d="' + d + '"' + (w ? ' checked' : '') + '> 営業する</label>' +
+      '<div class="row times" style="margin-top:6px">' +
+        '<select data-d="' + d + '" data-k="open">' + opts(10, 24, w ? w.open : '19:00') + '</select> 〜 ' +
+        '<select data-d="' + d + '" data-k="close">' + opts(12, 30, w ? w.close : '25:00') + '</select>' +
+      '</div></div>';
+    box.appendChild(el);
+  });
+  Array.prototype.forEach.call(box.querySelectorAll('input[type=checkbox]'), function(c){
+    c.addEventListener('change', function(){ c.closest('.day').classList.toggle('off', !c.checked); });
+  });
+}
+
+/* ===== カレンダー ===== */
+var exc = [];                        // その日だけの変更
+var calMonth = (function(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); })();
+var editing = null;
+function dkey(d){ return d.getFullYear() + '-' + two(d.getMonth() + 1) + '-' + two(d.getDate()); }
+function todayKey(){ return dkey(new Date()); }
+function hourLabel(t){ var a = t.split(':'), h = +a[0] % 24; return h + (a[1] !== '00' ? ':' + a[1] : '時'); }
+function weeklyNow(wd){
+  var c = document.querySelector('input[data-d="' + wd + '"]');
+  if (!c || !c.checked) return null;
+  return {open: document.querySelector('select[data-d="' + wd + '"][data-k="open"]').value, close: document.querySelector('select[data-d="' + wd + '"][data-k="close"]').value};
+}
+function excFor(k){ for (var i = 0; i < exc.length; i++) if (exc[i].date === k) return exc[i]; return null; }
+function renderCal(){
+  var y = calMonth.getFullYear(), m = calMonth.getMonth();
+  $('calTitle').textContent = y + '年' + (m + 1) + '月';
+  var now = new Date();
+  $('calPrev').disabled = (y === now.getFullYear() && m <= now.getMonth()) || y < now.getFullYear();
+  var html = '';
+  ['日','月','火','水','木','金','土'].forEach(function(n, i){ html += '<div class="wd' + (i === 0 ? ' sun' : i === 6 ? ' sat' : '') + '">' + n + '</div>'; });
+  var first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate(), tk = todayKey();
+  for (var i = 0; i < first; i++) html += '<div class="blank"></div>';
+  for (var d = 1; d <= days; d++) {
+    var dt = new Date(y, m, d), k = dkey(dt), x = excFor(k), w = weeklyNow(dt.getDay()), cls = 'd', t;
+    if (x && x.closed) { cls += ' ex-closed'; t = '臨時休'; }
+    else if (x) { cls += ' ex-hours'; t = hourLabel(x.open) + '〜' + hourLabel(x.close); }
+    else if (!w) { cls += ' off'; t = '定休'; }
+    else t = '〜' + hourLabel(w.close);
+    if (k === tk) cls += ' today';
+    html += '<button type="button" class="' + cls + '" data-k="' + k + '"' + (k < tk ? ' disabled' : '') + '>' + d + '<span class="t">' + t + '</span></button>';
+  }
+  $('cal').innerHTML = html;
+}
+function renderExList(){
+  var tk = todayKey(), items = exc.filter(function(x){ return x.date >= tk; }).sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  $('exlist').innerHTML = items.length ? items.map(function(x){
+    var dt = new Date(x.date + 'T00:00:00');
+    return '<li><b>' + (dt.getMonth() + 1) + '/' + dt.getDate() + '(' + NAMES[dt.getDay()] + ')</b><span>' +
+      (x.closed ? '臨時休業' : timeLabelStr(x.open) + '〜' + timeLabelStr(x.close)) + (x.note ? ' ・ ' + esc(x.note) : '') +
+      '</span><button type="button" data-k="' + x.date + '">変更</button></li>';
+  }).join('') : '<li><span>この先の臨時の変更はありません</span></li>';
+}
+function timeLabelStr(t){ var a = t.split(':'); return timeLabel(+a[0], +a[1]); }
+function refreshCal(){ renderCal(); renderExList(); }
+
+function openDay(k){
+  editing = k;
+  var dt = new Date(k + 'T00:00:00'), x = excFor(k), w = weeklyNow(dt.getDay());
+  $('dayTitle').textContent = (dt.getMonth() + 1) + '月' + dt.getDate() + '日(' + NAMES[dt.getDay()] + ')';
+  $('dayUsual').textContent = 'いつもは ' + (w ? timeLabelStr(w.open) + '〜' + timeLabelStr(w.close) : '定休日') + ' です。';
+  var type = x ? (x.closed ? 'closed' : 'hours') : 'normal';
+  document.querySelector('input[name=dayType][value=' + type + ']').checked = true;
+  var o = (x && x.open) || (w && w.open) || '19:00', c = (x && x.close) || (w && w.close) || '25:00';
+  $('dayOpen').innerHTML = opts(10, 24, o); $('dayClose').innerHTML = opts(12, 30, c);
+  $('dayNote').value = (x && x.note) || '';
+  syncDayForm();
+  $('daySheet').hidden = false;
+}
+function syncDayForm(){
+  var t = document.querySelector('input[name=dayType]:checked').value;
+  $('dayTimes').style.display = t === 'hours' ? 'flex' : 'none';
+  $('dayNote').disabled = t === 'normal';
+}
+$('dayForm').addEventListener('change', syncDayForm);
+$('dayForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var t = document.querySelector('input[name=dayType]:checked').value, k = editing;
+  if (t === 'hours') {
+    var o = $('dayOpen').value, c = $('dayClose').value;
+    if (o >= c) { alert('閉店の時間を、開店より後にしてください。'); return; }
+  }
+  exc = exc.filter(function(x){ return x.date !== k; });
+  var note = $('dayNote').value.trim();
+  if (t === 'closed') exc.push({date: k, closed: true, note: note});
+  if (t === 'hours') exc.push({date: k, open: $('dayOpen').value, close: $('dayClose').value, note: note});
+  $('daySheet').hidden = true;
+  refreshCal(); markDirty();
+});
+$('dayCancel').addEventListener('click', function(){ $('daySheet').hidden = true; });
+$('cal').addEventListener('click', function(e){ var b = e.target.closest('button[data-k]'); if (b && !b.disabled) openDay(b.getAttribute('data-k')); });
+$('exlist').addEventListener('click', function(e){ var b = e.target.closest('button[data-k]'); if (b) { var k = b.getAttribute('data-k'); calMonth = new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, 1); renderCal(); openDay(k); } });
+$('calPrev').addEventListener('click', function(){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1); renderCal(); });
+$('calNext').addEventListener('click', function(){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1); renderCal(); });
+$('weekly').addEventListener('change', renderCal);
+
+/* ===== 人気メニュー・ギャラリー ===== */
+var DEFAULT_CONTENT = {
+  ranking: [
+    {name: 'ストロベリーミルク', en: 'Strawberry Milk', desc: '甘くてやさしい、\nセレネスで一番人気の\nドリンクです。', img: ''},
+    {name: 'はちみつレモンサワー', en: 'Honey Lemon Sour', desc: 'はちみつのやさしい甘みと、\nさわやかなレモンのサワー。', img: ''},
+    {name: 'レモンサワー', en: 'Lemon Sour', desc: 'さっぱり飲みやすい、\n定番のレモンサワー。', img: ''}
+  ],
+  gallery: {
+    hero: {img: '', title: 'カウンターで\n過ごす特別な時間を。', caption: 'バーカウンター'},
+    tiles: [{img: '', caption: '店内全体'}, {img: '', caption: 'カクテル'}, {img: '', caption: '夜カフェ'},
+            {img: '', caption: 'カラオケ'}, {img: '', caption: 'ボードゲーム'}, {img: '', caption: '宴会・グループ'}]
+  }
+};
+var cont = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+/* ドライブの写真は2通りのアドレスを試して、表示できたほうを使う */
+function imgUrls(id, w){
+  var e = encodeURIComponent(id);
+  return ['https://drive.google.com/thumbnail?id=' + e + '&sz=w' + w, 'https://lh3.googleusercontent.com/d/' + e + '=w' + w];
+}
+function firstOk(list, cb){
+  var i = 0;
+  (function next(){
+    if (i >= list.length) return cb(null);
+    var u = list[i++], im = new Image();
+    im.onload = function(){ cb(u); }; im.onerror = next; im.src = u;
+  })();
+}
+/* 写真を入れる場所ごとの大きさ(この形に自動で切り抜いて縮める) */
+function frameFor(path){
+  if (path.indexOf('ranking.') === 0) return {w: 800, h: 918};
+  if (path === 'gallery.hero') return {w: 1400, h: 659};
+  return {w: 600, h: 750};
+}
+function field(label, f, v, multi, ph){
+  return '<label>' + label + '</label>' + (multi
+    ? '<textarea data-f="' + f + '" rows="3"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(v) + '</textarea>'
+    : '<input type="text" data-f="' + f + '" value="' + esc(v) + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>');
+}
+function itemHtml(path, title, it, fields){
+  return '<div class="item" data-path="' + path + '"><div class="item-top">' +
+    '<div class="thumb"><span>今の写真のまま</span></div>' +
+    '<div class="item-btns"><b>' + title + '</b><span class="btn ghost small pick">写真を変える<input type="file" accept="image/*"></span>' +
+    '<button type="button" class="reset">元の写真に戻す</button></div></div>' + fields + '</div>';
+}
+function getAt(path){ var o = cont; path.split('.').forEach(function(k){ o = o[k]; }); return o; }
+function paintThumb(el){
+  var it = getAt(el.getAttribute('data-path')), th = el.querySelector('.thumb'), sp = th.querySelector('span');
+  var src = it._preview || '';
+  th.style.backgroundImage = src ? 'url("' + src + '")' : '';
+  th.classList.toggle('has', !!(src || it.img));
+  sp.textContent = it._busy ? 'アップロード中…' : it._preview ? '新しい写真' : it.img ? '読み込み中…' : '今の写真のまま';
+  if (it.img && !it._preview) {
+    var want = it.img;
+    firstOk(imgUrls(want, 400), function(u){
+      if (getAt(el.getAttribute('data-path')).img !== want || it._preview) return;
+      if (u) { th.style.backgroundImage = 'url("' + u + '")'; sp.textContent = ''; sp.style.display = 'none'; }
+      else sp.textContent = '写真を表示できません';
+    });
+  }
+  sp.style.display = sp.textContent ? '' : 'none';
+  el.querySelector('.reset').style.display = it.img || it._preview ? '' : 'none';
+}
+function renderContent(){
+  $('rankEdit').innerHTML = cont.ranking.map(function(r, i){
+    return itemHtml('ranking.' + i, 'No.' + (i + 1), r,
+      field('名前', 'name', r.name) + field('英語の飾り文字 <small>(写真の上に出る筆記体)</small>', 'en', r.en) + field('説明', 'desc', r.desc, true));
+  }).join('');
+  var g = cont.gallery;
+  $('galHero').innerHTML = itemHtml('gallery.hero', '大きい写真', g.hero,
+    field('見出し', 'title', g.hero.title, true) + field('小さい文字', 'caption', g.hero.caption));
+  $('galTiles').innerHTML = g.tiles.map(function(t, i){
+    return itemHtml('gallery.tiles.' + i, '', t, field('写真の名前', 'caption', t.caption));
+  }).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('.item'), paintThumb);
+}
+document.querySelector('main').addEventListener('input', function(e){
+  var f = e.target.getAttribute('data-f'), item = e.target.closest('.item');
+  if (f && item) getAt(item.getAttribute('data-path'))[f] = e.target.value;
+});
+document.querySelector('main').addEventListener('click', function(e){
+  if (!e.target.classList.contains('reset')) return;
+  var item = e.target.closest('.item'), it = getAt(item.getAttribute('data-path'));
+  it.img = ''; delete it._preview; paintThumb(item); markDirty();
+});
+document.querySelector('main').addEventListener('change', function(e){
+  if (e.target.type !== 'file' || !e.target.files[0]) return;
+  var item = e.target.closest('.item'), file = e.target.files[0];
+  e.target.value = '';
+  shrink(file, frameFor(item.getAttribute('data-path')), function(dataUrl){
+    if (!dataUrl) { failed('この写真は読み込めませんでした。別の写真を選んでください。'); return; }
+    var it = getAt(item.getAttribute('data-path'));
+    it._preview = dataUrl; it._busy = true; paintThumb(item);
+    upload(dataUrl, function(id){ it.img = id; it._busy = false; paintThumb(item); markDirty(); },
+                    function(){ delete it._preview; it._busy = false; paintThumb(item); });
+  });
+});
+/* 写真を入れる場所の形に合わせて、真ん中を切り抜いて縮めてから送る */
+function shrink(file, frame, cb){
+  var fr = new FileReader();
+  fr.onload = function(){
+    var im = new Image();
+    im.onload = function(){
+      var ratio = frame.w / frame.h, sw = im.width, sh = im.height;
+      if (sw / sh > ratio) sw = Math.round(sh * ratio); else sh = Math.round(sw / ratio);
+      var s = Math.min(1, frame.w / sw), c = document.createElement('canvas');
+      c.width = Math.round(sw * s); c.height = Math.round(sh * s);
+      c.getContext('2d').drawImage(im, (im.width - sw) / 2, (im.height - sh) / 2, sw, sh, 0, 0, c.width, c.height);
+      cb(c.toDataURL('image/jpeg', 0.85));
+    };
+    im.onerror = function(){ cb(null); };
+    im.src = fr.result;
+  };
+  fr.onerror = function(){ cb(null); };
+  fr.readAsDataURL(file);
+}
+function upload(dataUrl, ok, ng){
+  var pass = store('sere_pass');
+  if (!pass) { askPass('', function(){ upload(dataUrl, ok, ng); }, ng); return; }
+  setState('写真をアップロードしています…');
+  api('upload', {passcode: pass, data: dataUrl.split(',')[1], mime: 'image/jpeg'}, function(j){
+    if (j && j.ok) { ok(j.id); setState('写真を入れました。「この内容で保存する」でページに反映されます。', 'dirty'); return; }
+    var e = (j && j.error) || '不明なエラー';
+    if (wrongPass(e)) { store('sere_pass', null); askPass('合言葉が違います。もう一度入れてください。', function(){ upload(dataUrl, ok, ng); }, ng); return; }
+    ng(); failed(e);
+  }, function(msg){ ng(); failed(msg); });
+}
+function contentOut(){
+  function clean(x){ var o = {}; for (var k in x) if (k.charAt(0) !== '_') o[k] = x[k]; return o; }
+  return {ranking: cont.ranking.map(clean), gallery: {hero: clean(cont.gallery.hero), tiles: cont.gallery.tiles.map(clean)}};
+}
+
+function collect(){
+  var weekly = {};
+  for (var d = 0; d < 7; d++) {
+    var on = document.querySelector('input[data-d="' + d + '"]').checked;
+    var o = document.querySelector('select[data-d="' + d + '"][data-k="open"]').value;
+    var c = document.querySelector('select[data-d="' + d + '"][data-k="close"]').value;
+    if (on && o >= c && Number(c.split(':')[0]) < 24) throw new Error(NAMES[d] + '曜日の営業時間が正しくありません');
+    weekly[String(d)] = on ? {open: o, close: c} : null;
+  }
+  var exceptions = exc.slice();
+  exceptions.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  return {weekly: weekly, exceptions: exceptions, notice: $('notice').value.trim(), hoursNote: $('hoursNote').value.trim(), content: contentOut()};
+}
+
+function fill(sch){
+  state = sch && sch.weekly ? sch : JSON.parse(JSON.stringify(DEFAULT));
+  renderWeekly();
+  exc = (state.exceptions || []).slice();
+  refreshCal();
+  $('notice').value = state.notice || '';
+  $('hoursNote').value = typeof state.hoursNote === 'string' ? state.hoursNote : '';
+  if (sch && sch.content && sch.content.ranking) cont = JSON.parse(JSON.stringify(sch.content));
+  renderContent();
+}
+function checkServer(j){ $('oldServer').hidden = !!(j && j.content); }
+function loaded(j){
+  checkServer(j);
+  fill(j);
+  setState(j && j.updatedAt ? '最終保存: ' + stamp(j.updatedAt) : '最新の内容を読み込みました', '');
+}
+
+function load(){
+  setState('読み込み中…');
+  if (GAS) {
+    GAS.withSuccessHandler(loaded).withFailureHandler(function(err){ setState('読み込めませんでした: ' + (err && err.message || err), 'err'); }).getSchedule();
+    return;
+  }
+  var url = apiUrl();
+  fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(), {cache: 'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(loaded)
+    .catch(function(err){ setState(describeFailure(null, '', err), 'err'); });
+}
+
+function describeFailure(res, text, err){
+  if (err) {
+    if (location.protocol === 'file:' || /Failed to fetch|NetworkError|Load failed/i.test(String(err))) {
+      return '通信できませんでした。アプリ内のプレビューでは通信が止められることがあります。このファイルをSafariやChromeで開いて、もう一度試してください。(' + String(err) + ')';
+    }
+    return '通信エラー: ' + String(err);
+  }
+  var head = (text || '').slice(0, 120).replace(/\s+/g, ' ');
+  if (/<html|<!doctype|accounts\.google|ログイン|Sign in/i.test(text || '')) {
+    return 'Googleのログイン画面が返ってきました。デプロイの「アクセスできるユーザー」を「全員」にして、もう一度デプロイしてください。';
+  }
+  return '想定外の返事が返ってきました(状態 ' + (res ? res.status : '?') + '): ' + head;
+}
+
+/* Apps Script の中なら google.script.run、外からなら POST で送る */
+function api(action, payload, ok, ng){
+  if (GAS) {
+    var r = GAS.withSuccessHandler(ok).withFailureHandler(function(err){ ng('通信エラー: ' + (err && err.message || err)); });
+    if (action === 'upload') r.uploadImage(payload.passcode, payload.data, payload.mime);
+    else r.saveSchedule(payload.passcode, payload.schedule);
+    return;
+  }
+  var res0 = null;
+  fetch(apiUrl(), {method: 'POST', redirect: 'follow', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(Object.assign({action: action}, payload))})
+    .then(function(r){ res0 = r; return r.text(); })
+    .then(function(text){ var j = null; try { j = JSON.parse(text); } catch (e) {} if (j) ok(j); else ng(describeFailure(res0, text, null)); })
+    .catch(function(err){ ng(describeFailure(null, '', err)); });
+}
+function wrongPass(e){ return /合言葉|PASSCODE/.test(e) && !/設定されていません/.test(e); }
+function resetBtn(){ $('save').disabled = false; $('save').textContent = 'この内容で保存する'; }
+
+function save(){
+  var schedule;
+  try { schedule = collect(); } catch (e) { failed(e.message); return; }
+  var pass = store('sere_pass');
+  if (!pass) { askPass('', save); return; }
+  $('save').disabled = true; $('save').textContent = '保存しています…';
+  setState('保存しています…');
+  api('save', {passcode: pass, schedule: schedule}, function(j){
+    resetBtn();
+    if (j && j.ok && !(j.schedule && j.schedule.content)) {
+      checkServer(j.schedule);
+      failed('営業時間は保存できましたが、人気メニュー・ギャラリーは保存されていません。Apps Script を新しいバージョンでデプロイしてください。');
+      return;
+    }
+    if (j && j.ok) { checkServer(j.schedule); fill(j.schedule); showSaved(j.schedule); return; }
+    var e = (j && j.error) || '不明なエラー';
+    if (wrongPass(e)) { store('sere_pass', null); askPass('合言葉が違います。もう一度入れてください。', save); setState('保存できませんでした', 'err'); return; }
+    failed(e);
+  }, function(msg){ resetBtn(); failed(msg); });
+}
+
+var afterPass = null, cancelPass = null;
+function askPass(err, then, onCancel){
+  afterPass = then || save; cancelPass = onCancel || null;
+  $('askErr').textContent = err || '';
+  $('pass').value = '';
+  $('ask').hidden = false;
+  setTimeout(function(){ $('pass').focus(); }, 50);
+}
+$('askForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = $('pass').value;
+  if (!v) { $('askErr').textContent = '合言葉を入れてください。'; return; }
+  store('sere_pass', v);
+  $('ask').hidden = true;
+  afterPass();
+});
+$('askCancel').addEventListener('click', function(){ $('ask').hidden = true; if (cancelPass) cancelPass(); });
+$('toast').addEventListener('click', function(){ $('toast').classList.remove('show'); });
+
+/* 保存していない変更があるときは知らせる */
+document.querySelector('main').addEventListener('input', markDirty);
+document.querySelector('main').addEventListener('change', markDirty);
+function markDirty(){ setState('変更があります(まだ保存していません)', 'dirty'); }
+
+$('save').addEventListener('click', save);
+
+fill(DEFAULT);
+load();
+</script>
+</body>
+</html>
