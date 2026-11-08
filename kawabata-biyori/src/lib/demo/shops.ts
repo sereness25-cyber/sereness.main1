@@ -1,0 +1,83 @@
+import type { Shop } from "@/lib/types";
+
+/**
+ * デモ表示用の「架空の」店舗。実在する店舗ではありません。
+ * 住所・座標も実在の店舗と結びつかないよう、通り名までにとどめています。
+ * Supabase に接続すると表示されなくなります。
+ */
+const base = {
+  lat: null,
+  lng: null,
+  sns: {},
+  website: null,
+  image: null,
+  image_alt: "",
+  photo_permission: false,
+  verified_at: null,
+  is_published: true,
+  updated_at: "2026-11-01T00:00:00+09:00",
+  is_sample: true,
+} as const;
+
+export const DEMO_SHOPS: Shop[] = [
+  {
+    ...base,
+    id: "sample-shop-1",
+    name: "サンプル居酒屋（架空）",
+    slug: "sample-izakaya",
+    category: "izakaya",
+    description: "画面の見え方を確認するための架空の店舗です。実際の店舗情報は、管理画面から確認済みの情報だけを登録してください。",
+    address: "秋田市大町（川反通り周辺）※架空",
+    lat: 39.7203,
+    lng: 140.1149,
+    business_hours: "17:00〜23:00（例）",
+    closed_days: "日曜（例）",
+    price_range: "3,000〜4,000円（例）",
+    budget_level: 2,
+    payment_methods: "現金・カード（例）",
+    seats: "24席（例）",
+    solo_ok: true,
+    non_alcohol: true,
+    beginner_welcome: true,
+  },
+  {
+    ...base,
+    id: "sample-shop-2",
+    name: "サンプルBAR（架空）",
+    slug: "sample-bar",
+    category: "bar",
+    description: "架空のBARです。カウンター中心の小さなお店をイメージしたサンプルデータです。",
+    address: "秋田市大町（横町通り周辺）※架空",
+    lat: 39.7189,
+    lng: 140.1161,
+    business_hours: "19:00〜翌1:00（例）",
+    closed_days: "月曜（例）",
+    price_range: "チャージ500円＋ドリンク（例）",
+    budget_level: 2,
+    payment_methods: "現金（例）",
+    seats: "カウンター8席（例）",
+    solo_ok: true,
+    non_alcohol: true,
+    beginner_welcome: true,
+  },
+  {
+    ...base,
+    id: "sample-shop-3",
+    name: "サンプルスナック（架空）",
+    slug: "sample-snack",
+    category: "snack",
+    description: "架空のスナックです。料金の表示例を確認するためのサンプルデータです。",
+    address: "秋田市大町（赤れんが館通り周辺）※架空",
+    lat: 39.7178,
+    lng: 140.1170,
+    business_hours: "20:00〜翌2:00（例）",
+    closed_days: "日曜・祝日（例）",
+    price_range: "セット料金 3,000円/90分（例）",
+    budget_level: 2,
+    payment_methods: "現金（例）",
+    seats: "15席（例）",
+    solo_ok: true,
+    non_alcohol: false,
+    beginner_welcome: false,
+  },
+];
