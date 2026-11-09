@@ -8,6 +8,7 @@
 | `schedule-admin.html` | 管理ページ(単体で開く版) |
 | `apps-script/Code.gs` | Google Apps Script(営業データの保存・写真のドライブ保存) |
 | `apps-script/admin.html` | Apps Script に入れる管理ページ(`…/exec?page=admin` で開く) |
+| `kawabata-biyori/` | 川反の地域Webマガジン「かわばた日和」(Next.js + Supabase)。詳しくは `kawabata-biyori/README.md` |
 
 ## Apps Script の更新手順
 
