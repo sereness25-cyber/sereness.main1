@@ -120,23 +120,38 @@ table.list tr:hover td { background: #fbf9f6; }
 <body>
 
 <!-- ログイン -->
-<section id="login" class="login" hidden>
+<!-- パスワードで開く -->
+<section id="unlock" class="login" hidden>
+  <div class="panel stack">
+    <p class="brand" style="color:var(--navy)">かわばた日和<small style="color:var(--blush)">ADMIN</small></p>
+    <label class="f"><span>パスワード</span><input id="pw" type="password" autocomplete="current-password"></label>
+    <label class="check"><input type="checkbox" id="stay"><span>この端末ではログインしたままにする（共用のパソコンでは使わないでください）</span></label>
+    <div id="unlock-msg"></div>
+    <button class="btn primary" id="unlock-btn" type="button">ログイン</button>
+    <p class="hint">パスワードを忘れたときや、GitHub のトークンの期限が切れたときは <button class="linkbtn" type="button" id="to-setup">最初の設定をやり直す</button></p>
+  </div>
+</section>
+
+<!-- 最初の設定（1回だけ） -->
+<section id="setup" class="login" hidden>
   <div class="panel stack">
     <div>
       <p class="brand" style="color:var(--navy)">かわばた日和<small style="color:var(--blush)">ADMIN</small></p>
-      <p class="lead">GitHub の「アクセストークン」でログインします。トークンは GitHub の画面で作ります（最初の1回だけ）。</p>
+      <h1 style="margin-top:8px">最初の設定</h1>
+      <p class="lead">管理ページは GitHub に記事を保存します。そのための「アクセストークン」を1回だけ登録し、あなたが決めたパスワードで鍵をかけます。次からはパスワードだけで開けます。</p>
     </div>
     <ol class="steps">
       <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">トークン作成ページ</a>を開く（GitHub にログインした状態で）</li>
-      <li>Token name に「かわばた日和 管理」、Expiration（有効期限）を選ぶ</li>
+      <li>Token name に「かわばた日和 管理」、Expiration は「Custom」で<b>1年後</b>の日付を選ぶ</li>
       <li>Repository access で「Only select repositories」→ <b>sereness.main1</b> を選ぶ</li>
       <li>Permissions → Repository permissions で <b>Contents</b> を「Read and write」、<b>Actions</b> を「Read-only」にする</li>
       <li>「Generate token」を押し、表示された文字列（github_pat_…）をコピーして下に貼る</li>
     </ol>
     <label class="f"><span>アクセストークン</span><input id="token" type="password" autocomplete="off" placeholder="github_pat_..."></label>
-    <label class="check"><input type="checkbox" id="remember" checked><span>この端末に保存する（共用のパソコンではチェックを外してください）</span></label>
-    <div id="login-msg"></div>
-    <button class="btn primary" id="login-btn" type="button">ログイン</button>
+    <label class="f"><span>パスワード（12文字以上）</span><input id="pw1" type="password" autocomplete="new-password"><span class="hint">鍵のかかったトークンは誰でも見られる場所に置かれるため、推測されにくい長めのパスワードにしてください。</span></label>
+    <label class="f"><span>パスワード（確認のためもう一度）</span><input id="pw2" type="password" autocomplete="new-password"></label>
+    <div id="setup-msg"></div>
+    <div class="row"><button class="btn primary" id="setup-btn" type="button">設定してログイン</button><button class="btn" id="to-unlock" type="button" hidden>パスワードで開く画面へ戻る</button></div>
   </div>
 </section>
 
@@ -292,22 +307,85 @@ const loadCategories = () => load("categories", "categories.json");
 /* ============================================================
    ログイン
    ============================================================ */
-async function tryLogin(token, persist) {
-  TOKEN = token;
-  const repo = await gh(`/repos/${REPO.owner}/${REPO.name}`);
-  if (!repo.permissions || !repo.permissions.push) throw new Error("このトークンには書き込みの権限がありません（Contents を Read and write に）。");
-  store.set("kb-token", token, persist);
+/* トークンをパスワードで暗号化して kawabata-admin/lock.json に置く。開くときはパスワードで復号する */
+const LOCK_PATH = "kawabata-admin/lock.json";
+const ITER = 600000;
+const bytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function deriveKey(password, salt) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
 }
-$("#login-btn").addEventListener("click", async () => {
-  const t = $("#token").value.trim();
-  const msg = $("#login-msg");
-  if (!t) return (msg.innerHTML = '<p class="note err">トークンを貼り付けてください。</p>');
-  $("#login-btn").disabled = true; msg.innerHTML = '<p class="note">確認しています…</p>';
-  try { await tryLogin(t, $("#remember").checked); start(); }
-  catch (e) { msg.innerHTML = `<p class="note err">ログインできませんでした：${esc(e.status === 401 ? "トークンが正しくないか、期限切れです。" : e.status === 404 ? "sereness.main1 へのアクセスが許可されていません。トークンの Repository access を確認してください。" : e.message)}</p>`; }
-  finally { $("#login-btn").disabled = false; }
+async function lockToken(token, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt);
+  const data = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(token));
+  return { v: 1, kdf: "PBKDF2-SHA256", iterations: ITER, salt: b64(salt), iv: b64(iv), data: b64(data), updated_at: nowIso() };
+}
+async function unlockToken(lock, password) {
+  const key = await deriveKey(password, bytes(lock.salt));
+  try { return new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(lock.iv) }, key, bytes(lock.data))); }
+  catch { throw new Error("パスワードが違います。"); }
+}
+async function fetchLock() {
+  // 最新を取るため GitHub の生ファイルを先に見る（公開リポジトリなので誰でも読める）
+  const urls = [`https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/${REPO.branch}/${LOCK_PATH}?t=${Date.now()}`, `lock.json?t=${Date.now()}`];
+  for (const u of urls) { try { const r = await fetch(u, { cache: "no-store" }); if (r.ok) return await r.json(); } catch {} }
+  return null;
+}
+async function checkToken(token) {
+  TOKEN = token;
+  try {
+    const repo = await gh(`/repos/${REPO.owner}/${REPO.name}`);
+    if (!repo.permissions || !repo.permissions.push) throw new Error("このトークンには書き込みの権限がありません（Contents を Read and write に）。");
+  } catch (e) {
+    TOKEN = "";
+    if (e.status === 401) throw new Error("GitHub のトークンが正しくないか、期限が切れています。「最初の設定をやり直す」から新しいトークンを登録してください。");
+    if (e.status === 404) throw new Error("sereness.main1 へのアクセスが許可されていません。トークンの Repository access を確認してください。");
+    throw e;
+  }
+}
+const show = (id) => { ["unlock", "setup"].forEach((x) => ($("#" + x).hidden = x !== id)); };
+
+$("#unlock-btn").addEventListener("click", async () => {
+  const msg = $("#unlock-msg"), pw = $("#pw").value;
+  if (!pw) return (msg.innerHTML = '<p class="note err">パスワードを入力してください。</p>');
+  $("#unlock-btn").disabled = true; msg.innerHTML = '<p class="note">確認しています…</p>';
+  try {
+    const lock = await fetchLock();
+    if (!lock) throw new Error("設定が見つかりません。「最初の設定をやり直す」から設定してください。");
+    const token = await unlockToken(lock, pw);
+    await checkToken(token);
+    store.set("kb-token", token, $("#stay").checked);
+    start();
+  } catch (e) { msg.innerHTML = `<p class="note err">${esc(e.message)}</p>`; }
+  finally { $("#unlock-btn").disabled = false; }
 });
-$("#logout").addEventListener("click", () => { store.del("kb-token"); location.reload(); });
+$("#pw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#unlock-btn").click(); });
+$("#to-setup").addEventListener("click", () => { show("setup"); $("#to-unlock").hidden = false; });
+$("#to-unlock").addEventListener("click", () => show("unlock"));
+
+$("#setup-btn").addEventListener("click", async () => {
+  const msg = $("#setup-msg"), token = $("#token").value.trim(), p1 = $("#pw1").value, p2 = $("#pw2").value;
+  const err = (t) => (msg.innerHTML = `<p class="note err">${esc(t)}</p>`);
+  if (!token) return err("アクセストークンを貼り付けてください。");
+  if ([...p1].length < 12) return err("パスワードは12文字以上にしてください。");
+  if (p1 !== p2) return err("確認用のパスワードが一致しません。");
+  $("#setup-btn").disabled = true; msg.innerHTML = '<p class="note">トークンを確認して、鍵をかけています…</p>';
+  try {
+    await checkToken(token);
+    const lock = await lockToken(token, p1);
+    let sha;
+    try { sha = (await gh(contentsPath(LOCK_PATH) + `?ref=${REPO.branch}`)).sha; } catch {}
+    await putFile(LOCK_PATH, b64encode(JSON.stringify(lock, null, 2) + "\n"), "管理ページのパスワードを設定", sha);
+    store.set("kb-token", token, false);
+    start();
+    status("設定しました。次からはパスワードだけで開けます。", "ok", 6000);
+  } catch (e) { err(e.message); }
+  finally { $("#setup-btn").disabled = false; }
+});
+
+$("#logout").addEventListener("click", () => { store.del("kb-token"); TOKEN = ""; location.reload(); });
 
 /* ============================================================
    画面の切り替え
@@ -855,7 +933,7 @@ views.settings = async (el) => {
    起動
    ============================================================ */
 function start() {
-  $("#login").hidden = true; $("#app").hidden = false;
+  $("#unlock").hidden = true; $("#setup").hidden = true; $("#app").hidden = false;
   const setHead = () => document.documentElement.style.setProperty("--head-h", $("#head").offsetHeight + "px");
   setHead(); window.addEventListener("resize", setHead);
   go("home");
@@ -863,10 +941,10 @@ function start() {
 (async () => {
   const saved = store.get("kb-token");
   if (saved) {
-    try { await tryLogin(saved, !!localStorage.getItem("kb-token")); return start(); }
+    try { await checkToken(saved); return start(); }
     catch { store.del("kb-token"); }
   }
-  $("#login").hidden = false;
+  show((await fetchLock()) ? "unlock" : "setup");
 })();
 </script>
 </body>
