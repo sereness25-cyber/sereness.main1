@@ -146,8 +146,7 @@ function json(obj) {
 
 /* ============================================================
    かわばた日和 管理ページ用
-   - パスワードはスクリプト プロパティの KAWABATA_PASSWORD
-     (なければ PASSCODE = お店の管理ページと同じ合言葉)
+   - ログインなしで使える(KAWABATA_PASSWORD を設定したときだけパスワードを求める)
    - 記事・お店・イベントはドライブの「かわばた日和 データ」フォルダに JSON で保存
      (最初の1回だけ GitHub にある今のデータを写してくる)
    - 写真はドライブの「かわばた日和 写真」フォルダ(リンクを知っている人が見られる)
@@ -173,14 +172,14 @@ function kbHandle(body) {
   return out;
 }
 
-/* 10回続けて間違えると15分間ロックする */
+/* パスワードなしで使える。スクリプト プロパティに KAWABATA_PASSWORD を入れたときだけ、パスワードを求める
+   (10回続けて間違えると15分間ロック) */
 function kbPass(passcode) {
+  var pass = PropertiesService.getScriptProperties().getProperty('KAWABATA_PASSWORD');
+  if (!pass) return '';
   var cache = CacheService.getScriptCache();
   var fails = Number(cache.get('KB_FAILS') || 0);
   if (fails >= 10) return 'パスワードを続けて間違えたため、15分間ログインできません。時間をおいてお試しください';
-  var props = PropertiesService.getScriptProperties();
-  var pass = props.getProperty('KAWABATA_PASSWORD') || props.getProperty('PASSCODE');
-  if (!pass) return 'スクリプト プロパティに KAWABATA_PASSWORD が設定されていません';
   if (String(passcode == null ? '' : passcode) !== pass) {
     cache.put('KB_FAILS', String(fails + 1), 900);
     return 'パスワードが違います';

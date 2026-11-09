@@ -119,7 +119,7 @@ table.list tr:hover td { background: #fbf9f6; }
 </head>
 <body>
 
-<!-- パスワードで開く -->
+<!-- ふだんは出ない。Apps Script に KAWABATA_PASSWORD を設定したときだけ表示される -->
 <section id="unlock" class="login" hidden>
   <div class="panel stack">
     <p class="brand" style="color:var(--navy)">かわばた日和<small style="color:var(--blush)">ADMIN</small></p>
@@ -137,7 +137,6 @@ table.list tr:hover td { background: #fbf9f6; }
     <span class="brand">かわばた日和<small>ADMIN</small></span>
     <span class="top-actions">
       <a class="btn small" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" href="../kawabata/" target="_blank" rel="noopener">サイトを見る ↗</a>
-      <button class="btn small" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" id="logout" type="button">ログアウト</button>
     </span>
   </header>
   <nav class="tabs" role="tablist" aria-label="管理メニュー">
@@ -158,7 +157,7 @@ table.list tr:hover td { background: #fbf9f6; }
 /* ============================================================
    設定
    ============================================================ */
-/* 保存先は Google Apps Script（apps-script/Code.gs）。パスワードはスクリプト プロパティの KAWABATA_PASSWORD */
+/* 保存先は Google Apps Script（apps-script/Code.gs）。ログインなしで開ける */
 const API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec";
 const SITE = "https://sereness25-cyber.github.io/sereness.main1/kawabata";
 const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["snack","スナック"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
@@ -255,7 +254,7 @@ const loadEvents = () => load("events");
 const loadCategories = () => load("categories");
 
 /* ============================================================
-   ログイン（パスワードだけ）
+   パスワード（Apps Script に KAWABATA_PASSWORD を設定したときだけ使う）
    ============================================================ */
 $("#unlock-btn").addEventListener("click", async () => {
   const msg = $("#unlock-msg"), pw = $("#pw").value;
@@ -270,7 +269,6 @@ $("#unlock-btn").addEventListener("click", async () => {
   finally { $("#unlock-btn").disabled = false; }
 });
 $("#pw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#unlock-btn").click(); });
-$("#logout").addEventListener("click", () => { store.del("kb-pass"); PASS = ""; location.reload(); });
 
 /* ============================================================
    画面の切り替え
@@ -816,7 +814,7 @@ function start() {
 }
 store.del("kb-token"); // 以前のトークン方式の名残を消す
 PASS = store.get("kb-pass") || "";
-if (PASS) start(); else $("#unlock").hidden = false;
+start();
 </script>
 </body>
 </html>
