@@ -38,6 +38,8 @@ export type Article = {
 
 export type ShopCategory = "izakaya" | "bar" | "snack" | "dining" | "karaoke" | "other";
 
+export type ShopPhoto = { url: string; caption: string };
+
 export type Shop = {
   id: string;
   name: string;
@@ -60,6 +62,8 @@ export type Shop = {
   website: string | null;
   image: string | null;
   image_alt: string;
+  /** メイン以外の写真（お店のページに並べる） */
+  gallery?: ShopPhoto[];
   photo_permission: boolean;
   verified_at: string | null;
   is_published: boolean;

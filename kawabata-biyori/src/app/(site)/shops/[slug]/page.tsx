@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getArticlesForShop, getShopBySlug } from "@/lib/data";
@@ -60,6 +61,24 @@ export default async function ShopPage({ params }: Props) {
         )}
         <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
         <p className="mt-8 whitespace-pre-line text-[1.02rem] leading-9">{shop.description}</p>
+
+        {shop.gallery && shop.gallery.length > 0 && (
+          <section className="mt-10" aria-label="写真">
+            <h2 className="mb-4 text-xl text-navy">写真</h2>
+            <ul className="grid grid-cols-2 gap-3 md:grid-cols-3">
+              {shop.gallery.map((g, i) => (
+                <li key={g.url + i}>
+                  <figure>
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-beige">
+                      <Image src={g.url} alt={g.caption || `${shop.name}の写真`} fill sizes="(min-width: 960px) 300px, 50vw" className="object-cover" />
+                    </div>
+                    {g.caption && <figcaption className="mt-1.5 text-xs leading-6 text-muted">{g.caption}</figcaption>}
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section className="mt-10 border border-navy/15 bg-white p-6 md:p-8">
           <h2 className="text-xl text-navy">店舗情報</h2>

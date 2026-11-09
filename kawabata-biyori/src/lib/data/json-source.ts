@@ -37,7 +37,13 @@ export function jsonCategories(): Category[] {
 export function jsonShops(): Shop[] {
   return read<Shop>("shops.json", "shops")
     .filter((s) => s.is_published)
-    .map((s) => ({ ...s, sources: s.sources ?? [], shop_confirmed: !!s.shop_confirmed }));
+    .map((s) => ({
+      ...s,
+      sources: s.sources ?? [],
+      shop_confirmed: !!s.shop_confirmed,
+      // 写真の使用許可がないお店は、追加の写真も出さない
+      gallery: s.photo_permission && Array.isArray(s.gallery) ? s.gallery.filter((g) => g && /^https:\/\//.test(g.url)) : [],
+    }));
 }
 
 export function jsonEvents(): EventItem[] {

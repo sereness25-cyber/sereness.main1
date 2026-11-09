@@ -98,6 +98,16 @@ table.list tr:hover td { background: #fbf9f6; }
 .editor blockquote { margin: 1.2em 0; padding: .8em 0; border-top: 1px solid var(--navy); border-bottom: 1px solid var(--navy); text-align: center; font-family: var(--mincho); color: var(--navy); }
 .editor .callout { margin: 1.2em 0; padding: .8em 1em; border-left: 3px solid var(--rose); background: #fbf3f3; }
 .editor img { max-width: 100%; height: auto; border-radius: 8px; }
+.editor figure { margin: 1.2em 0; }
+.editor figcaption { font-size: .85rem; color: var(--muted); text-align: center; }
+.gallery { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 720px) { .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.gallery li { list-style: none; background: #fbf9f6; border: 1px solid var(--line); border-radius: 12px; padding: 6px; }
+.gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; display: block; }
+.gallery input { margin-top: 6px; padding: 6px 8px; font-size: .82rem; }
+.gallery .row { margin-top: 6px; gap: 4px; }
+.photo-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 96px; border: 2px dashed #d9cfc2; border-radius: 12px; background: #fff; color: var(--navy); font-weight: 700; cursor: pointer; width: 100%; }
+.photo-drop small { font-weight: 400; color: var(--muted); }
 .editor table { border-collapse: collapse; width: 100%; }
 .editor th, .editor td { border: 1px solid var(--line); padding: 6px 8px; }
 .editor [data-shop-card], .editor [data-article-card] { margin: 1em 0; padding: .6em 1em; border: 1px dashed var(--rose); border-radius: 10px; color: var(--navy); font-size: .9rem; background: #fff; }
@@ -380,7 +390,7 @@ views["articles:edit"] = async (el, id) => {
             <span class="sep"></span>
             <button type="button" data-cmd="ul">・箇条書き</button><button type="button" data-cmd="ol">1. 番号</button><button type="button" data-cmd="quote">引用</button><button type="button" data-cmd="callout">注意書き</button>
             <span class="sep"></span>
-            <button type="button" data-cmd="image">画像</button><button type="button" data-cmd="table">表</button>
+            <button type="button" data-cmd="image">📷 写真</button><button type="button" data-cmd="table">表</button>
             <select data-embed="shop" aria-label="店舗カードを挿入"><option value="">店舗カード…</option>${shops.map((s) => `<option value="${esc(s.slug)}">${esc(s.name)}</option>`).join("")}</select>
             <select data-embed="article" aria-label="記事カードを挿入"><option value="">記事カード…</option>${liveArticles.map((x) => `<option value="${esc(x.slug)}">${esc(x.title)}</option>`).join("")}</select>
             <span class="sep"></span>
@@ -390,8 +400,9 @@ views["articles:edit"] = async (el, id) => {
           <div class="editor" id="a-body" contenteditable="true" aria-label="本文">${a.content}</div>
           <textarea class="source" id="a-source" hidden aria-label="本文のHTML"></textarea>
         </div>
+        <button class="photo-drop" type="button" id="a-photo-btn" style="margin-top:10px">📷 本文に写真を入れる<small>カーソルのある場所の下に入ります。まとめて何枚でも選べます</small></button>
         <p class="hint">編集中の内容は、この端末に自動で一時保存されます。サイトに反映するには「保存」を押してください。</p>
-        <input type="file" id="img-file" accept="image/jpeg,image/png,image/webp" hidden>
+        <input type="file" id="img-file" accept="image/jpeg,image/png,image/webp" multiple hidden>
       </div>
 
       <aside class="side stack">
@@ -515,15 +526,20 @@ views["articles:edit"] = async (el, id) => {
     if (c === "table") return insertBlock("<table><thead><tr><th>見出し</th><th>見出し</th></tr></thead><tbody><tr><td>　</td><td>　</td></tr><tr><td>　</td><td>　</td></tr></tbody></table>");
     if (c === "image") return $("#img-file").click();
   }));
+  $("#a-photo-btn").addEventListener("click", () => { if (!sourceMode) $("#img-file").click(); });
   $("#img-file").addEventListener("change", async (e) => {
-    const f = e.target.files[0]; e.target.value = ""; if (!f) return;
-    const alt = prompt("画像の説明（alt）を入力してください", "") || "";
-    try {
-      status("画像をアップロードしています…");
-      const up = await uploadImage(f);
-      insertHtml(`<img src="${esc(up.url)}" alt="${esc(alt)}">`);
-      status("画像を追加しました。公開ページへの反映後に表示されます。", "ok", 4000);
-    } catch (err) { status("画像を追加できませんでした：" + err.message, "err", 6000); }
+    const files = [...e.target.files]; e.target.value = ""; if (!files.length) return;
+    let done = 0;
+    for (const f of files) {
+      const cap = (prompt(`写真の説明（写真の下に表示されます。空欄でもOK）\n${f.name}`, "") || "").trim();
+      try {
+        status(`写真をアップロードしています…（${done + 1}/${files.length}）`);
+        const up = await uploadImage(f);
+        insertBlock(`<figure><img src="${esc(up.url)}" alt="${esc(cap)}">${cap ? `<figcaption>${esc(cap)}</figcaption>` : ""}</figure>`);
+        done++;
+      } catch (err) { status(`「${f.name}」を追加できませんでした：` + err.message, "err", 6000); return; }
+    }
+    status(`写真を${done}枚入れました。記事を保存すると反映されます。`, "ok", 5000);
   });
   $$("[data-embed]", el).forEach((s) => s.addEventListener("change", () => {
     if (!s.value || sourceMode) return;
@@ -617,6 +633,27 @@ views["shops:edit"] = async (el, id) => {
             ${t("s-slug", "URLスラッグ", s.slug, "半角英小文字・数字・ハイフン")}${t("s-address", "住所", s.address)}</div>
           <label class="f"><span>紹介文</span><textarea id="s-desc" rows="5">${esc(s.description)}</textarea></label>
         </section>
+        <section class="panel stack"><h2>写真</h2>
+          <div class="grid2">
+            <div>
+              <span class="flabel">メイン写真（一覧やお店ページの一番上に出ます）</span>
+              <img class="thumb" id="s-img" alt="" ${s.image ? `src="${esc(s.image)}"` : "hidden"}>
+              <div class="row" style="margin-top:6px"><button class="btn small" type="button" id="s-img-btn">${s.image ? "変更" : "📷 写真を選ぶ"}</button><button class="btn small" type="button" id="s-img-del" ${s.image ? "" : "hidden"}>外す</button></div>
+              <input type="text" id="s-img-alt" placeholder="写真の説明（例：カウンター席）" value="${esc(s.image_alt)}" style="margin-top:6px">
+            </div>
+            <div>
+              <span class="flabel">お店から写真使用の許可</span>
+              <label class="check"><input type="checkbox" id="s-perm" ${s.photo_permission ? "checked" : ""}><span>お店から写真を使う許可を得た（写真を載せるときは必須）</span></label>
+            </div>
+          </div>
+          <div>
+            <span class="flabel">ほかの写真（最大12枚・お店のページに並びます）</span>
+            <ul class="gallery" id="s-gallery" style="margin:0;padding:0"></ul>
+            <button class="photo-drop" type="button" id="s-gal-btn" style="margin-top:8px">＋ 写真を追加<small>まとめて選べます</small></button>
+          </div>
+          <input type="file" id="s-file" accept="image/jpeg,image/png,image/webp" hidden>
+          <input type="file" id="s-gal-file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+        </section>
         <section class="panel stack"><h2>営業・料金</h2>
           <div class="grid2">${t("s-hours", "営業時間", s.business_hours)}${t("s-closed", "定休日", s.closed_days)}${t("s-price", "料金", s.price_range, "例：チャージ500円＋ドリンク、セット3,000円/90分")}
             <label class="f"><span>予算の目安（検索用）</span><select id="s-budget">${BUDGETS.map(([v, l]) => `<option value="${v}" ${String(s.budget_level ?? "") === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
@@ -637,13 +674,6 @@ views["shops:edit"] = async (el, id) => {
           <div id="s-msg"></div>
           <button class="btn primary" type="button" id="s-save">保存</button>
         </div>
-        <div class="panel stack"><h2 style="margin:0">写真</h2>
-          <img class="thumb" id="s-img" alt="" ${s.image ? `src="${esc(s.image)}"` : "hidden"}>
-          <div class="row"><button class="btn small" type="button" id="s-img-btn">${s.image ? "変更" : "写真を選ぶ"}</button><button class="btn small" type="button" id="s-img-del" ${s.image ? "" : "hidden"}>外す</button></div>
-          <input type="text" id="s-img-alt" placeholder="写真の説明（alt）" value="${esc(s.image_alt)}">
-          <label class="check"><input type="checkbox" id="s-perm" ${s.photo_permission ? "checked" : ""}><span>お店から写真使用の許可を得た</span></label>
-          <input type="file" id="s-file" accept="image/jpeg,image/png,image/webp" hidden>
-        </div>
         <div class="panel stack"><h2 style="margin:0">初心者歓迎マーク</h2>
           <p class="hint" style="margin:0">次の4点をすべて、お店に確認できた場合だけ付けてください。</p>
           ${["料金が明確", "初来店客を歓迎", "料金説明に対応", "不明瞭な追加料金がない"].map((x, i) => `<label class="check"><input type="checkbox" class="bw" ${s.beginner_welcome ? "checked" : ""}><span>${x}</span></label>`).join("")}
@@ -661,6 +691,38 @@ views["shops:edit"] = async (el, id) => {
     try { status("写真をアップロードしています…"); const up = await uploadImage(f); s.image = up.url; $("#s-img").src = up.preview; $("#s-img").hidden = false; $("#s-img-del").hidden = false; dirty = true; status("写真を設定しました。保存すると反映されます。", "ok", 4000); }
     catch (err) { status("写真を追加できませんでした：" + err.message, "err", 6000); }
   });
+  /* ほかの写真 */
+  s.gallery = Array.isArray(s.gallery) ? s.gallery : [];
+  const previews = new Map();
+  const drawGallery = () => {
+    $("#s-gallery").innerHTML = s.gallery.map((g, i) => `<li>
+      <img src="${esc(previews.get(g.url) || g.url)}" alt="">
+      <input type="text" data-cap="${i}" value="${esc(g.caption)}" placeholder="説明（空欄でもOK）">
+      <div class="row"><button class="btn small" type="button" data-left="${i}" ${i ? "" : "disabled"} aria-label="前へ">←</button><button class="btn small" type="button" data-right="${i}" ${i < s.gallery.length - 1 ? "" : "disabled"} aria-label="後ろへ">→</button><button class="btn small" type="button" data-rm="${i}">外す</button></div>
+    </li>`).join("");
+    $("#s-gal-btn").hidden = s.gallery.length >= 12;
+    $$("[data-cap]", el).forEach((x) => x.addEventListener("input", () => { s.gallery[+x.dataset.cap].caption = x.value.trim(); dirty = true; }));
+    const swap = (a, b) => { [s.gallery[a], s.gallery[b]] = [s.gallery[b], s.gallery[a]]; dirty = true; drawGallery(); };
+    $$("[data-left]", el).forEach((b) => (b.onclick = () => swap(+b.dataset.left, +b.dataset.left - 1)));
+    $$("[data-right]", el).forEach((b) => (b.onclick = () => swap(+b.dataset.right, +b.dataset.right + 1)));
+    $$("[data-rm]", el).forEach((b) => (b.onclick = () => { s.gallery.splice(+b.dataset.rm, 1); dirty = true; drawGallery(); }));
+  };
+  drawGallery();
+  $("#s-gal-btn").onclick = () => $("#s-gal-file").click();
+  $("#s-gal-file").addEventListener("change", async (e) => {
+    const files = [...e.target.files].slice(0, 12 - s.gallery.length); e.target.value = ""; if (!files.length) return;
+    let n = 0;
+    for (const f of files) {
+      try {
+        status(`写真をアップロードしています…（${n + 1}/${files.length}）`);
+        const up = await uploadImage(f);
+        previews.set(up.url, up.preview);
+        s.gallery.push({ url: up.url, caption: "" }); n++; dirty = true; drawGallery();
+      } catch (err) { status(`「${f.name}」を追加できませんでした：` + err.message, "err", 6000); return; }
+    }
+    status(`写真を${n}枚追加しました。説明を書いて「保存」を押すと反映されます。`, "ok", 5000);
+  });
+
   const v = (idn) => $("#" + idn).value.trim();
   const fromTri = (x) => (x === "" ? null : x === "yes");
   $("#s-save").onclick = async () => {
@@ -670,7 +732,7 @@ views["shops:edit"] = async (el, id) => {
     if (!name) return err("店名を入力してください。");
     const pub = $("#s-pub").checked, verified = v("s-verified") || null;
     if (pub && !verified) return err("公開するには情報の確認日を入力してください。");
-    if (s.image && !$("#s-perm").checked) return err("写真を使う場合は、写真使用の許可の確認にチェックを入れてください。");
+    if ((s.image || s.gallery.length) && !$("#s-perm").checked) return err("写真を載せるときは、「お店から写真を使う許可を得た」にチェックを入れてください。");
     if ($("#s-bw").checked && !$$(".bw", el).every((x) => x.checked)) return err("初心者歓迎マークは、4項目をすべて確認してから付けてください。");
     const slug = slugify(v("s-slug") || name);
     if (shops.some((x) => x.id !== s.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のお店で使われています。`);

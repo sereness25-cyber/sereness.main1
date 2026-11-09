@@ -102,6 +102,9 @@ body {
   color: #555;
 }
 .article-body img { border-radius: 16px; margin: 1.6em auto; height: auto; }
+.article-body figure { margin: 1.8em 0; }
+.article-body figure img { margin: 0 auto; }
+.article-body figcaption { margin-top: 0.6em; font-size: 0.85rem; color: var(--color-muted, #777); text-align: center; line-height: 1.7; }
 .article-body table { width: 100%; border-collapse: collapse; margin: 1.6em 0; font-size: 0.95rem; display: block; overflow-x: auto; }
 .article-body th, .article-body td { border: 1px solid var(--color-beige); padding: 0.6em 0.8em; text-align: left; vertical-align: top; }
 .article-body th { background: #f6efe7; white-space: nowrap; }
