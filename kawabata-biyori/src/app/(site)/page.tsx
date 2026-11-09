@@ -76,7 +76,6 @@ export default async function HomePage() {
             <Image src={PHOTOS.street.src} alt="" fill priority sizes="(min-width:1200px) 750px, 100vw" className="object-cover object-right" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#2a1a19]/90 via-[#2a1a19]/55 to-transparent md:from-cocoa md:from-40% md:via-cocoa/70 md:via-55%" />
-          <span className="absolute bottom-2 right-2 bg-black/50 px-2 py-0.5 text-[0.65rem] tracking-wider text-white">写真はイメージです</span>
           <div className="relative flex min-h-[440px] flex-col justify-center px-6 py-10 text-white md:min-h-[540px] md:px-14">
             <p className="w-fit border border-white/80 px-3 py-1 font-mincho text-sm tracking-[0.2em]">巻頭特集</p>
             <h1 className="mt-5 font-mincho text-[2.6rem] font-medium leading-[1.2] tracking-[0.04em] drop-shadow md:text-[4rem]">
@@ -136,7 +135,6 @@ export default async function HomePage() {
               <div className="relative">
                 <Image src={PHOTOS.portrait.src} alt="" fill sizes="(min-width:768px) 520px, 100vw" className="object-cover object-top" />
                 <div className="absolute inset-0 bg-gradient-to-r from-cocoa via-transparent to-transparent" />
-                <span className="absolute bottom-2 right-2 bg-black/50 px-2 py-0.5 text-[0.65rem] tracking-wider text-white">写真はイメージです</span>
               </div>
             </Link>
           </Container>

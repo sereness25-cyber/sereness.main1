@@ -2,7 +2,7 @@ import { jsonSettings } from "./data/json-source";
 
 /**
  * 写真がまだない記事・店舗に出す仮の写真（イメージ）。
- * public/images/photos のファイルは実在の店舗・人物ではないため、表示時は必ず「イメージ」と明記する。
+ * public/images/photos のファイルは実在の店舗・人物ではない（画面に「イメージ」の文字は出さない。alt にのみ記載）。
  * 取材写真が用意できたら、記事のアイキャッチや店舗写真を登録すればそちらが優先される。
  */
 const DEFAULT_PHOTOS = {

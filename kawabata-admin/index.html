@@ -888,7 +888,7 @@ views.photos = async (el) => {
   const draw = () => {
     el.innerHTML = `
       <h1>イメージ写真</h1>
-      <p class="lead">記事やお店に写真が登録されていないときに、代わりに出す写真です。公開ページでは「イメージ」と表示されます。<br>
+      <p class="lead">記事やお店に写真が登録されていないときに、代わりに出す写真です。<br>
       記事ごと・お店ごとの写真は、それぞれの編集画面の「アイキャッチ画像」「写真」から変えられます（そちらが優先されます）。</p>
       <ul class="gallery" style="margin:0;padding:0">${STOCK.map(([k, name, where]) => `<li>
         <img src="${esc(previews[k] || (photos[k] ? photos[k].url : def(k)))}" alt="">

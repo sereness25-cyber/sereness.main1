@@ -31,7 +31,7 @@ export function Thumb({
   className?: string;
   /** 画像がないときに出す仮の写真。指定がなければイラストを出す */
   photo?: PhotoKey;
-  /** 「イメージ」表示を右下に出す（上に文字を重ねる表紙用） */
+  /** 以前の「イメージ」表示の位置指定（いまは表示していない。呼び出し側との互換のため残す） */
   badgeBottom?: boolean;
 }) {
   // 個別に縦横比を指定したときは、標準の16:9を付けない（クラスの競合を避ける）
@@ -49,7 +49,6 @@ export function Thumb({
     return (
       <div className={`relative ${ratio} overflow-hidden bg-beige ${className}`}>
         <Image src={p.src} alt={alt || p.alt} fill sizes={sizes} priority={priority} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-        <span className={`absolute right-1.5 z-10 rounded-sm bg-black/45 px-1.5 py-px text-[0.6rem] tracking-wider text-white ${badgeBottom ? "bottom-1.5" : "top-1.5"}`}>イメージ</span>
       </div>
     );
   }
