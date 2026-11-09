@@ -64,6 +64,10 @@ export type Shop = {
   verified_at: string | null;
   is_published: boolean;
   updated_at: string;
+  /** 情報の出典 */
+  sources: { label: string; url: string }[];
+  /** お店本人に掲載内容を確認済みか。false なら「公開情報をもとに掲載」と表示する */
+  shop_confirmed: boolean;
   /** 架空のサンプル店舗。本番データでは常に false */
   is_sample?: boolean;
 };

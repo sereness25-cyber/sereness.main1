@@ -293,3 +293,47 @@ select a.id, c.id from public.articles a, public.categories c where a.slug = 'wh
 insert into public.tags (name, slug) values ('編集部より', 'editorial') on conflict (slug) do nothing;
 insert into public.article_tags (article_id, tag_id)
 select a.id, t.id from public.articles a, public.tags t where a.slug = 'why-we-started' and t.slug = 'editorial' on conflict do nothing;
+
+-- 公開情報をもとに調べたお店（お店には未確認。0002_shop_sources.sql の後に実行）
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('Café & Bar Sereness', 'cafe-bar-sereness', 'bar', 'カラオケ・ゲーム・スポーツ観戦も楽しめるカフェ&バー。飲み放題が基本料金で、ソフトドリンクの飲み放題もあり、お酒を飲まない人や一人での来店も歓迎と案内されています。かわばた日和の運営元です。', '秋田県秋田市大町5-2-7 SCビル2F', '月・火・木 19:00〜1:00／金・土・祝前日 19:00〜3:00', '水曜日', 'アルコール飲み放題 男性2,650円・女性1,100円／ソフトドリンク飲み放題 男性1,100円・女性550円', true, true, false, '{"instagram":"https://www.instagram.com/cafe_bar.sereness/"}'::jsonb, 'https://sereness25-cyber.github.io/sereness.main1/', '2026-11-09', true, '[{"label":"Café & Bar Sereness 公式サイト（運営元）","url":"https://sereness25-cyber.github.io/sereness.main1/"}]'::jsonb, true)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('秋田川反漁屋酒場 秋田本店', 'kawabata-isariya-sakaba', 'izakaya', '新鮮な魚介類と秋田の郷土料理・地酒を楽しめる居酒屋として紹介されています。自分で炙って仕上げるきりたんぽ鍋が特徴とされています。', '秋田県秋田市大町4-2-35', '17:00〜24:00', '無休', '', null, null, false, '{}'::jsonb, 'https://marutomisuisan.jpn.com/isariya-akita/', '2026-11-09', true, '[{"label":"公式サイト（丸富水産）","url":"https://marutomisuisan.jpn.com/isariya-akita/"},{"label":"あきた元気ナビ","url":"https://www.akita-yulala.jp/restaurant/658"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('秋田きりたんぽ屋 秋田大町分店', 'akita-kiritanpoya-omachi', 'izakaya', 'きりたんぽ鍋を名物に、マタギ鍋やハタハタのしょっつる鍋など秋田の郷土料理を扱う居酒屋として紹介されています。営業時間は掲載先によって違うため、お出かけ前にお店へご確認ください。', '秋田県秋田市大町4-2-20', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"あきた元気ナビ","url":"https://www.akita-yulala.jp/restaurant/5000018832"},{"label":"一休.comレストラン","url":"https://restaurant.ikyu.com/147601"},{"label":"川反外町振興会","url":"https://kawabatatomachi.com/2018/04/24/%E7%A7%8B%E7%94%B0%E3%81%8D%E3%82%8A%E3%81%9F%E3%82%93%E3%81%BD%E5%B1%8B%E3%80%80%E5%A4%A7%E7%94%BA%E5%88%86%E5%BA%97/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('BAR ル・ヴェール', 'bar-le-verre', 'bar', '秋田市大町・川反のバー。公式サイトでは「女性の一人飲みに人気」と紹介されています。JR秋田駅西口から徒歩16分。', '秋田県秋田市大町4-1-5', '18:00〜1:00（L.O. 0:30）', '日曜日、第1・第3月曜日（月曜が祝日の場合は日曜営業・翌月曜休み）', '', true, null, false, '{}'::jsonb, 'https://www.bar-leverre.com/', '2026-11-09', true, '[{"label":"BAR ル・ヴェール 公式サイト","url":"https://www.bar-leverre.com/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('BARアラジン', 'bar-aladdin', 'bar', 'ダーツとカラオケを楽しめる飲み放題のバーとして紹介されています。赤れんが郷土館前バス停から徒歩約1分。', '秋田県秋田市大町3-2-22 ジャスマックビル1F', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"エキテン","url":"https://www.ekiten.jp/shop_36158497/info/p7/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('炭火やきとりと竈めし 一の酉 秋田川反店', 'ichinotori-kawabata', 'izakaya', '炭火やきとりと竈（かまど）で炊くごはんの店。', '秋田県秋田市大町3-2-30 シャインズビル1F', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"NAVITIME（秋田市大町の居酒屋一覧）","url":"https://www.navitime.co.jp/category/0308001/05201052000/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('いろり家 秋田川反店', 'irori-ya-kawabata', 'izakaya', '秋田市大町・川反の居酒屋。', '秋田県秋田市大町4-2-26', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"NAVITIME（秋田市大町の居酒屋一覧）","url":"https://www.navitime.co.jp/category/0308001/05201052000/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('薄利多賣半兵エ 秋田川反店', 'hanbee-kawabata', 'izakaya', '秋田市大町・川反の居酒屋。', '秋田県秋田市大町5-1-3 八番館ビル1F', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"NAVITIME（秋田市大町の居酒屋一覧）","url":"https://www.navitime.co.jp/category/0308001/05201052000/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('川反軒', 'kawabata-ken', 'izakaya', '秋田市大町・川反の居酒屋。', '秋田県秋田市大町5丁目2-42', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"Yahoo!マップ","url":"https://map.yahoo.co.jp/v3/place/B6E9aZPgVW2"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('川反 日なた', 'kawabata-hinata', 'izakaya', '秋田市大町・川反の居酒屋。', '秋田県秋田市大町4丁目1-14', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"Yahoo!マップ","url":"https://map.yahoo.co.jp/v3/place/FujyaXQyjQE"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('四丁目 炭火焼 紅がら屋', 'beniga-raya', 'izakaya', '秋田市大町・川反の炭火焼の店。', '秋田県秋田市大町4-2-34', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"ホームメイト（秋田市大町の居酒屋一覧）","url":"https://www.cookdoor.jp/akita/jc05201/zip0100921/list/izakaya/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('手づくり料理 一楽土', 'ichirakudo', 'izakaya', '秋田市大町・川反の手づくり料理の店。', '秋田県秋田市大町5-2-41', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"ホームメイト（秋田市大町の居酒屋一覧）","url":"https://www.cookdoor.jp/akita/jc05201/zip0100921/list/izakaya/"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('お多福', 'otafuku', 'izakaya', '秋田の郷土料理を味わえる店として紹介されています。', '秋田県秋田市大町4-2-25', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"るるぶ＆more.（秋田の郷土料理の名店案内）","url":"https://plus.rurubu.jp/article/6ah22brietv"}]'::jsonb, false)
+on conflict (slug) do nothing;
+insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)
+values ('ちゃわん屋', 'chawanya', 'izakaya', '秋田の郷土料理を味わえる店として紹介されています。', '秋田県秋田市大町4-2-7', '', '', '', null, null, false, '{}'::jsonb, null, '2026-11-09', true, '[{"label":"るるぶ＆more.（秋田の郷土料理の名店案内）","url":"https://plus.rurubu.jp/article/6ah22brietv"}]'::jsonb, false)
+on conflict (slug) do nothing;

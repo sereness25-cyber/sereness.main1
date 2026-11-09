@@ -68,7 +68,8 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
           <p className="mt-2 leading-7">編集部が次の4点を確認できたお店に表示しています。①料金が明確 ②初めてのお客さまを歓迎 ③料金の説明に対応 ④不明瞭な追加料金がない。</p>
         </details>
 
-        <p className="mt-6 text-sm text-muted">{shops.length}件のお店</p>
+        <p className="mt-6 text-xs leading-6 text-muted">掲載しているお店の多くは、公開されている情報をもとに編集部が調べたもので、お店にはまだ確認していません。お出かけ前に営業状況をご確認ください。</p>
+        <p className="mt-3 text-sm text-muted">{shops.length}件のお店</p>
         {shops.length ? (
           <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shops.map((s) => <ShopCard key={s.id} shop={s} />)}</div>
         ) : (

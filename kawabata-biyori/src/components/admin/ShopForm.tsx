@@ -40,6 +40,8 @@ export function ShopForm({ shop, demo }: { shop: Shop | null; demo: boolean }) {
     photo_permission: shop?.photo_permission ?? false,
     verified_at: shop?.verified_at ?? "",
     is_published: shop?.is_published ?? false,
+    sources: (shop?.sources ?? []).map((x) => `${x.label} | ${x.url}`).join("\n"),
+    shop_confirmed: shop?.shop_confirmed ?? false,
   });
   const [checks, setChecks] = useState([false, false, false, false]);
   const [picker, setPicker] = useState(false);
@@ -80,6 +82,15 @@ export function ShopForm({ shop, demo }: { shop: Shop | null; demo: boolean }) {
       photo_permission: s.photo_permission,
       verified_at: s.verified_at || null,
       is_published: s.is_published,
+      sources: s.sources
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((l) => {
+          const [label, url] = l.includes("|") ? l.split("|").map((x) => x.trim()) : [l, l];
+          return { label, url };
+        }),
+      shop_confirmed: s.shop_confirmed,
     };
     const r = await saveShop(payload);
     setBusy(false);
@@ -134,6 +145,11 @@ export function ShopForm({ shop, demo }: { shop: Shop | null; demo: boolean }) {
             {triSel("non_alcohol", "ノンアル対応", "あり", "なし")}
           </div>
         </Panel>
+        <Panel title="出典">
+          <Field label="情報の出典" hint="1行に1つ。「表示名 | URL」の形で入力">
+            <textarea value={s.sources} onChange={(e) => set("sources", e.target.value)} rows={3} className={input} placeholder="公式サイト | https://example.com" />
+          </Field>
+        </Panel>
         <Panel title="リンク">
           <div className="grid gap-4 md:grid-cols-2">
             {tf("website", "公式サイト")}{tf("instagram", "Instagram")}{tf("x", "X")}{tf("facebook", "Facebook")}{tf("youtube", "YouTube")}
@@ -145,6 +161,7 @@ export function ShopForm({ shop, demo }: { shop: Shop | null; demo: boolean }) {
           {msg && <p role={msg.ok ? "status" : "alert"} className={`mb-3 rounded-xl px-3 py-2 text-sm ${msg.ok ? "bg-[#e8f3ec] text-[#1f6b3a]" : "bg-[#fbecee] text-[#8a1c30]"}`}>{msg.text}</p>}
           <div className="space-y-3">
             <Field label="情報の最終確認日" hint="店舗に確認した日。公開には必須です"><input type="date" value={s.verified_at} onChange={(e) => set("verified_at", e.target.value)} className={input} /></Field>
+            <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={s.shop_confirmed} onChange={(e) => set("shop_confirmed", e.target.checked)} className="mt-1" />掲載内容をお店に確認済み（外すと「公開情報をもとに掲載」と表示）</label>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={s.is_published} onChange={(e) => set("is_published", e.target.checked)} />サイトに公開する</label>
             <button type="button" disabled={busy} onClick={submit} className={`${btnPrimary} w-full`}>{busy ? "保存中…" : "保存する"}</button>
           </div>

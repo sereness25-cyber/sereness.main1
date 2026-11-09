@@ -3,7 +3,7 @@ import type { Article, EventItem, Shop } from "@/lib/types";
 import { BUDGET_LABELS, shopCategoryLabel } from "@/lib/constants";
 import { formatDate, formatEventDate } from "@/lib/format";
 import { Thumb } from "./Thumb";
-import { photoForCategory, photoForShop, type PhotoKey } from "@/lib/photos";
+import { photoForCategory, type PhotoKey } from "@/lib/photos";
 import { BeginnerMark, DraftBadge, PrBadge, SampleBadge } from "./Badges";
 
 function Meta({ article }: { article: Article }) {
@@ -66,14 +66,16 @@ export function ShopCard({ shop }: { shop: Shop }) {
   return (
     <article className="group h-full">
       <Link href={`/shops/${shop.slug}`} className="flex h-full flex-col gap-4">
-        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} photo={photoForShop(shop.category)} />
+        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} />
         <div className="flex flex-1 flex-col gap-2">
           <p className="flex flex-wrap items-center gap-2 text-[0.72rem] tracking-wider">
             <span className="font-bold text-rose-deep">{shopCategoryLabel(shop.category)}</span>
             {shop.beginner_welcome && <BeginnerMark />}
             {shop.is_sample && <SampleBadge />}
+            {!shop.is_sample && !shop.shop_confirmed && <span className="text-[0.68rem] text-muted">公開情報をもとに掲載</span>}
           </p>
           <h3 className="headline text-[1.15rem] text-navy group-hover:underline">{shop.name}</h3>
+          {shop.address && <p className="text-xs text-muted">{shop.address.replace(/^秋田県秋田市/, "")}</p>}
           <dl className="mt-auto grid grid-cols-[4.5em_1fr] gap-y-1 border-t border-navy/15 pt-3 text-sm text-muted">
             <dt>予算</dt>
             <dd className="text-ink">{shop.price_range || (shop.budget_level ? BUDGET_LABELS[shop.budget_level] : "—")}</dd>

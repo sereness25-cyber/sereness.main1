@@ -4,7 +4,7 @@ import { ARTICLE_SELECT, mapArticleRow } from "@/lib/data";
 import type { Article, Category, EventItem, Media, Shop, Tag } from "@/lib/types";
 import { DEMO_ARTICLES } from "@/lib/demo/articles";
 import { DEMO_CATEGORIES } from "@/lib/demo/categories";
-import { DEMO_SHOPS } from "@/lib/demo/shops";
+import { RESEARCHED_SHOPS as DEMO_SHOPS } from "@/lib/content/shops";
 import { DEMO_EVENTS } from "@/lib/demo/events";
 import type { AdminSession } from "./auth";
 

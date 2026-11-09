@@ -31,6 +31,8 @@ const shopInput = z.object({
   photo_permission: z.boolean(),
   verified_at: z.string().date().nullable(),
   is_published: z.boolean(),
+  sources: z.array(z.object({ label: z.string().trim().min(1).max(100), url: z.string().url() })).max(10),
+  shop_confirmed: z.boolean(),
 });
 export type ShopInput = z.infer<typeof shopInput>;
 

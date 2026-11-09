@@ -6,7 +6,7 @@ import { ARTICLES_PER_PAGE, SERIES_TAG } from "@/lib/constants";
 import type { Article, Category, EventItem, Shop, ShopCategory, SiteSettings, Tag } from "@/lib/types";
 import { DEMO_CATEGORIES } from "@/lib/demo/categories";
 import { DEMO_ARTICLES } from "@/lib/demo/articles";
-import { DEMO_SHOPS } from "@/lib/demo/shops";
+import { RESEARCHED_SHOPS } from "@/lib/content/shops";
 import { DEMO_EVENTS } from "@/lib/demo/events";
 
 /**
@@ -73,7 +73,7 @@ export const getTags = cache(async (): Promise<Tag[]> => {
 });
 
 const loadShops = cache(async (): Promise<Shop[]> => {
-  if (isDemo()) return DEMO_SHOPS;
+  if (isDemo()) return RESEARCHED_SHOPS;
   const { data, error } = await publicClient().from("shops").select("*").order("name");
   if (error) throw new Error(`店舗の取得に失敗しました: ${error.message}`);
   return data as Shop[];

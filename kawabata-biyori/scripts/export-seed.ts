@@ -5,6 +5,7 @@
  */
 import { writeFileSync } from "node:fs";
 import { DEMO_ARTICLES } from "../src/lib/demo/articles";
+import { RESEARCHED_SHOPS } from "../src/lib/content/shops";
 
 const q = (s: string) => `'${s.replace(/'/g, "''")}'`;
 const lines: string[] = [
@@ -34,5 +35,15 @@ for (const a of DEMO_ARTICLES) {
   }
   lines.push("");
 }
+lines.push("-- 公開情報をもとに調べたお店（お店には未確認。0002_shop_sources.sql の後に実行）");
+const nul = (v: string | null) => (v ? q(v) : "null");
+const bool = (v: boolean | null) => (v === null ? "null" : String(v));
+for (const s of RESEARCHED_SHOPS) {
+  lines.push(
+    `insert into public.shops (name, slug, category, description, address, business_hours, closed_days, price_range, solo_ok, non_alcohol, beginner_welcome, sns, website, verified_at, is_published, sources, shop_confirmed)`,
+    `values (${q(s.name)}, ${q(s.slug)}, ${q(s.category)}, ${q(s.description)}, ${q(s.address)}, ${q(s.business_hours)}, ${q(s.closed_days)}, ${q(s.price_range)}, ${bool(s.solo_ok)}, ${bool(s.non_alcohol)}, false, ${q(JSON.stringify(s.sns))}::jsonb, ${nul(s.website)}, ${nul(s.verified_at)}, true, ${q(JSON.stringify(s.sources))}::jsonb, ${s.shop_confirmed})`,
+    `on conflict (slug) do nothing;`,
+  );
+}
 writeFileSync(new URL("../supabase/seed.sql", import.meta.url), lines.join("\n"));
-console.log(`supabase/seed.sql に ${DEMO_ARTICLES.length} 本の下書きを書き出しました`);
+console.log(`supabase/seed.sql に 記事${DEMO_ARTICLES.length}本（下書き）とお店${RESEARCHED_SHOPS.length}件を書き出しました`);

@@ -5,7 +5,6 @@ import { BUDGET_LABELS, shopCategoryLabel } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import { shopLd } from "@/lib/jsonld";
 import { Thumb } from "@/components/site/Thumb";
-import { photoForShop } from "@/lib/photos";
 import { BeginnerMark, CategoryBadge, SampleBadge } from "@/components/site/Badges";
 import { ArticleCard } from "@/components/site/Cards";
 import { Container } from "@/components/site/Section";
@@ -59,7 +58,7 @@ export default async function ShopPage({ params }: Props) {
         {shop.is_sample && (
           <p className="mt-3 rounded-xl bg-navy/5 px-4 py-3 text-sm">これは画面確認用の<strong>架空の店舗</strong>です。実在するお店ではありません。</p>
         )}
-        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} photo={photoForShop(shop.category)} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
+        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
         <p className="mt-8 whitespace-pre-line text-[1.02rem] leading-9">{shop.description}</p>
 
         <section className="mt-10 border border-navy/15 bg-white p-6 md:p-8">
@@ -81,12 +80,32 @@ export default async function ShopPage({ params }: Props) {
               </div>
             )}
           </dl>
+          {!shop.shop_confirmed && !shop.is_sample && (
+            <p className="mt-4 border-l-2 border-blush bg-[#fbf3f3] px-4 py-3 text-sm leading-7">
+              この情報は、公開されている情報をもとに編集部が調べたものです。<strong>お店にはまだ確認していません。</strong>閉店・移転・営業時間の変更があるかもしれません。
+            </p>
+          )}
+          {shop.sources.length > 0 && (
+            <div className="mt-4 text-xs text-muted">
+              <p className="font-bold">出典</p>
+              <ul className="mt-1 space-y-0.5">
+                {shop.sources.map((s) => (
+                  <li key={s.url}><a href={s.url} target="_blank" rel="noopener noreferrer" className="underline">{s.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          )}
           <p className="mt-4 text-xs text-muted">
-            {shop.verified_at ? `情報の最終確認日：${formatDate(shop.verified_at)}。` : "情報の確認日：未確認。"}
+            {shop.verified_at ? `${shop.shop_confirmed ? "情報の最終確認日" : "公開情報を調べた日"}：${formatDate(shop.verified_at)}。` : "情報の確認日：未確認。"}
             営業時間や料金は変わることがあります。お出かけ前にお店へご確認ください。
           </p>
         </section>
 
+        {(shop.lat === null || shop.lng === null) && shop.address && !shop.is_sample && (
+          <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${shop.address}`)}`} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
+            Googleマップで場所を見る
+          </a>
+        )}
         {shop.lat !== null && shop.lng !== null && (
           <section className="mt-10">
             <h2 className="mb-4 text-xl text-navy">地図</h2>
