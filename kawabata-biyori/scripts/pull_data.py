@@ -33,7 +33,15 @@ def main():
         print("::warning::Apps Script の返事が想定と違います（新しいバージョンでデプロイされていない可能性があります）。今回は取り込みません。")
         return
     if not payload["categories"]:
-        print("::warning::カテゴリーが空です。念のため取り込みません。")
+        print("::warning::カテゴリーが空です。念のため取り込みません（Apps Script のエディタで kawabataSetup を実行してください）。")
+        return
+    try:
+        with open(os.path.join(data_dir, "articles.json"), encoding="utf-8") as f:
+            had = len(json.load(f)["articles"])
+    except Exception:  # noqa: BLE001
+        had = 0
+    if had and not payload["articles"]:
+        print("::warning::公開中の記事が0件の返事でした。念のため取り込みません。")
         return
 
     text = json.dumps(payload, ensure_ascii=False)

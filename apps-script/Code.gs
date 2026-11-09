@@ -205,14 +205,53 @@ function kbFile(name) {
 function kbRead(name) {
   var f = kbFile(name);
   if (f) return JSON.parse(f.getBlob().getDataAsString('UTF-8'));
-  var data = null;
-  try {
-    var res = UrlFetchApp.fetch(KB_RAW + name + '.json?t=' + Date.now(), {muteHttpExceptions: true});
-    if (res.getResponseCode() === 200) data = JSON.parse(res.getContentText('UTF-8'));
-  } catch (e) {}
-  if (!data) { data = {}; if (name !== 'settings') data[name] = []; }
+  var data = kbFetchGithub(name);  // 最初の1回だけ GitHub から写す(写せなければ空のファイルは作らない)
   kbWrite(name, data);
   return data;
+}
+
+function kbFetchGithub(name) {
+  var res;
+  try {
+    res = UrlFetchApp.fetch(KB_RAW + name + '.json?t=' + Date.now(), {muteHttpExceptions: true});
+  } catch (e) {
+    throw new Error('GitHub からデータを写せませんでした。Apps Script のエディタで関数「kawabataSetup」を実行して、許可してください');
+  }
+  if (res.getResponseCode() !== 200) throw new Error('GitHub の ' + name + '.json を読めませんでした(' + res.getResponseCode() + ')');
+  return JSON.parse(res.getContentText('UTF-8'));
+}
+
+/* エディタから1回実行する: GitHub にあってドライブにない記事・お店・イベントを足し、空のカテゴリーなどを埋める。
+   GitHub 側のほうが新しいものは差し替える。ドライブで編集した内容(より新しいもの)は上書きしない */
+function kawabataSetup() {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  var report = [];
+  try {
+    KB_LISTS.forEach(function(k){
+      var gh = kbFetchGithub(k)[k] || [];
+      var f = kbFile(k);
+      var cur = f ? (JSON.parse(f.getBlob().getDataAsString('UTF-8'))[k] || []) : [];
+      var byId = {}, updated = 0;
+      gh.forEach(function(x){ if (x && x.id) byId[x.id] = x; });
+      cur = cur.map(function(x){
+        var g = x && byId[x.id];
+        if (g && String(g.updated_at || '') > String(x.updated_at || '')) { updated++; return g; }  // GitHub のほうが新しければ差し替え
+        return x;
+      });
+      var ids = {};
+      cur.forEach(function(x){ if (x && x.id) ids[x.id] = true; });
+      var added = gh.filter(function(x){ return x && x.id && !ids[x.id]; });
+      var data = {};
+      data[k] = added.concat(cur);
+      kbWrite(k, data);
+      report.push(k + ': ' + added.length + '件追加・' + updated + '件更新(合計' + data[k].length + '件)');
+    });
+    var sf = kbFile('settings');
+    if (!sf) kbWrite('settings', kbFetchGithub('settings'));
+  } finally { lock.releaseLock(); }
+  Logger.log(report.join('\n'));
+  return report;
 }
 
 function kbWrite(name, data) {
@@ -223,6 +262,8 @@ function kbWrite(name, data) {
 }
 
 function kbLoadAll() {
+  var c = kbFile('categories');
+  if (c && !(JSON.parse(c.getBlob().getDataAsString('UTF-8')).categories || []).length) kawabataSetup();  // 以前の失敗で空になっていたら埋め直す
   var out = {};
   KB_LISTS.forEach(function(k){ out[k] = kbRead(k)[k] || []; });
   out.settings = kbRead('settings');
