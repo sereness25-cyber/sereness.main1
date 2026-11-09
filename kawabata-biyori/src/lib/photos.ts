@@ -6,6 +6,10 @@ import { jsonSettings } from "./data/json-source";
  * 取材写真が用意できたら、記事のアイキャッチや店舗写真を登録すればそちらが優先される。
  */
 const DEFAULT_PHOTOS = {
+  // トップページ専用（管理画面の「写真」で差し替え）
+  hero: { src: "/images/photos/street.webp", alt: "提灯が灯る夜の飲み屋街" },
+  people: { src: "/images/photos/portrait.webp", alt: "カウンターで笑う女性" },
+  // 記事・お店に写真がないときに出す写真
   street: { src: "/images/photos/street.webp", alt: "提灯が灯る夜の飲み屋街（イメージ）" },
   cocktail: { src: "/images/photos/cocktail.webp", alt: "ピンク色のカクテル（イメージ）" },
   beef: { src: "/images/photos/beef.webp", alt: "肉料理の一皿（イメージ）" },

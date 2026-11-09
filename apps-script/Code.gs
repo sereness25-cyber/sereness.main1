@@ -288,7 +288,7 @@ function kbSave(file, item, remove) {
   } finally { lock.releaseLock(); }
 }
 
-var KB_PHOTO_KEYS = ['street', 'cocktail', 'beef', 'river', 'portrait', 'izakaya', 'bar', 'snack', 'whisky'];
+var KB_PHOTO_KEYS = ['hero', 'people', 'street', 'cocktail', 'beef', 'river', 'portrait', 'izakaya', 'bar', 'snack', 'whisky'];
 
 /* SNSリンクとイメージ写真。送られてきた項目だけ書き換える */
 function kbSaveSettings(s) {

@@ -154,7 +154,7 @@ table.list tr:hover td { background: #fbf9f6; }
     <button role="tab" data-view="articles">記事</button>
     <button role="tab" data-view="shops">お店</button>
     <button role="tab" data-view="events">イベント</button>
-    <button role="tab" data-view="photos">イメージ写真</button>
+    <button role="tab" data-view="photos">写真</button>
     <button role="tab" data-view="settings">設定</button>
   </nav>
   </div>
@@ -870,8 +870,9 @@ views.settings = async (el) => {
    イメージ写真（写真がない記事・お店に出す仮の写真）
    ============================================================ */
 const STOCK = [
-  ["street", "夜の飲み屋街", "トップページの一番上の大きな写真／「はじめての川反」「川反の未来」の記事"],
-  ["portrait", "カウンターの人物", "トップページの「川反の人々」コーナー"],
+  ["hero", "トップページ：メイン写真", "トップページの一番上の大きな写真", "street"],
+  ["people", "トップページ：「川反の人々」の写真", "トップページの「川反の人々」コーナー", "portrait"],
+  ["street", "夜の飲み屋街", "「はじめての川反」「川反の未来」の記事"],
   ["cocktail", "カクテル", "「川反の楽しみ方」の記事"],
   ["beef", "料理", "「川反グルメ」の記事／ダイニングのお店"],
   ["river", "川沿いの夜景", "「川反の歴史」「川反ニュース」の記事"],
@@ -884,19 +885,23 @@ views.photos = async (el) => {
   const settings = (await load("settings")) || {};
   const photos = JSON.parse(JSON.stringify(settings.photos || {}));
   const previews = {};
-  const def = (k) => `${SITE}/images/photos/${k}.webp`;
-  const draw = () => {
-    el.innerHTML = `
-      <h1>イメージ写真</h1>
-      <p class="lead">記事やお店に写真が登録されていないときに、代わりに出す写真です。<br>
-      記事ごと・お店ごとの写真は、それぞれの編集画面の「アイキャッチ画像」「写真」から変えられます（そちらが優先されます）。</p>
-      <ul class="gallery" style="margin:0;padding:0">${STOCK.map(([k, name, where]) => `<li>
+  const def = (k) => `${SITE}/images/photos/${(STOCK.find((x) => x[0] === k) || [])[3] || k}.webp`;
+  const card = ([k, name, where]) => `<li>
         <img src="${esc(previews[k] || (photos[k] ? photos[k].url : def(k)))}" alt="">
         <p style="margin:6px 2px 0;font-weight:700;color:var(--navy)">${name} ${photos[k] ? '<span class="pill published">差し替え中</span>' : '<span class="pill draft">最初の写真</span>'}</p>
         <p class="hint" style="margin:2px 2px 0">使われる場所：${where}</p>
         <input type="text" data-alt="${k}" value="${esc(photos[k] ? photos[k].alt : "")}" placeholder="写真の説明（例：川反通りの夜）" ${photos[k] ? "" : "hidden"}>
         <div class="row"><button class="btn small" type="button" data-pick="${k}">📷 変更</button>${photos[k] ? `<button class="btn small" type="button" data-reset="${k}">最初の写真に戻す</button>` : ""}</div>
-      </li>`).join("")}</ul>
+      </li>`;
+  const draw = () => {
+    el.innerHTML = `
+      <h1>写真</h1>
+      <p class="lead">トップページの写真と、記事やお店に写真が登録されていないときに代わりに出す写真を変えられます。<br>
+      記事ごと・お店ごとの写真は、それぞれの編集画面の「アイキャッチ画像」「写真」から変えられます（そちらが優先されます）。</p>
+      <h2 style="margin-top:18px">トップページ</h2>
+      <ul class="gallery" style="margin:0;padding:0">${STOCK.slice(0, 2).map(card).join("")}</ul>
+      <h2 style="margin-top:22px">記事・お店に写真がないときの写真</h2>
+      <ul class="gallery" style="margin:0;padding:0">${STOCK.slice(2).map(card).join("")}</ul>
       <input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" hidden>
       <div id="ph-msg" style="margin-top:12px"></div>
       <button class="btn primary" type="button" id="ph-save" style="margin-top:8px">保存</button>
