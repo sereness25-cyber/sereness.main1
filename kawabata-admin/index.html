@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>かわばた日和 管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* 配色はかわばた日和の仕様（アイボリー・ダスティピンク・ネイビー）に合わせる */
+:root {
+  --bg: #f4f1ec; --card: #ffffff; --ink: #333333; --muted: #777777; --line: #e6ded3;
+  --navy: #34445c; --navy-deep: #263347; --rose: #d9a7ad; --blush: #c9768a;
+  --ok-bg: #e8f3ec; --ok: #1f6b3a; --warn-bg: #fdf1d8; --warn: #8a5a00; --err-bg: #fbecee; --err: #8a1c30;
+  --mincho: "Zen Old Mincho", "Hiragino Mincho ProN", serif;
+  --sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.75 var(--sans); }
+a { color: var(--navy); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+.head { position: sticky; top: 0; z-index: 20; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px max(16px, env(safe-area-inset-left)); background: var(--navy); color: #fff; }
+.brand { font-family: var(--mincho); font-size: 1.15rem; letter-spacing: .06em; }
+.brand small { display: block; font-family: var(--sans); font-size: .62rem; letter-spacing: .3em; opacity: .7; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.top a, .top button { color: #fff; }
+
+.tabs { display: flex; gap: 4px; overflow-x: auto; padding: 8px max(16px, env(safe-area-inset-left)); background: var(--navy-deep); scroll-padding-inline: 16px; }
+.tabs::after { content: ""; flex: 0 0 8px; }
+.tabs button { flex: none; padding: 8px 14px; border: 0; border-radius: 999px; background: transparent; color: #fff; opacity: .8; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: rgba(255,255,255,.18); opacity: 1; font-weight: 700; }
+
+main { max-width: 1120px; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-left)) 80px; }
+h1 { font-family: var(--mincho); font-size: 1.35rem; color: var(--navy); margin: 0 0 4px; letter-spacing: .04em; }
+h2 { font-size: 1rem; color: var(--navy); margin: 0 0 10px; }
+.lead { color: var(--muted); font-size: .88rem; margin: 0 0 16px; }
+.panel { background: var(--card); border-radius: 14px; padding: 18px; box-shadow: 0 6px 20px -12px rgba(52,68,92,.35); }
+.stack > * + * { margin-top: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.between { justify-content: space-between; }
+.grid2 { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+.layout { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } .side { position: sticky; top: calc(var(--head-h, 104px) + 12px); align-self: start; } }
+
+label.f { display: block; }
+label.f > span, .flabel { display: block; margin-bottom: 4px; font-size: .85rem; font-weight: 700; color: var(--navy); }
+.hint { display: block; margin-top: 3px; font-size: .75rem; color: var(--muted); }
+input[type=text], input[type=url], input[type=password], input[type=date], input[type=datetime-local], input[type=search], input[type=number], select, textarea {
+  width: 100%; padding: 9px 11px; border: 1px solid #d9cfc2; border-radius: 10px; background: #fff;
+}
+textarea { resize: vertical; }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; }
+.check input { margin-top: 5px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #d9cfc2; background: #fff; color: var(--navy); font-weight: 700; font-size: .88rem; cursor: pointer; text-decoration: none; }
+.btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn.rose { background: var(--blush); border-color: var(--blush); color: #fff; }
+.btn.danger { background: #b3263e; border-color: #b3263e; color: #fff; }
+.btn.small { min-height: 32px; padding: 0 12px; font-size: .8rem; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.note { padding: 10px 14px; border-radius: 10px; font-size: .86rem; }
+.note.ok { background: var(--ok-bg); color: var(--ok); }
+.note.warn { background: var(--warn-bg); color: var(--warn); }
+.note.err { background: var(--err-bg); color: var(--err); }
+.pill { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.pill.draft { background: #eee; color: #555; }
+.pill.published { background: var(--ok-bg); color: var(--ok); }
+.pill.scheduled { background: var(--warn-bg); color: var(--warn); }
+.pill.private { background: var(--err-bg); color: var(--err); }
+
+table.list { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.table-wrap { overflow-x: auto; background: var(--card); border-radius: 14px; box-shadow: 0 6px 20px -12px rgba(52,68,92,.35); }
+table.list th { text-align: left; font-size: .75rem; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.list td { padding: 10px 12px; border-bottom: 1px solid #f1ebe3; vertical-align: top; }
+table.list tr:hover td { background: #fbf9f6; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--navy); font-weight: 700; text-align: left; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.sub { display: block; font-size: .75rem; color: var(--muted); }
+
+/* エディター */
+.toolbar { position: sticky; top: var(--head-h, 104px); z-index: 5; display: flex; flex-wrap: wrap; gap: 2px; padding: 6px; border-bottom: 1px solid var(--line); background: #fff; border-radius: 14px 14px 0 0; }
+.toolbar button, .toolbar select { min-height: 34px; min-width: 34px; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: var(--navy); cursor: pointer; font-size: .85rem; }
+.toolbar button:hover { background: #f4f1ec; }
+.toolbar select { border: 1px solid var(--line); max-width: 9.5rem; }
+.toolbar .sep { width: 1px; margin: 4px 4px; background: var(--line); }
+.editor-box { background: #fff; border-radius: 14px; box-shadow: 0 6px 20px -12px rgba(52,68,92,.35); }
+.editor { min-height: 380px; padding: 16px 18px; outline: none; line-height: 2; font-size: 1rem; }
+.editor:empty::before { content: "本文を書きましょう…"; color: #aaa; }
+.editor h2 { font-family: var(--mincho); font-size: 1.3rem; border-top: 3px double var(--navy); padding-top: .6em; margin: 1.6em 0 .6em; }
+.editor h3 { font-family: var(--mincho); font-size: 1.1rem; margin: 1.4em 0 .5em; }
+.editor h4 { font-size: 1rem; margin: 1.2em 0 .4em; }
+.editor blockquote { margin: 1.2em 0; padding: .8em 0; border-top: 1px solid var(--navy); border-bottom: 1px solid var(--navy); text-align: center; font-family: var(--mincho); color: var(--navy); }
+.editor .callout { margin: 1.2em 0; padding: .8em 1em; border-left: 3px solid var(--rose); background: #fbf3f3; }
+.editor img { max-width: 100%; height: auto; border-radius: 8px; }
+.editor table { border-collapse: collapse; width: 100%; }
+.editor th, .editor td { border: 1px solid var(--line); padding: 6px 8px; }
+.editor [data-shop-card], .editor [data-article-card] { margin: 1em 0; padding: .6em 1em; border: 1px dashed var(--rose); border-radius: 10px; color: var(--navy); font-size: .9rem; background: #fff; }
+.source { width: 100%; min-height: 380px; border: 0; border-radius: 0 0 14px 14px; padding: 16px; font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.status-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 10px max(16px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)); background: var(--navy); color: #fff; font-size: .85rem; }
+.status-bar.err { background: #8a1c30; }
+.status-bar.ok { background: #1f6b3a; }
+
+.login { max-width: 520px; margin: 40px auto; }
+.steps { margin: 0; padding-left: 1.3em; font-size: .88rem; }
+.steps li + li { margin-top: 6px; }
+.thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; background: #eee; }
+.stat { display: block; padding: 14px; border-radius: 12px; background: var(--card); box-shadow: 0 6px 20px -12px rgba(52,68,92,.35); text-decoration: none; color: inherit; }
+.stat b { display: block; font-size: 1.8rem; color: var(--navy); line-height: 1.2; }
+.stats { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 720px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+</style>
+</head>
+<body>
+
+<!-- ログイン -->
+<section id="login" class="login" hidden>
+  <div class="panel stack">
+    <div>
+      <p class="brand" style="color:var(--navy)">かわばた日和<small style="color:var(--blush)">ADMIN</small></p>
+      <p class="lead">GitHub の「アクセストークン」でログインします。トークンは GitHub の画面で作ります（最初の1回だけ）。</p>
+    </div>
+    <ol class="steps">
+      <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">トークン作成ページ</a>を開く（GitHub にログインした状態で）</li>
+      <li>Token name に「かわばた日和 管理」、Expiration（有効期限）を選ぶ</li>
+      <li>Repository access で「Only select repositories」→ <b>sereness.main1</b> を選ぶ</li>
+      <li>Permissions → Repository permissions で <b>Contents</b> を「Read and write」、<b>Actions</b> を「Read-only」にする</li>
+      <li>「Generate token」を押し、表示された文字列（github_pat_…）をコピーして下に貼る</li>
+    </ol>
+    <label class="f"><span>アクセストークン</span><input id="token" type="password" autocomplete="off" placeholder="github_pat_..."></label>
+    <label class="check"><input type="checkbox" id="remember" checked><span>この端末に保存する（共用のパソコンではチェックを外してください）</span></label>
+    <div id="login-msg"></div>
+    <button class="btn primary" id="login-btn" type="button">ログイン</button>
+  </div>
+</section>
+
+<!-- 管理画面 -->
+<div id="app" hidden>
+  <div class="head" id="head">
+  <header class="top">
+    <span class="brand">かわばた日和<small>ADMIN</small></span>
+    <span class="top-actions">
+      <a class="btn small" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" href="../kawabata/" target="_blank" rel="noopener">サイトを見る ↗</a>
+      <button class="btn small" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" id="logout" type="button">ログアウト</button>
+    </span>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="管理メニュー">
+    <button role="tab" data-view="home">ダッシュボード</button>
+    <button role="tab" data-view="articles">記事</button>
+    <button role="tab" data-view="shops">お店</button>
+    <button role="tab" data-view="events">イベント</button>
+    <button role="tab" data-view="settings">設定</button>
+  </nav>
+  </div>
+  <main id="view"></main>
+</div>
+
+<div id="status" class="status-bar" role="status" hidden></div>
+
+<script>
+"use strict";
+/* ============================================================
+   設定
+   ============================================================ */
+const REPO = { owner: "sereness25-cyber", name: "sereness.main1", branch: "main" };
+const DATA = "kawabata-data";
+const SITE = "https://sereness25-cyber.github.io/sereness.main1/kawabata";
+const MEDIA_BASE = "https://sereness25-cyber.github.io/sereness.main1/" + DATA + "/images";
+const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["snack","スナック"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
+const BUDGETS = [["","未設定"],["1","〜3,000円"],["2","3,000〜5,000円"],["3","5,000〜8,000円"],["4","8,000円〜"]];
+const STATUS = { draft: "下書き", published: "公開", scheduled: "予約公開", private: "非公開" };
+
+/* ============================================================
+   小さな道具
+   ============================================================ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const store = {
+  get(k) { try { return localStorage.getItem(k) ?? sessionStorage.getItem(k); } catch { return null; } },
+  set(k, v, persist) { try { (persist ? localStorage : sessionStorage).setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch {} },
+};
+function status(text, kind = "", ms = 0) {
+  const el = $("#status");
+  el.textContent = text; el.className = "status-bar " + kind; el.hidden = false;
+  clearTimeout(status.t);
+  if (ms) status.t = setTimeout(() => (el.hidden = true), ms);
+}
+const b64encode = (str) => { const bytes = new TextEncoder().encode(str); let bin = ""; bytes.forEach((b) => (bin += String.fromCharCode(b))); return btoa(bin); };
+const b64decode = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, "")), (c) => c.charCodeAt(0)));
+const nowIso = () => new Date().toISOString();
+const toLocal = (iso) => (iso ? new Date(new Date(iso).getTime() + 9 * 3600e3).toISOString().slice(0, 16) : "");
+const fromLocal = (v) => (v ? new Date(v + ":00+09:00").toISOString() : null);
+const fmt = (iso) => (iso ? new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)) : "—");
+function slugify(s) {
+  const a = String(s).normalize("NFKC").toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-").replace(/-+/g, "-");
+  return a || "post-" + Date.now().toString(36);
+}
+/* タグ名から安定したスラッグを作る（サイト側と同じ計算） */
+function tagSlug(name) {
+  const a = slugify(name);
+  if (!a.startsWith("post-")) return a;
+  let h = 2166136261;
+  for (const ch of name.normalize("NFKC")) h = Math.imul(h ^ ch.codePointAt(0), 16777619);
+  return "t-" + (h >>> 0).toString(36);
+}
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+
+/* ============================================================
+   GitHub API
+   ============================================================ */
+let TOKEN = "";
+async function gh(path, opts = {}) {
+  const res = await fetch("https://api.github.com" + path, {
+    ...opts,
+    headers: { Authorization: "Bearer " + TOKEN, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", ...(opts.headers || {}) },
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const err = new Error(body.message || "HTTP " + res.status);
+    err.status = res.status;
+    throw err;
+  }
+  return res.status === 204 ? null : res.json();
+}
+const contentsPath = (p) => `/repos/${REPO.owner}/${REPO.name}/contents/${p.split("/").map(encodeURIComponent).join("/")}`;
+
+/* JSON ファイルを読む（1MBを超えても読めるよう blob からも取る） */
+async function readJson(file) {
+  const meta = await gh(contentsPath(`${DATA}/${file}`) + `?ref=${REPO.branch}`);
+  let text = meta.content ? b64decode(meta.content) : "";
+  if (!text) { const blob = await gh(`/repos/${REPO.owner}/${REPO.name}/git/blobs/${meta.sha}`); text = b64decode(blob.content); }
+  return { data: JSON.parse(text), sha: meta.sha };
+}
+async function putFile(path, base64, message, sha) {
+  return gh(contentsPath(path), { method: "PUT", body: JSON.stringify({ message, content: base64, sha, branch: REPO.branch }) });
+}
+
+/* 1件だけ書き換えて保存する。保存直前に最新を読み直すので、別の端末の変更を消さない */
+async function saveItem(file, key, item, message, { remove = false } = {}) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { data, sha } = await readJson(file);
+    const list = data[key] || [];
+    const i = list.findIndex((x) => x.id === item.id);
+    if (remove) { if (i >= 0) list.splice(i, 1); }
+    else if (i >= 0) list[i] = item; else list.unshift(item);
+    data[key] = list;
+    try {
+      await putFile(`${DATA}/${file}`, b64encode(JSON.stringify(data, null, 2) + "\n"), message, sha);
+      cache[key] = list;
+      return;
+    } catch (e) { if (e.status !== 409 && e.status !== 422) throw e; }
+  }
+  throw new Error("ほかの端末で同時に保存されたため保存できませんでした。もう一度お試しください。");
+}
+
+/* 画像を最大2000pxのWebPにしてアップロードし、公開URLを返す */
+async function uploadImage(file) {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("JPEG・PNG・WebP の画像を選んでください。");
+  const bmp = await createImageBitmap(file);
+  const scale = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.85));
+  const b64 = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(",")[1]); fr.readAsDataURL(blob); });
+  const name = `${new Date().toISOString().slice(0, 7)}/${uuid()}.webp`;
+  await putFile(`${DATA}/images/${name}`, b64, "画像を追加: " + file.name);
+  return { url: `${MEDIA_BASE}/${name}`, preview: URL.createObjectURL(blob) };
+}
+
+/* ============================================================
+   データ
+   ============================================================ */
+const cache = { articles: null, shops: null, events: null, categories: null, settings: null };
+async function load(key, file) {
+  if (!cache[key]) cache[key] = (await readJson(file)).data[key];
+  return cache[key];
+}
+const loadArticles = () => load("articles", "articles.json");
+const loadShops = () => load("shops", "shops.json");
+const loadEvents = () => load("events", "events.json");
+const loadCategories = () => load("categories", "categories.json");
+
+/* ============================================================
+   ログイン
+   ============================================================ */
+async function tryLogin(token, persist) {
+  TOKEN = token;
+  const repo = await gh(`/repos/${REPO.owner}/${REPO.name}`);
+  if (!repo.permissions || !repo.permissions.push) throw new Error("このトークンには書き込みの権限がありません（Contents を Read and write に）。");
+  store.set("kb-token", token, persist);
+}
+$("#login-btn").addEventListener("click", async () => {
+  const t = $("#token").value.trim();
+  const msg = $("#login-msg");
+  if (!t) return (msg.innerHTML = '<p class="note err">トークンを貼り付けてください。</p>');
+  $("#login-btn").disabled = true; msg.innerHTML = '<p class="note">確認しています…</p>';
+  try { await tryLogin(t, $("#remember").checked); start(); }
+  catch (e) { msg.innerHTML = `<p class="note err">ログインできませんでした：${esc(e.status === 401 ? "トークンが正しくないか、期限切れです。" : e.status === 404 ? "sereness.main1 へのアクセスが許可されていません。トークンの Repository access を確認してください。" : e.message)}</p>`; }
+  finally { $("#login-btn").disabled = false; }
+});
+$("#logout").addEventListener("click", () => { store.del("kb-token"); location.reload(); });
+
+/* ============================================================
+   画面の切り替え
+   ============================================================ */
+const views = {};
+let dirty = false;
+window.addEventListener("beforeunload", (e) => { if (dirty) e.preventDefault(); });
+function go(name, arg) {
+  if (dirty && !confirm("保存していない変更があります。移動しますか？")) return;
+  dirty = false;
+  $$(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === name.split(":")[0])));
+  const view = $("#view");
+  view.innerHTML = '<p class="lead">読み込んでいます…</p>';
+  views[name](view, arg).catch((e) => { view.innerHTML = `<p class="note err">読み込めませんでした：${esc(e.message)}</p>`; });
+  window.scrollTo(0, 0);
+}
+$$(".tabs button").forEach((b) => b.addEventListener("click", () => go(b.dataset.view)));
+
+/* ============================================================
+   ダッシュボード
+   ============================================================ */
+views.home = async (el) => {
+  const [articles, shops, events] = await Promise.all([loadArticles(), loadShops(), loadEvents()]);
+  const now = Date.now();
+  const live = articles.filter((a) => (a.status === "published" || a.status === "scheduled") && a.published_at && new Date(a.published_at) <= now);
+  const sched = articles.filter((a) => a.status === "scheduled" && a.published_at && new Date(a.published_at) > now);
+  el.innerHTML = `
+    <h1>ダッシュボード</h1>
+    <p class="lead">保存すると、数分で <a href="${SITE}/" target="_blank" rel="noopener">公開ページ</a> に反映されます。</p>
+    <div class="stats">
+      <a class="stat" href="#" data-go="articles"><span class="sub">公開中の記事</span><b>${live.length}</b></a>
+      <a class="stat" href="#" data-go="articles"><span class="sub">下書き</span><b>${articles.filter((a) => a.status === "draft").length}</b></a>
+      <a class="stat" href="#" data-go="articles"><span class="sub">予約</span><b>${sched.length}</b></a>
+      <a class="stat" href="#" data-go="shops"><span class="sub">掲載中のお店</span><b>${shops.filter((s) => s.is_published).length}</b></a>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn primary" data-new="article" type="button">新しい記事を書く</button>
+      <button class="btn" data-new="shop" type="button">お店を追加</button>
+      <button class="btn" data-new="event" type="button">イベントを追加</button>
+    </div>
+    <section class="panel" style="margin-top:18px">
+      <h2>公開ページへの反映状況</h2>
+      <div id="runs"><p class="lead">確認しています…</p></div>
+    </section>
+    <section class="panel" style="margin-top:18px">
+      <h2>最近更新した記事</h2>
+      <ul style="margin:0;padding-left:1.2em">${[...articles].sort((a, b) => b.updated_at.localeCompare(a.updated_at)).slice(0, 6).map((a) => `<li><button class="linkbtn" data-edit="${esc(a.id)}">${esc(a.title || "（無題）")}</button> <span class="pill ${a.status}">${STATUS[a.status]}</span></li>`).join("")}</ul>
+    </section>`;
+  bindCommon(el);
+  try {
+    const runs = await gh(`/repos/${REPO.owner}/${REPO.name}/actions/runs?per_page=5`);
+    const label = (r) => r.status !== "completed" ? '<span class="pill scheduled">処理中</span>' : r.conclusion === "success" ? '<span class="pill published">完了</span>' : '<span class="pill private">失敗</span>';
+    $("#runs").innerHTML = `<table class="list"><tbody>${runs.workflow_runs.map((r) => `<tr><td>${label(r)}</td><td>${esc(r.name)}</td><td class="sub">${fmt(r.created_at)}</td></tr>`).join("")}</tbody></table>
+      <p class="hint">「かわばた日和を書き出す」→「pages build and deployment」の順に完了すると、公開ページが新しくなります。</p>`;
+  } catch {
+    $("#runs").innerHTML = '<p class="hint">反映状況を見るには、トークンの Actions を「Read-only」にしてください（なくても保存はできます）。</p>';
+  }
+};
+
+function bindCommon(el) {
+  $$("[data-go]", el).forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); go(a.dataset.go); }));
+  $$("[data-new]", el).forEach((b) => b.addEventListener("click", () => go(b.dataset.new === "article" ? "articles:edit" : b.dataset.new === "shop" ? "shops:edit" : "events:edit")));
+  $$("[data-edit]", el).forEach((b) => b.addEventListener("click", () => go("articles:edit", b.dataset.edit)));
+}
+
+/* ============================================================
+   記事
+   ============================================================ */
+views.articles = async (el) => {
+  const articles = await loadArticles();
+  const cats = await loadCategories();
+  const catName = Object.fromEntries(cats.map((c) => [c.slug, c.name]));
+  el.innerHTML = `
+    <div class="row between"><div><h1>記事</h1><p class="lead">下書きはサイトに表示されません。「公開」または予約時刻を過ぎた「予約公開」だけが表示されます。</p></div>
+    <button class="btn primary" data-new="article" type="button">新しい記事を書く</button></div>
+    <div class="row" style="margin-bottom:12px">
+      <select id="f-status" style="width:auto"><option value="">すべての状態</option>${Object.entries(STATUS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>
+      <input type="search" id="f-q" placeholder="タイトルで検索" style="max-width:280px">
+    </div>
+    <div class="table-wrap"><table class="list"><thead><tr><th>タイトル</th><th>状態</th><th>カテゴリー</th><th>公開日時</th><th>更新</th></tr></thead><tbody id="rows"></tbody></table></div>`;
+  const draw = () => {
+    const st = $("#f-status").value, q = $("#f-q").value.trim();
+    const rows = articles.filter((a) => (!st || a.status === st) && (!q || (a.title || "").includes(q)));
+    $("#rows").innerHTML = rows.map((a) => `<tr>
+      <td><button class="linkbtn" data-edit="${esc(a.id)}">${esc(a.title || "（無題）")}</button><span class="sub">/${esc(a.slug)}</span></td>
+      <td><span class="pill ${a.status}">${STATUS[a.status]}</span></td>
+      <td class="sub">${esc((a.category_slugs || []).map((s) => catName[s] || s).join("・"))}</td>
+      <td class="sub">${fmt(a.published_at)}</td><td class="sub">${fmt(a.updated_at)}</td></tr>`).join("") || '<tr><td colspan="5" class="sub">該当する記事はありません。</td></tr>';
+    bindCommon($("#rows"));
+  };
+  $("#f-status").addEventListener("change", draw); $("#f-q").addEventListener("input", draw);
+  bindCommon(el); draw();
+};
+
+views["articles:edit"] = async (el, id) => {
+  const [articles, cats, shops] = await Promise.all([loadArticles(), loadCategories(), loadShops()]);
+  const src = articles.find((a) => a.id === id);
+  const a = src ? JSON.parse(JSON.stringify(src)) : {
+    id: uuid(), title: "", slug: "", content: "", excerpt: "", thumbnail: null, thumbnail_alt: "", thumbnail_is_ai: false,
+    status: "draft", published_at: null, updated_at: nowIso(), created_at: nowIso(), seo_title: "", seo_description: "", focus_keyword: "",
+    is_featured: false, is_sponsored: false, category_slugs: [], tags: [], shop_slugs: [],
+  };
+  const backupKey = "kb-article-backup-" + a.id;
+  const liveArticles = articles.filter((x) => x.id !== a.id && (x.status === "published" || x.status === "scheduled"));
+
+  el.innerHTML = `
+    <div class="row between"><h1>${src ? "記事の編集" : "新しい記事"}</h1><button class="btn" type="button" id="back">← 記事一覧</button></div>
+    <div id="restore"></div>
+    <div class="layout" style="margin-top:12px">
+      <div class="stack" style="min-width:0">
+        <input type="text" id="a-title" placeholder="記事タイトル" style="font-family:var(--mincho);font-size:1.3rem;font-weight:700;padding:14px" value="${esc(a.title)}">
+        <label class="f"><span>導入文・概要</span><textarea id="a-excerpt" rows="3">${esc(a.excerpt)}</textarea><span class="hint">記事の冒頭と、一覧のカードに表示されます（120文字程度）</span></label>
+        <div class="editor-box">
+          <div class="toolbar" role="toolbar" aria-label="書式">
+            <button type="button" data-cmd="h2">H2</button><button type="button" data-cmd="h3">H3</button><button type="button" data-cmd="h4">H4</button><button type="button" data-cmd="p">本文</button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="bold" aria-label="太字"><b>B</b></button><button type="button" data-cmd="italic" aria-label="斜体"><i>I</i></button><button type="button" data-cmd="link">リンク</button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="ul">・箇条書き</button><button type="button" data-cmd="ol">1. 番号</button><button type="button" data-cmd="quote">引用</button><button type="button" data-cmd="callout">注意書き</button>
+            <span class="sep"></span>
+            <button type="button" data-cmd="image">画像</button><button type="button" data-cmd="table">表</button>
+            <select data-embed="shop" aria-label="店舗カードを挿入"><option value="">店舗カード…</option>${shops.map((s) => `<option value="${esc(s.slug)}">${esc(s.name)}</option>`).join("")}</select>
+            <select data-embed="article" aria-label="記事カードを挿入"><option value="">記事カード…</option>${liveArticles.map((x) => `<option value="${esc(x.slug)}">${esc(x.title)}</option>`).join("")}</select>
+            <span class="sep"></span>
+            <button type="button" data-cmd="undo" aria-label="元に戻す">↶</button><button type="button" data-cmd="redo" aria-label="やり直す">↷</button>
+            <button type="button" data-cmd="source">HTML</button>
+          </div>
+          <div class="editor" id="a-body" contenteditable="true" aria-label="本文">${a.content}</div>
+          <textarea class="source" id="a-source" hidden aria-label="本文のHTML"></textarea>
+        </div>
+        <p class="hint">編集中の内容は、この端末に自動で一時保存されます。サイトに反映するには「保存」を押してください。</p>
+        <input type="file" id="img-file" accept="image/jpeg,image/png,image/webp" hidden>
+      </div>
+
+      <aside class="side stack">
+        <div class="panel stack">
+          <div class="row between"><span class="pill ${a.status}" id="a-pill">${STATUS[a.status]}</span><span class="sub" id="a-dirty"></span></div>
+          <label class="f"><span>公開設定</span>
+            <select id="a-status">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${a.status === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+          <label class="f" id="a-date-wrap"><span>公開日時</span><input type="datetime-local" id="a-date" value="${toLocal(a.published_at)}"><span class="hint" id="a-date-hint"></span></label>
+          <div id="a-msg"></div>
+          <div class="row"><button class="btn primary" type="button" id="a-save">保存</button>
+          ${src && (src.status === "published" || src.status === "scheduled") ? `<a class="btn" href="${SITE}/articles/${esc(src.slug)}" target="_blank" rel="noopener">公開ページ ↗</a>` : ""}</div>
+          <p class="hint">公開する前に、内容が事実と合っているか確認してください。</p>
+        </div>
+        <div class="panel stack">
+          <label class="f"><span>URLスラッグ</span><input type="text" id="a-slug" value="${esc(a.slug)}" placeholder="例：kawabata-guide"><span class="hint">半角英小文字・数字・ハイフン。公開後に変えるとURLが変わります。</span></label>
+          <div>
+            <span class="flabel">アイキャッチ画像</span>
+            <img class="thumb" id="a-thumb" alt="" ${a.thumbnail ? `src="${esc(a.thumbnail)}"` : "hidden"}>
+            <div class="row" style="margin-top:6px"><button class="btn small" type="button" id="a-thumb-btn">${a.thumbnail ? "変更" : "画像を選ぶ"}</button><button class="btn small" type="button" id="a-thumb-del" ${a.thumbnail ? "" : "hidden"}>外す</button></div>
+            <input type="text" id="a-thumb-alt" placeholder="画像の説明（alt）" style="margin-top:6px" value="${esc(a.thumbnail_alt)}">
+            <label class="check" style="margin-top:6px"><input type="checkbox" id="a-thumb-ai" ${a.thumbnail_is_ai ? "checked" : ""}><span>AIで作った画像（「イメージ画像」と表示）</span></label>
+            <input type="file" id="thumb-file" accept="image/jpeg,image/png,image/webp" hidden>
+          </div>
+          <fieldset style="border:0;padding:0;margin:0"><legend class="flabel">カテゴリー（複数可）</legend>
+            ${cats.map((c) => `<label class="check"><input type="checkbox" name="cat" value="${esc(c.slug)}" ${a.category_slugs.includes(c.slug) ? "checked" : ""}><span>${esc(c.name)}</span></label>`).join("")}
+          </fieldset>
+          <label class="f"><span>タグ</span><input type="text" id="a-tags" value="${esc(a.tags.map((t) => t.name).join("、"))}" placeholder="初心者、一人飲み"><span class="hint">「、」で区切って入力。「連載」を付けると連載ページに並びます。</span></label>
+          <fieldset style="border:0;padding:0;margin:0"><legend class="flabel">この記事で紹介するお店</legend>
+            <div style="max-height:160px;overflow:auto">${shops.map((s) => `<label class="check"><input type="checkbox" name="shop" value="${esc(s.slug)}" ${a.shop_slugs.includes(s.slug) ? "checked" : ""}><span>${esc(s.name)}</span></label>`).join("")}</div>
+          </fieldset>
+          <label class="check"><input type="checkbox" id="a-featured" ${a.is_featured ? "checked" : ""}><span>編集部のおすすめ（特集）に表示</span></label>
+          <label class="check"><input type="checkbox" id="a-sponsored" ${a.is_sponsored ? "checked" : ""}><span>広告・タイアップ記事（「PR」を表示）</span></label>
+        </div>
+        <div class="panel stack">
+          <h2 style="margin:0">SEO</h2>
+          <label class="f"><span>フォーカスキーワード</span><input type="text" id="a-kw" value="${esc(a.focus_keyword)}" placeholder="例：川反 一人飲み"></label>
+          <label class="f"><span>SEOタイトル</span><input type="text" id="a-seot" value="${esc(a.seo_title)}"><span class="hint" id="a-seot-n"></span></label>
+          <label class="f"><span>メタディスクリプション</span><textarea id="a-seod" rows="3">${esc(a.seo_description)}</textarea><span class="hint" id="a-seod-n"></span></label>
+        </div>
+        ${src ? '<button class="btn danger" type="button" id="a-del">記事を削除</button>' : ""}
+      </aside>
+    </div>`;
+
+  const body = $("#a-body"), source = $("#a-source");
+  let sourceMode = false;
+  const html = () => (sourceMode ? source.value : body.innerHTML).trim();
+  const mark = () => { dirty = true; $("#a-dirty").textContent = "未保存の変更あり"; };
+  $$("input, textarea, select", el).forEach((x) => x.addEventListener("input", mark));
+  body.addEventListener("input", mark);
+
+  const counts = () => {
+    $("#a-seot-n").textContent = `${[...$("#a-seot").value].length}文字（目安：20〜40文字。空欄なら記事タイトル）`;
+    $("#a-seod-n").textContent = `${[...$("#a-seod").value].length}文字（目安：70〜120文字）`;
+  };
+  counts(); $("#a-seot").addEventListener("input", counts); $("#a-seod").addEventListener("input", counts);
+  const dateUi = () => {
+    const s = $("#a-status").value;
+    $("#a-date-wrap").hidden = !(s === "published" || s === "scheduled");
+    $("#a-date-hint").textContent = s === "scheduled" ? "この時刻を過ぎると自動で公開されます（1時間ごとに確認）" : "空欄なら保存した時刻になります";
+  };
+  dateUi(); $("#a-status").addEventListener("change", dateUi);
+
+  /* 一時保存（この端末だけ） */
+  try {
+    const bk = JSON.parse(localStorage.getItem(backupKey) || "null");
+    if (bk && bk.html !== a.content) {
+      $("#restore").innerHTML = `<p class="note warn">この端末に、${fmt(new Date(bk.at).toISOString())} に一時保存した編集内容があります。 <button class="btn small" type="button" id="do-restore">復元する</button> <button class="btn small" type="button" id="drop-restore">破棄</button></p>`;
+      $("#do-restore").onclick = () => { body.innerHTML = bk.html; $("#a-title").value = bk.title; $("#a-excerpt").value = bk.excerpt; $("#restore").innerHTML = ""; mark(); };
+      $("#drop-restore").onclick = () => { localStorage.removeItem(backupKey); $("#restore").innerHTML = ""; };
+    }
+  } catch {}
+  const autosave = setInterval(() => {
+    if (!document.body.contains(body)) return clearInterval(autosave);
+    if (!dirty) return;
+    try { localStorage.setItem(backupKey, JSON.stringify({ at: Date.now(), html: html(), title: $("#a-title").value, excerpt: $("#a-excerpt").value })); $("#a-dirty").textContent = "この端末に一時保存しました"; } catch {}
+  }, 10000);
+
+  /* ツールバー。ボタンやメニューを押すと本文の入力位置が外れるので、最後の位置を覚えて戻す */
+  let caret = null;
+  const remember = () => { const s = window.getSelection(); if (s.rangeCount && body.contains(s.anchorNode)) caret = s.getRangeAt(0).cloneRange(); };
+  ["keyup", "mouseup", "input", "focus"].forEach((ev) => body.addEventListener(ev, remember));
+  document.addEventListener("selectionchange", () => { if (document.activeElement === body) remember(); });
+  const restore = () => {
+    body.focus();
+    const s = window.getSelection();
+    if (s.rangeCount && body.contains(s.anchorNode)) return;
+    s.removeAllRanges();
+    if (caret) s.addRange(caret);
+    else { const r = document.createRange(); r.selectNodeContents(body); r.collapse(false); s.addRange(r); }
+  };
+  const exec = (c, v) => { restore(); document.execCommand(c, false, v); remember(); mark(); };
+  const insertHtml = (h) => exec("insertHTML", h);
+  /* 箱型の要素（カード・表・注意書き）は、いまいる段落の直後に差し込む */
+  const insertBlock = (h) => {
+    restore();
+    const s = window.getSelection();
+    let node = s.rangeCount ? s.getRangeAt(0).startContainer : null;
+    while (node && node.parentNode !== body) node = node.parentNode;
+    const tpl = document.createElement("template");
+    tpl.innerHTML = h + "<p><br></p>";
+    const last = tpl.content.lastChild;
+    if (node) body.insertBefore(tpl.content, node.nextSibling); else body.appendChild(tpl.content);
+    const r = document.createRange(); r.setStart(last, 0); r.collapse(true); s.removeAllRanges(); s.addRange(r);
+    remember(); mark();
+  };
+  $$("[data-cmd]", el).forEach((b) => b.addEventListener("click", () => {
+    const c = b.dataset.cmd;
+    if (c === "source") {
+      sourceMode = !sourceMode;
+      if (sourceMode) { source.value = body.innerHTML; } else { body.innerHTML = source.value; }
+      body.hidden = sourceMode; source.hidden = !sourceMode; b.textContent = sourceMode ? "見たまま" : "HTML"; return;
+    }
+    if (sourceMode) return;
+    if (["h2", "h3", "h4", "p"].includes(c)) return exec("formatBlock", c);
+    if (c === "bold" || c === "italic" || c === "undo" || c === "redo") return exec(c);
+    if (c === "ul") return exec("insertUnorderedList");
+    if (c === "ol") return exec("insertOrderedList");
+    if (c === "quote") return exec("formatBlock", "blockquote");
+    if (c === "callout") { const t = String(window.getSelection() || "") || "注意書きの文章"; return insertBlock(`<div class="callout" data-callout=""><p>${esc(t)}</p></div>`); }
+    if (c === "link") { const u = prompt("リンク先のURL（サイト内の記事は /articles/スラッグ）", "https://"); if (u) exec("createLink", u); return; }
+    if (c === "table") return insertBlock("<table><thead><tr><th>見出し</th><th>見出し</th></tr></thead><tbody><tr><td>　</td><td>　</td></tr><tr><td>　</td><td>　</td></tr></tbody></table>");
+    if (c === "image") return $("#img-file").click();
+  }));
+  $("#img-file").addEventListener("change", async (e) => {
+    const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    const alt = prompt("画像の説明（alt）を入力してください", "") || "";
+    try {
+      status("画像をアップロードしています…");
+      const up = await uploadImage(f);
+      insertHtml(`<img src="${esc(up.url)}" alt="${esc(alt)}">`);
+      status("画像を追加しました。公開ページへの反映後に表示されます。", "ok", 4000);
+    } catch (err) { status("画像を追加できませんでした：" + err.message, "err", 6000); }
+  });
+  $$("[data-embed]", el).forEach((s) => s.addEventListener("change", () => {
+    if (!s.value || sourceMode) return;
+    const kind = s.dataset.embed, label = s.options[s.selectedIndex].text;
+    insertBlock(`<div data-${kind}-card="" data-slug="${esc(s.value)}" contenteditable="false">${kind === "shop" ? "店舗紹介カード" : "関連記事カード"}：${esc(label)}</div>`);
+    s.value = "";
+  }));
+
+  /* アイキャッチ */
+  $("#a-thumb-btn").onclick = () => $("#thumb-file").click();
+  $("#a-thumb-del").onclick = () => { a.thumbnail = null; $("#a-thumb").hidden = true; $("#a-thumb-del").hidden = true; mark(); };
+  $("#thumb-file").addEventListener("change", async (e) => {
+    const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    try { status("画像をアップロードしています…"); const up = await uploadImage(f); a.thumbnail = up.url; const img = $("#a-thumb"); img.src = up.preview; img.hidden = false; $("#a-thumb-del").hidden = false; mark(); status("アイキャッチ画像を設定しました。保存すると反映されます。", "ok", 4000); }
+    catch (err) { status("画像を追加できませんでした：" + err.message, "err", 6000); }
+  });
+
+  /* 保存 */
+  $("#a-save").onclick = async () => {
+    const msg = $("#a-msg"); msg.innerHTML = "";
+    const st = $("#a-status").value;
+    let pub = fromLocal($("#a-date").value);
+    const title = $("#a-title").value.trim();
+    const slug = slugify($("#a-slug").value || title);
+    const err = (t) => (msg.innerHTML = `<p class="note err">${esc(t)}</p>`);
+    if ((st === "published" || st === "scheduled") && !title) return err("公開するにはタイトルが必要です。");
+    if (st === "scheduled" && (!pub || new Date(pub) <= new Date())) return err("予約公開の日時は、現在より後にしてください。");
+    if (st === "published" && !pub) pub = nowIso();
+    if (articles.some((x) => x.id !== a.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別の記事で使われています。`);
+    const names = [...new Set($("#a-tags").value.split(/[、,，\s]+/).map((t) => t.trim()).filter(Boolean))];
+    const item = {
+      ...a, title, slug, content: html(), excerpt: $("#a-excerpt").value.trim(), status: st, published_at: pub,
+      thumbnail_alt: $("#a-thumb-alt").value.trim(), thumbnail_is_ai: $("#a-thumb-ai").checked,
+      seo_title: $("#a-seot").value.trim(), seo_description: $("#a-seod").value.trim(), focus_keyword: $("#a-kw").value.trim(),
+      is_featured: $("#a-featured").checked, is_sponsored: $("#a-sponsored").checked,
+      category_slugs: $$('input[name="cat"]:checked', el).map((x) => x.value),
+      shop_slugs: $$('input[name="shop"]:checked', el).map((x) => x.value),
+      tags: names.map((n) => { const s = tagSlug(n); return { id: "tag-" + s, slug: s, name: n }; }),
+      updated_at: nowIso(),
+    };
+    $("#a-save").disabled = true; status("保存しています…");
+    try {
+      await saveItem("articles.json", "articles", item, `記事を保存: ${item.title || item.slug}（${STATUS[st]}）`);
+      dirty = false; try { localStorage.removeItem(backupKey); } catch {}
+      status(st === "draft" || st === "private" ? "保存しました（サイトには表示されません）。" : "保存しました。数分で公開ページに反映されます。", "ok", 5000);
+      go("articles:edit", item.id);
+    } catch (e2) { status("保存できませんでした：" + e2.message, "err", 8000); $("#a-save").disabled = false; }
+  };
+  if ($("#a-del")) $("#a-del").onclick = async () => {
+    if (!confirm("この記事を削除します。元に戻せません。よろしいですか？")) return;
+    try { status("削除しています…"); await saveItem("articles.json", "articles", a, `記事を削除: ${a.title}`, { remove: true }); dirty = false; status("削除しました。", "ok", 4000); go("articles"); }
+    catch (e) { status("削除できませんでした：" + e.message, "err", 8000); }
+  };
+  $("#back").onclick = () => go("articles");
+};
+
+/* ============================================================
+   お店
+   ============================================================ */
+views.shops = async (el) => {
+  const shops = await loadShops();
+  const cat = Object.fromEntries(SHOP_CATS);
+  el.innerHTML = `
+    <div class="row between"><div><h1>お店</h1><p class="lead">お店に確認できた内容だけを載せましょう。確認前の情報は「公開情報をもとに掲載」と表示されます。</p></div>
+    <button class="btn primary" type="button" data-new="shop">お店を追加</button></div>
+    <div class="table-wrap"><table class="list"><thead><tr><th>店名</th><th>業種</th><th>公開</th><th>お店に確認</th><th>確認日</th></tr></thead><tbody>
+    ${shops.map((s) => `<tr><td><button class="linkbtn" data-shop="${esc(s.id)}">${esc(s.name)}</button><span class="sub">${esc(s.address)}</span></td><td>${esc(cat[s.category] || "")}</td><td>${s.is_published ? "公開" : "非公開"}</td><td>${s.shop_confirmed ? '<span class="pill published">確認済み</span>' : '<span class="pill draft">未確認</span>'}</td><td class="sub">${esc(s.verified_at || "—")}</td></tr>`).join("") || '<tr><td colspan="5" class="sub">まだお店がありません。</td></tr>'}
+    </tbody></table></div>`;
+  bindCommon(el);
+  $$("[data-shop]", el).forEach((b) => b.addEventListener("click", () => go("shops:edit", b.dataset.shop)));
+};
+
+views["shops:edit"] = async (el, id) => {
+  const shops = await loadShops();
+  const src = shops.find((s) => s.id === id);
+  const s = src ? JSON.parse(JSON.stringify(src)) : {
+    id: uuid(), name: "", slug: "", category: "izakaya", description: "", address: "", lat: null, lng: null, business_hours: "", closed_days: "", price_range: "",
+    budget_level: null, payment_methods: "", seats: "", solo_ok: null, non_alcohol: null, beginner_welcome: false, sns: {}, website: null, image: null, image_alt: "",
+    photo_permission: false, verified_at: null, is_published: false, updated_at: nowIso(), sources: [], shop_confirmed: false,
+  };
+  const tri = (v) => (v === null || v === undefined ? "" : v ? "yes" : "no");
+  const triSel = (idn, v, yes, no) => `<select id="${idn}"><option value="">未確認</option><option value="yes" ${tri(v) === "yes" ? "selected" : ""}>${yes}</option><option value="no" ${tri(v) === "no" ? "selected" : ""}>${no}</option></select>`;
+  const t = (idn, label, v, hint = "") => `<label class="f"><span>${label}</span><input type="text" id="${idn}" value="${esc(v)}">${hint ? `<span class="hint">${hint}</span>` : ""}</label>`;
+  el.innerHTML = `
+    <div class="row between"><h1>${src ? "お店の編集" : "お店を追加"}</h1><button class="btn" type="button" id="back">← お店一覧</button></div>
+    <div class="layout" style="margin-top:12px">
+      <div class="stack" style="min-width:0">
+        <section class="panel stack"><h2>基本情報</h2>
+          <div class="grid2">${t("s-name", "店名（必須）", s.name)}
+            <label class="f"><span>業種</span><select id="s-cat">${SHOP_CATS.map(([v, l]) => `<option value="${v}" ${s.category === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+            ${t("s-slug", "URLスラッグ", s.slug, "半角英小文字・数字・ハイフン")}${t("s-address", "住所", s.address)}</div>
+          <label class="f"><span>紹介文</span><textarea id="s-desc" rows="5">${esc(s.description)}</textarea></label>
+        </section>
+        <section class="panel stack"><h2>営業・料金</h2>
+          <div class="grid2">${t("s-hours", "営業時間", s.business_hours)}${t("s-closed", "定休日", s.closed_days)}${t("s-price", "料金", s.price_range, "例：チャージ500円＋ドリンク、セット3,000円/90分")}
+            <label class="f"><span>予算の目安（検索用）</span><select id="s-budget">${BUDGETS.map(([v, l]) => `<option value="${v}" ${String(s.budget_level ?? "") === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+            ${t("s-pay", "支払方法", s.payment_methods)}${t("s-seats", "席数", s.seats)}
+            <label class="f"><span>一人での利用</span>${triSel("s-solo", s.solo_ok, "OK", "グループ向け")}</label>
+            <label class="f"><span>ノンアル対応</span>${triSel("s-nonalc", s.non_alcohol, "あり", "なし")}</label></div>
+        </section>
+        <section class="panel stack"><h2>リンク・出典</h2>
+          <div class="grid2">${t("s-web", "公式サイト", s.website || "")}${t("s-ig", "Instagram", (s.sns || {}).instagram || "")}${t("s-x", "X", (s.sns || {}).x || "")}${t("s-fb", "Facebook", (s.sns || {}).facebook || "")}</div>
+          <label class="f"><span>情報の出典</span><textarea id="s-sources" rows="3" placeholder="公式サイト | https://example.com">${esc((s.sources || []).map((x) => `${x.label} | ${x.url}`).join("\n"))}</textarea><span class="hint">1行に1つ、「表示名 | URL」の形で入力</span></label>
+        </section>
+      </div>
+      <aside class="side stack">
+        <div class="panel stack">
+          <label class="f"><span>情報の確認日</span><input type="date" id="s-verified" value="${esc(s.verified_at || "")}"><span class="hint">公開には必須です</span></label>
+          <label class="check"><input type="checkbox" id="s-confirmed" ${s.shop_confirmed ? "checked" : ""}><span>掲載内容をお店に確認済み（外すと「公開情報をもとに掲載」と表示）</span></label>
+          <label class="check"><input type="checkbox" id="s-pub" ${s.is_published ? "checked" : ""}><span>サイトに公開する</span></label>
+          <div id="s-msg"></div>
+          <button class="btn primary" type="button" id="s-save">保存</button>
+        </div>
+        <div class="panel stack"><h2 style="margin:0">写真</h2>
+          <img class="thumb" id="s-img" alt="" ${s.image ? `src="${esc(s.image)}"` : "hidden"}>
+          <div class="row"><button class="btn small" type="button" id="s-img-btn">${s.image ? "変更" : "写真を選ぶ"}</button><button class="btn small" type="button" id="s-img-del" ${s.image ? "" : "hidden"}>外す</button></div>
+          <input type="text" id="s-img-alt" placeholder="写真の説明（alt）" value="${esc(s.image_alt)}">
+          <label class="check"><input type="checkbox" id="s-perm" ${s.photo_permission ? "checked" : ""}><span>お店から写真使用の許可を得た</span></label>
+          <input type="file" id="s-file" accept="image/jpeg,image/png,image/webp" hidden>
+        </div>
+        <div class="panel stack"><h2 style="margin:0">初心者歓迎マーク</h2>
+          <p class="hint" style="margin:0">次の4点をすべて、お店に確認できた場合だけ付けてください。</p>
+          ${["料金が明確", "初来店客を歓迎", "料金説明に対応", "不明瞭な追加料金がない"].map((x, i) => `<label class="check"><input type="checkbox" class="bw" ${s.beginner_welcome ? "checked" : ""}><span>${x}</span></label>`).join("")}
+          <label class="check" style="border-top:1px solid var(--line);padding-top:8px"><input type="checkbox" id="s-bw" ${s.beginner_welcome ? "checked" : ""}><b>初心者歓迎マークを表示</b></label>
+        </div>
+        ${src ? '<button class="btn danger" type="button" id="s-del">お店を削除</button>' : ""}
+      </aside>
+    </div>`;
+  $$("input, textarea, select", el).forEach((x) => x.addEventListener("input", () => (dirty = true)));
+  $("#back").onclick = () => go("shops");
+  $("#s-img-btn").onclick = () => $("#s-file").click();
+  $("#s-img-del").onclick = () => { s.image = null; $("#s-img").hidden = true; $("#s-img-del").hidden = true; dirty = true; };
+  $("#s-file").addEventListener("change", async (e) => {
+    const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    try { status("写真をアップロードしています…"); const up = await uploadImage(f); s.image = up.url; $("#s-img").src = up.preview; $("#s-img").hidden = false; $("#s-img-del").hidden = false; dirty = true; status("写真を設定しました。保存すると反映されます。", "ok", 4000); }
+    catch (err) { status("写真を追加できませんでした：" + err.message, "err", 6000); }
+  });
+  const v = (idn) => $("#" + idn).value.trim();
+  const fromTri = (x) => (x === "" ? null : x === "yes");
+  $("#s-save").onclick = async () => {
+    const err = (m) => ($("#s-msg").innerHTML = `<p class="note err">${esc(m)}</p>`);
+    $("#s-msg").innerHTML = "";
+    const name = v("s-name");
+    if (!name) return err("店名を入力してください。");
+    const pub = $("#s-pub").checked, verified = v("s-verified") || null;
+    if (pub && !verified) return err("公開するには情報の確認日を入力してください。");
+    if (s.image && !$("#s-perm").checked) return err("写真を使う場合は、写真使用の許可の確認にチェックを入れてください。");
+    if ($("#s-bw").checked && !$$(".bw", el).every((x) => x.checked)) return err("初心者歓迎マークは、4項目をすべて確認してから付けてください。");
+    const slug = slugify(v("s-slug") || name);
+    if (shops.some((x) => x.id !== s.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のお店で使われています。`);
+    let sources;
+    try {
+      sources = v("s-sources").split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
+        const [label, url] = l.includes("|") ? l.split("|").map((x) => x.trim()) : [l, l];
+        new URL(url); return { label, url };
+      });
+    } catch { return err("出典のURLの形式を確認してください（https:// から始まるURL）。"); }
+    const item = {
+      ...s, name, slug, category: $("#s-cat").value, description: v("s-desc"), address: v("s-address"),
+      business_hours: v("s-hours"), closed_days: v("s-closed"), price_range: v("s-price"), budget_level: v("s-budget") ? Number(v("s-budget")) : null,
+      payment_methods: v("s-pay"), seats: v("s-seats"), solo_ok: fromTri($("#s-solo").value), non_alcohol: fromTri($("#s-nonalc").value),
+      beginner_welcome: $("#s-bw").checked, website: v("s-web") || null,
+      sns: { instagram: v("s-ig"), x: v("s-x"), facebook: v("s-fb"), youtube: (s.sns || {}).youtube || "" },
+      image_alt: v("s-img-alt"), photo_permission: $("#s-perm").checked, verified_at: verified, is_published: pub,
+      sources, shop_confirmed: $("#s-confirmed").checked, updated_at: nowIso(),
+    };
+    $("#s-save").disabled = true; status("保存しています…");
+    try { await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false; status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("shops:edit", item.id); }
+    catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#s-save").disabled = false; }
+  };
+  if ($("#s-del")) $("#s-del").onclick = async () => {
+    if (!confirm("このお店を削除します。よろしいですか？")) return;
+    try { await saveItem("shops.json", "shops", s, `お店を削除: ${s.name}`, { remove: true }); dirty = false; status("削除しました。", "ok", 4000); go("shops"); }
+    catch (e) { status("削除できませんでした：" + e.message, "err", 8000); }
+  };
+};
+
+/* ============================================================
+   イベント
+   ============================================================ */
+views.events = async (el) => {
+  const events = await loadEvents();
+  const now = Date.now();
+  el.innerHTML = `
+    <div class="row between"><div><h1>イベント</h1><p class="lead">終了日時（なければ開始日時）を過ぎると、自動で「過去のイベント」になります。</p></div>
+    <button class="btn primary" type="button" data-new="event">イベントを追加</button></div>
+    <div class="table-wrap"><table class="list"><thead><tr><th>イベント</th><th>開始</th><th>状態</th><th>公開</th></tr></thead><tbody>
+    ${[...events].sort((a, b) => b.starts_at.localeCompare(a.starts_at)).map((e) => `<tr><td><button class="linkbtn" data-ev="${esc(e.id)}">${esc(e.title)}</button></td><td class="sub">${fmt(e.starts_at)}</td><td>${new Date(e.ends_at || e.starts_at) < now ? '<span class="pill draft">終了</span>' : '<span class="pill published">開催予定</span>'}</td><td>${e.is_published ? "公開" : "非公開"}</td></tr>`).join("") || '<tr><td colspan="4" class="sub">まだイベントがありません。</td></tr>'}
+    </tbody></table></div>`;
+  bindCommon(el);
+  $$("[data-ev]", el).forEach((b) => b.addEventListener("click", () => go("events:edit", b.dataset.ev)));
+};
+
+views["events:edit"] = async (el, id) => {
+  const events = await loadEvents();
+  const src = events.find((e) => e.id === id);
+  const e = src ? JSON.parse(JSON.stringify(src)) : { id: uuid(), title: "", slug: "", starts_at: "", ends_at: null, venue: "", fee: "", content: "", organizer: "", how_to_apply: "", image: null, image_alt: "", is_published: false, updated_at: nowIso() };
+  const plain = (e.content || "").replace(/<\/p>\s*<p>/g, "\n\n").replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "");
+  const t = (idn, label, v) => `<label class="f"><span>${label}</span><input type="text" id="${idn}" value="${esc(v)}"></label>`;
+  el.innerHTML = `
+    <div class="row between"><h1>${src ? "イベントの編集" : "イベントを追加"}</h1><button class="btn" type="button" id="back">← イベント一覧</button></div>
+    <div class="layout" style="margin-top:12px">
+      <section class="panel stack" style="min-width:0">
+        ${t("e-title", "イベント名（必須）", e.title)}
+        <div class="grid2">
+          <label class="f"><span>開始日時（必須）</span><input type="datetime-local" id="e-start" value="${toLocal(e.starts_at)}"></label>
+          <label class="f"><span>終了日時</span><input type="datetime-local" id="e-end" value="${toLocal(e.ends_at)}"></label>
+          ${t("e-venue", "開催場所", e.venue)}${t("e-fee", "参加料金", e.fee)}${t("e-org", "主催者", e.organizer)}${t("e-apply", "申込方法", e.how_to_apply)}${t("e-slug", "URLスラッグ", e.slug)}
+        </div>
+        <label class="f"><span>内容</span><textarea id="e-content" rows="8">${esc(plain)}</textarea><span class="hint">空行で段落が分かれます</span></label>
+      </section>
+      <aside class="side stack">
+        <div class="panel stack">
+          <label class="check"><input type="checkbox" id="e-pub" ${e.is_published ? "checked" : ""}><span>サイトに公開する</span></label>
+          <div id="e-msg"></div>
+          <button class="btn primary" type="button" id="e-save">保存</button>
+        </div>
+        <div class="panel stack"><h2 style="margin:0">画像</h2>
+          <img class="thumb" id="e-img" alt="" ${e.image ? `src="${esc(e.image)}"` : "hidden"}>
+          <button class="btn small" type="button" id="e-img-btn">${e.image ? "変更" : "画像を選ぶ"}</button>
+          <input type="text" id="e-img-alt" placeholder="画像の説明（alt）" value="${esc(e.image_alt)}">
+          <input type="file" id="e-file" accept="image/jpeg,image/png,image/webp" hidden>
+        </div>
+        ${src ? '<button class="btn danger" type="button" id="e-del">イベントを削除</button>' : ""}
+      </aside>
+    </div>`;
+  $$("input, textarea, select", el).forEach((x) => x.addEventListener("input", () => (dirty = true)));
+  $("#back").onclick = () => go("events");
+  $("#e-img-btn").onclick = () => $("#e-file").click();
+  $("#e-file").addEventListener("change", async (ev) => {
+    const f = ev.target.files[0]; ev.target.value = ""; if (!f) return;
+    try { status("画像をアップロードしています…"); const up = await uploadImage(f); e.image = up.url; $("#e-img").src = up.preview; $("#e-img").hidden = false; dirty = true; status("画像を設定しました。保存すると反映されます。", "ok", 4000); }
+    catch (err) { status("画像を追加できませんでした：" + err.message, "err", 6000); }
+  });
+  $("#e-save").onclick = async () => {
+    const err = (m) => ($("#e-msg").innerHTML = `<p class="note err">${esc(m)}</p>`);
+    const title = $("#e-title").value.trim(), starts = fromLocal($("#e-start").value), ends = fromLocal($("#e-end").value);
+    if (!title) return err("イベント名を入力してください。");
+    if (!starts) return err("開始日時を入力してください。");
+    if (ends && new Date(ends) < new Date(starts)) return err("終了日時は開始日時より後にしてください。");
+    const slug = slugify($("#e-slug").value || title);
+    if (events.some((x) => x.id !== e.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のイベントで使われています。`);
+    const content = $("#e-content").value.trim().split(/\n{2,}/).filter(Boolean).map((p) => `<p>${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
+    const item = { ...e, title, slug, starts_at: starts, ends_at: ends, venue: $("#e-venue").value.trim(), fee: $("#e-fee").value.trim(), organizer: $("#e-org").value.trim(), how_to_apply: $("#e-apply").value.trim(), content, image_alt: $("#e-img-alt").value.trim(), is_published: $("#e-pub").checked, updated_at: nowIso() };
+    $("#e-save").disabled = true; status("保存しています…");
+    try { await saveItem("events.json", "events", item, `イベントを保存: ${title}`); dirty = false; status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("events:edit", item.id); }
+    catch (x) { status("保存できませんでした：" + x.message, "err", 8000); $("#e-save").disabled = false; }
+  };
+  if ($("#e-del")) $("#e-del").onclick = async () => {
+    if (!confirm("このイベントを削除します。よろしいですか？")) return;
+    try { await saveItem("events.json", "events", e, `イベントを削除: ${e.title}`, { remove: true }); dirty = false; status("削除しました。", "ok", 4000); go("events"); }
+    catch (x) { status("削除できませんでした：" + x.message, "err", 8000); }
+  };
+};
+
+/* ============================================================
+   設定（SNSリンク）
+   ============================================================ */
+views.settings = async (el) => {
+  const { data, sha } = await readJson("settings.json");
+  el.innerHTML = `
+    <h1>設定</h1><p class="lead">フッターに表示するSNSのリンクです。空欄の項目は表示しません。</p>
+    <section class="panel stack" style="max-width:640px">
+      ${["instagram", "x", "facebook", "youtube"].map((k) => `<label class="f"><span>${{ instagram: "Instagram", x: "X", facebook: "Facebook", youtube: "YouTube" }[k]}</span><input type="url" id="st-${k}" value="${esc(data[k] || "")}" placeholder="https://"></label>`).join("")}
+      <div id="st-msg"></div>
+      <button class="btn primary" type="button" id="st-save">保存</button>
+    </section>`;
+  $("#st-save").onclick = async () => {
+    const next = {};
+    for (const k of ["instagram", "x", "facebook", "youtube"]) {
+      const v = $("#st-" + k).value.trim();
+      if (v && !/^https:\/\//.test(v)) return ($("#st-msg").innerHTML = '<p class="note err">URLは https:// から始めてください。</p>');
+      next[k] = v;
+    }
+    try { status("保存しています…"); await putFile(`${DATA}/settings.json`, b64encode(JSON.stringify(next, null, 2) + "\n"), "SNSリンクを更新", sha); status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("settings"); }
+    catch (e) { status("保存できませんでした：" + e.message, "err", 8000); }
+  };
+};
+
+/* ============================================================
+   起動
+   ============================================================ */
+function start() {
+  $("#login").hidden = true; $("#app").hidden = false;
+  const setHead = () => document.documentElement.style.setProperty("--head-h", $("#head").offsetHeight + "px");
+  setHead(); window.addEventListener("resize", setHead);
+  go("home");
+}
+(async () => {
+  const saved = store.get("kb-token");
+  if (saved) {
+    try { await tryLogin(saved, !!localStorage.getItem("kb-token")); return start(); }
+    catch { store.del("kb-token"); }
+  }
+  $("#login").hidden = false;
+})();
+</script>
+</body>
+</html>
