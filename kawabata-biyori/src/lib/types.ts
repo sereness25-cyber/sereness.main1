@@ -115,6 +115,8 @@ export type SiteSettings = {
   x: string;
   facebook: string;
   youtube: string;
+  /** 管理画面で差し替えたイメージ写真（キーは lib/photos.ts の PHOTOS） */
+  photos?: Record<string, { url: string; alt: string }>;
 };
 
 export type AiSettings = {

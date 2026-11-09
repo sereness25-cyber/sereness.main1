@@ -1,9 +1,11 @@
+import { jsonSettings } from "./data/json-source";
+
 /**
  * 写真がまだない記事・店舗に出す仮の写真（イメージ）。
  * public/images/photos のファイルは実在の店舗・人物ではないため、表示時は必ず「イメージ」と明記する。
  * 取材写真が用意できたら、記事のアイキャッチや店舗写真を登録すればそちらが優先される。
  */
-export const PHOTOS = {
+const DEFAULT_PHOTOS = {
   street: { src: "/images/photos/street.webp", alt: "提灯が灯る夜の飲み屋街（イメージ）" },
   cocktail: { src: "/images/photos/cocktail.webp", alt: "ピンク色のカクテル（イメージ）" },
   beef: { src: "/images/photos/beef.webp", alt: "肉料理の一皿（イメージ）" },
@@ -14,7 +16,24 @@ export const PHOTOS = {
   snack: { src: "/images/photos/snack.webp", alt: "スナックの店内（イメージ）" },
   whisky: { src: "/images/photos/whisky.webp", alt: "ウイスキーのグラス（イメージ）" },
 } as const;
-export type PhotoKey = keyof typeof PHOTOS;
+export type PhotoKey = keyof typeof DEFAULT_PHOTOS;
+
+/** 管理画面（設定 → イメージ写真）で差し替えた写真があれば、そちらを使う */
+function overrides(): Record<string, { url: string; alt: string }> {
+  try {
+    return jsonSettings().photos ?? {};
+  } catch {
+    return {};
+  }
+}
+const custom = overrides();
+export const PHOTOS = Object.fromEntries(
+  (Object.keys(DEFAULT_PHOTOS) as PhotoKey[]).map((k) => {
+    const c = custom[k];
+    const ok = c && /^https:\/\/[^\s"'<>]+$/.test(c.url);
+    return [k, ok ? { src: c.url, alt: c.alt ? `${c.alt}（イメージ）` : DEFAULT_PHOTOS[k].alt } : DEFAULT_PHOTOS[k]];
+  }),
+) as Record<PhotoKey, { src: string; alt: string }>;
 
 const BY_CATEGORY: Record<string, PhotoKey> = {
   beginner: "street",

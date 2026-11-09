@@ -154,6 +154,7 @@ table.list tr:hover td { background: #fbf9f6; }
     <button role="tab" data-view="articles">記事</button>
     <button role="tab" data-view="shops">お店</button>
     <button role="tab" data-view="events">イベント</button>
+    <button role="tab" data-view="photos">イメージ写真</button>
     <button role="tab" data-view="settings">設定</button>
   </nav>
   </div>
@@ -860,9 +861,70 @@ views.settings = async (el) => {
       if (v && !/^https:\/\//.test(v)) return ($("#st-msg").innerHTML = '<p class="note err">URLは https:// から始めてください。</p>');
       next[k] = v;
     }
-    try { status("保存しています…"); cache.settings = (await api("kb_settings", { settings: next })).settings; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("settings"); }
+    try { status("保存しています…"); cache.settings = (await api("kb_settings", { settings: { ...next, photos: data.photos || {} } })).settings; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("settings"); }
     catch (e) { status("保存できませんでした：" + e.message, "err", 8000); }
   };
+};
+
+/* ============================================================
+   イメージ写真（写真がない記事・お店に出す仮の写真）
+   ============================================================ */
+const STOCK = [
+  ["street", "夜の飲み屋街", "トップページの一番上の大きな写真／「はじめての川反」「川反の未来」の記事"],
+  ["portrait", "カウンターの人物", "トップページの「川反の人々」コーナー"],
+  ["cocktail", "カクテル", "「川反の楽しみ方」の記事"],
+  ["beef", "料理", "「川反グルメ」の記事／ダイニングのお店"],
+  ["river", "川沿いの夜景", "「川反の歴史」「川反ニュース」の記事"],
+  ["izakaya", "居酒屋のカウンター", "「川反の人々」の記事／居酒屋のお店"],
+  ["bar", "BAR", "BARのお店"],
+  ["snack", "スナック", "スナック・カラオケのお店"],
+  ["whisky", "ウイスキー", "その他のお店"],
+];
+views.photos = async (el) => {
+  const settings = (await load("settings")) || {};
+  const photos = JSON.parse(JSON.stringify(settings.photos || {}));
+  const previews = {};
+  const def = (k) => `${SITE}/images/photos/${k}.webp`;
+  const draw = () => {
+    el.innerHTML = `
+      <h1>イメージ写真</h1>
+      <p class="lead">記事やお店に写真が登録されていないときに、代わりに出す写真です。公開ページでは「イメージ」と表示されます。<br>
+      記事ごと・お店ごとの写真は、それぞれの編集画面の「アイキャッチ画像」「写真」から変えられます（そちらが優先されます）。</p>
+      <ul class="gallery" style="margin:0;padding:0">${STOCK.map(([k, name, where]) => `<li>
+        <img src="${esc(previews[k] || (photos[k] ? photos[k].url : def(k)))}" alt="">
+        <p style="margin:6px 2px 0;font-weight:700;color:var(--navy)">${name} ${photos[k] ? '<span class="pill published">差し替え中</span>' : '<span class="pill draft">最初の写真</span>'}</p>
+        <p class="hint" style="margin:2px 2px 0">使われる場所：${where}</p>
+        <input type="text" data-alt="${k}" value="${esc(photos[k] ? photos[k].alt : "")}" placeholder="写真の説明（例：川反通りの夜）" ${photos[k] ? "" : "hidden"}>
+        <div class="row"><button class="btn small" type="button" data-pick="${k}">📷 変更</button>${photos[k] ? `<button class="btn small" type="button" data-reset="${k}">最初の写真に戻す</button>` : ""}</div>
+      </li>`).join("")}</ul>
+      <input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp" hidden>
+      <div id="ph-msg" style="margin-top:12px"></div>
+      <button class="btn primary" type="button" id="ph-save" style="margin-top:8px">保存</button>
+      <p class="hint">写真は、お店や人の許可を得たもの・自分で撮ったものだけを使ってください。</p>`;
+    let target = null;
+    $$("[data-pick]", el).forEach((b) => (b.onclick = () => { target = b.dataset.pick; $("#ph-file").click(); }));
+    $$("[data-reset]", el).forEach((b) => (b.onclick = () => { delete photos[b.dataset.reset]; delete previews[b.dataset.reset]; dirty = true; draw(); }));
+    $$("[data-alt]", el).forEach((x) => x.addEventListener("input", () => { photos[x.dataset.alt].alt = x.value.trim(); dirty = true; }));
+    $("#ph-file").addEventListener("change", async (e) => {
+      const f = e.target.files[0]; e.target.value = ""; if (!f || !target) return;
+      try {
+        status("写真をアップロードしています…");
+        const up = await uploadImage(f);
+        photos[target] = { url: up.url, alt: (photos[target] && photos[target].alt) || "" };
+        previews[target] = up.preview; dirty = true; draw();
+        status("写真を差し替えました。「保存」を押すと反映されます。", "ok", 5000);
+      } catch (err) { status("写真を追加できませんでした：" + err.message, "err", 6000); }
+    });
+    $("#ph-save").onclick = async () => {
+      $("#ph-save").disabled = true;
+      try {
+        status("保存しています…");
+        cache.settings = (await api("kb_settings", { settings: { photos } })).settings;
+        dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("photos");
+      } catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#ph-save").disabled = false; }
+    };
+  };
+  draw();
 };
 
 /* ============================================================

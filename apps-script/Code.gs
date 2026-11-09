@@ -288,14 +288,33 @@ function kbSave(file, item, remove) {
   } finally { lock.releaseLock(); }
 }
 
+var KB_PHOTO_KEYS = ['street', 'cocktail', 'beef', 'river', 'portrait', 'izakaya', 'bar', 'snack', 'whisky'];
+
+/* SNSリンクとイメージ写真。送られてきた項目だけ書き換える */
 function kbSaveSettings(s) {
-  var next = {};
-  ['instagram', 'x', 'facebook', 'youtube'].forEach(function(k){
-    var v = String((s && s[k]) || '').trim().slice(0, 300);
-    next[k] = /^https:\/\//.test(v) ? v : '';
-  });
-  kbWrite('settings', next);
-  return {ok: true, settings: next};
+  s = s || {};
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var next = kbRead('settings') || {};
+    ['instagram', 'x', 'facebook', 'youtube'].forEach(function(k){
+      if (!(k in s)) return;
+      var v = String(s[k] || '').trim().slice(0, 300);
+      next[k] = /^https:\/\//.test(v) ? v : '';
+    });
+    if (s.photos && typeof s.photos === 'object') {
+      var photos = {};
+      KB_PHOTO_KEYS.forEach(function(k){
+        var p = s.photos[k];
+        if (p && /^https:\/\/[^\s"'<>]+$/.test(String(p.url || '')) && String(p.url).length <= 500) {
+          photos[k] = {url: String(p.url), alt: String(p.alt || '').slice(0, 80)};
+        }
+      });
+      next.photos = photos;
+    }
+    kbWrite('settings', next);
+    return {ok: true, settings: next};
+  } finally { lock.releaseLock(); }
 }
 
 function kbUpload(data, mime) {
