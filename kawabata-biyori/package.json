@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "seed:export": "tsx scripts/export-seed.ts"
+    "seed:export": "tsx scripts/export-seed.ts",
+    "setup:sql": "npm run -s seed:export && node scripts/build-setup-sql.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

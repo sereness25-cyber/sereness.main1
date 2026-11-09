@@ -89,9 +89,10 @@ http://localhost:3000 が公開サイト、http://localhost:3000/admin が管理
 ### 3-2. Supabase を接続する
 
 1. [Supabase](https://supabase.com) でプロジェクトを作ります。
-2. SQL Editor で `supabase/migrations/0001_init.sql` を実行します。テーブル、RLS、画像用の Storage バケット、初期カテゴリーが作られます。
-3. 続けて `supabase/migrations/0002_shop_sources.sql`、`supabase/seed.sql` の順に実行します。初期記事10本が**下書き**で、公開情報をもとに調べたお店14件が「お店には未確認」の状態で入ります。
-4. Authentication → Users で管理者のユーザーを作り、SQL Editor で管理者として登録します。
+2. SQL Editor に `supabase/setup-all.sql` を全部貼り付けて実行します。テーブル、RLS、画像用の Storage バケット、初期カテゴリー、初期記事（下書き）、お店が一度に入ります。
+   （個別に流す場合は `migrations/0001_init.sql` → `migrations/0002_shop_sources.sql` → `seed.sql` の順）
+3. （2で setup-all.sql を使った場合は不要）
+4. Authentication → Users で管理者のユーザーを作り、`supabase/register-admin.sql` のメールアドレスを書き換えて SQL Editor で実行します。
 
    ```sql
    insert into public.admin_profiles (user_id, display_name)
