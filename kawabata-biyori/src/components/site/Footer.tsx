@@ -34,6 +34,9 @@ export async function Footer() {
           </div>
           <nav aria-label="フッターメニュー" className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm">
             {[
+              ["/features", "特集"],
+              ["/series", "連載"],
+              ["/issues", "バックナンバー"],
               ["/articles", "記事を読む"],
               ["/shops", "お店を探す"],
               ["/guide", "はじめての川反"],

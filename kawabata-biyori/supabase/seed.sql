@@ -244,6 +244,9 @@ values ('川反で働く人々 ― 連載をはじめます', 'people-of-kawabat
 on conflict (slug) do nothing;
 insert into public.article_categories (article_id, category_id)
 select a.id, c.id from public.articles a, public.categories c where a.slug = 'people-of-kawabata' and c.slug = 'people' on conflict do nothing;
+insert into public.tags (name, slug) values ('連載', 'rensai') on conflict (slug) do nothing;
+insert into public.article_tags (article_id, tag_id)
+select a.id, t.id from public.articles a, public.tags t where a.slug = 'people-of-kawabata' and t.slug = 'rensai' on conflict do nothing;
 insert into public.tags (name, slug) values ('インタビュー', 'interview') on conflict (slug) do nothing;
 insert into public.article_tags (article_id, tag_id)
 select a.id, t.id from public.articles a, public.tags t where a.slug = 'people-of-kawabata' and t.slug = 'interview' on conflict do nothing;

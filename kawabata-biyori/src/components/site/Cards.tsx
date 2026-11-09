@@ -3,6 +3,7 @@ import type { Article, EventItem, Shop } from "@/lib/types";
 import { BUDGET_LABELS, shopCategoryLabel } from "@/lib/constants";
 import { formatDate, formatEventDate } from "@/lib/format";
 import { Thumb } from "./Thumb";
+import { photoForCategory, photoForShop, type PhotoKey } from "@/lib/photos";
 import { BeginnerMark, DraftBadge, PrBadge, SampleBadge } from "./Badges";
 
 function Meta({ article }: { article: Article }) {
@@ -17,7 +18,7 @@ function Meta({ article }: { article: Article }) {
 }
 
 /** 雑誌の記事カード。size="lg" は特集用の大きな組み */
-export function ArticleCard({ article, priority = false, showExcerpt = true, size = "md" }: { article: Article; priority?: boolean; showExcerpt?: boolean; size?: "md" | "lg" }) {
+export function ArticleCard({ article, priority = false, showExcerpt = true, size = "md", photo }: { article: Article; priority?: boolean; showExcerpt?: boolean; size?: "md" | "lg"; photo?: PhotoKey }) {
   const lg = size === "lg";
   return (
     <article className="group h-full">
@@ -30,6 +31,7 @@ export function ArticleCard({ article, priority = false, showExcerpt = true, siz
             seed={article.slug}
             isAi={article.thumbnail_is_ai}
             priority={priority}
+            photo={photo ?? photoForCategory(article.categories[0]?.slug)}
             className={lg ? "aspect-[3/2]" : ""}
             sizes={lg ? "(min-width:1024px) 720px, 100vw" : undefined}
           />
@@ -64,7 +66,7 @@ export function ShopCard({ shop }: { shop: Shop }) {
   return (
     <article className="group h-full">
       <Link href={`/shops/${shop.slug}`} className="flex h-full flex-col gap-4">
-        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} />
+        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} photo={photoForShop(shop.category)} />
         <div className="flex flex-1 flex-col gap-2">
           <p className="flex flex-wrap items-center gap-2 text-[0.72rem] tracking-wider">
             <span className="font-bold text-rose-deep">{shopCategoryLabel(shop.category)}</span>

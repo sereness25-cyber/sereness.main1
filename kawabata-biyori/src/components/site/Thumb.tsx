@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PHOTOS, type PhotoKey } from "@/lib/photos";
 
 const PALETTES = [
   ["#f3dde0", "#d9a7ad"],
@@ -17,6 +18,8 @@ export function Thumb({
   priority = false,
   sizes = "(min-width:1024px) 380px, (min-width:640px) 50vw, 100vw",
   className = "",
+  photo,
+  badgeBottom = false,
 }: {
   src: string | null;
   alt: string;
@@ -26,19 +29,34 @@ export function Thumb({
   priority?: boolean;
   sizes?: string;
   className?: string;
+  /** 画像がないときに出す仮の写真。指定がなければイラストを出す */
+  photo?: PhotoKey;
+  /** 「イメージ」表示を右下に出す（上に文字を重ねる表紙用） */
+  badgeBottom?: boolean;
 }) {
+  // 個別に縦横比を指定したときは、標準の16:9を付けない（クラスの競合を避ける）
+  const ratio = /(^|\s)aspect-/.test(className) ? "" : "aspect-[16/9]";
   if (src) {
     return (
-      <div className={`relative aspect-[16/9] overflow-hidden bg-beige ${className}`}>
+      <div className={`relative ${ratio} overflow-hidden bg-beige ${className}`}>
         <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
         {isAi && <span className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2.5 py-0.5 text-[0.7rem] text-white">イメージ画像</span>}
+      </div>
+    );
+  }
+  if (photo) {
+    const p = PHOTOS[photo];
+    return (
+      <div className={`relative ${ratio} overflow-hidden bg-beige ${className}`}>
+        <Image src={p.src} alt={alt || p.alt} fill sizes={sizes} priority={priority} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+        <span className={`absolute right-1.5 z-10 rounded-sm bg-black/45 px-1.5 py-px text-[0.6rem] tracking-wider text-white ${badgeBottom ? "bottom-1.5" : "top-1.5"}`}>イメージ</span>
       </div>
     );
   }
   const n = [...seed].reduce((a, c) => a + c.charCodeAt(0), 0);
   const [bg, fg] = PALETTES[n % PALETTES.length];
   return (
-    <div className={`relative aspect-[16/9] overflow-hidden ${className}`} style={{ background: bg }} role="img" aria-label={alt || label || "かわばた日和"}>
+    <div className={`relative ${ratio} overflow-hidden ${className}`} style={{ background: bg }} role="img" aria-label={alt || label || "かわばた日和"}>
       <svg viewBox="0 0 320 180" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <circle cx="262" cy="46" r="22" fill="#fff" opacity=".7" />
         <circle cx="270" cy="40" r="20" fill={bg} />

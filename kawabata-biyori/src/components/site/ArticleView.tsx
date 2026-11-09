@@ -4,6 +4,7 @@ import { sanitizeArticleHtml, splitEmbeds, withHeadingIds, readingMinutes } from
 import { formatDate } from "@/lib/format";
 import { siteUrl } from "@/lib/constants";
 import { Thumb } from "./Thumb";
+import { photoForCategory } from "@/lib/photos";
 import { ArticleCard, ShopCard } from "./Cards";
 import { DraftBadge, PrBadge } from "./Badges";
 import { ShareButtons } from "./ShareButtons";
@@ -57,7 +58,7 @@ export function ArticleView({ article, related, shops, embedShops, embedArticles
 
       <Container className="mt-8 max-w-[1100px]">
         <figure>
-          <Thumb src={article.thumbnail} alt={article.thumbnail_alt} label={article.categories[0]?.name} seed={article.slug} isAi={article.thumbnail_is_ai} priority className="aspect-[21/9]" sizes="(min-width: 1100px) 1100px, 100vw" />
+          <Thumb src={article.thumbnail} alt={article.thumbnail_alt} label={article.categories[0]?.name} seed={article.slug} isAi={article.thumbnail_is_ai} priority photo={photoForCategory(article.categories[0]?.slug)} className="aspect-[21/9]" sizes="(min-width: 1100px) 1100px, 100vw" />
           {article.thumbnail_alt && <figcaption className="mt-2 text-right text-xs text-muted">{article.thumbnail_alt}</figcaption>}
         </figure>
       </Container>

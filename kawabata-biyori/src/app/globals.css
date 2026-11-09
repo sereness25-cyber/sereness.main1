@@ -12,6 +12,8 @@
   --color-card: #ffffff;
   --color-ink: #333333;
   --color-muted: #777777;
+  --color-blush: #c9768a;
+  --color-cocoa: #4a302c;
 
   --font-maru: var(--font-zen-maru), "Hiragino Maru Gothic ProN", sans-serif;
   --font-sans: var(--font-noto-sans), "Hiragino Sans", "Yu Gothic", sans-serif;

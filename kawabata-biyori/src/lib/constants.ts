@@ -34,14 +34,26 @@ export const BUDGET_LABELS: Record<number, string> = {
   4: "8,000円〜",
 };
 
+/** ヘッダーの雑誌風ナビ */
 export const NAV = [
-  { href: "/", label: "ホーム" },
-  { href: "/articles", label: "記事を読む" },
-  { href: "/shops", label: "お店を探す" },
-  { href: "/guide", label: "はじめての川反" },
+  { href: "/features", label: "特集" },
+  { href: "/series", label: "連載" },
+  { href: "/shops", label: "お店ガイド" },
   { href: "/events", label: "イベント" },
-  { href: "/map", label: "川反マップ" },
+  { href: "/issues", label: "バックナンバー" },
 ] as const;
+
+/** メニュー（ハンバーガー）にだけ出す項目 */
+export const MENU_EXTRA = [
+  { href: "/", label: "ホーム" },
+  { href: "/guide", label: "はじめての川反" },
+  { href: "/articles", label: "記事をすべて見る" },
+  { href: "/map", label: "川反マップ" },
+  { href: "/search", label: "サイト内検索" },
+] as const;
+
+/** 連載記事に付けるタグ */
+export const SERIES_TAG = "rensai";
 
 /** 川反通り周辺（秋田市大町・旭川沿い）のおおよその中心。地図の初期表示にだけ使う */
 export const KAWABATA_CENTER: [number, number] = [39.7195, 140.1155];

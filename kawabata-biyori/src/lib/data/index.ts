@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/public";
-import { ARTICLES_PER_PAGE } from "@/lib/constants";
+import { ARTICLES_PER_PAGE, SERIES_TAG } from "@/lib/constants";
 import type { Article, Category, EventItem, Shop, ShopCategory, SiteSettings, Tag } from "@/lib/types";
 import { DEMO_CATEGORIES } from "@/lib/demo/categories";
 import { DEMO_ARTICLES } from "@/lib/demo/articles";
@@ -287,4 +287,48 @@ export async function searchAll(q: string, scope?: "articles" | "shops" | "event
       : [],
   ]);
   return { articles, shops, events };
+}
+
+// ---------------------------------------------------------------
+// 雑誌の「号」（バックナンバー）と連載
+// 公開月ごとに記事をまとめ、記事のある月を古い順に VOL.01, 02… とする
+// ---------------------------------------------------------------
+
+export type Issue = { vol: number; year: number; month: number; key: string; articles: Article[]; cover: Article };
+
+const monthKey = (iso: string) => {
+  const d = new Date(new Date(iso).getTime() + 9 * 3600 * 1000);
+  return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1 };
+};
+
+export const getIssues = cache(async (): Promise<Issue[]> => {
+  const all = await loadArticles();
+  const map = new Map<string, { year: number; month: number; articles: Article[] }>();
+  for (const a of all) {
+    const { year, month } = monthKey(a.published_at ?? a.updated_at);
+    const key = `${year}-${String(month).padStart(2, "0")}`;
+    if (!map.has(key)) map.set(key, { year, month, articles: [] });
+    map.get(key)!.articles.push(a);
+  }
+  const keys = [...map.keys()].sort();
+  return keys
+    .map((key, i) => {
+      const m = map.get(key)!;
+      const cover = m.articles.find((a) => a.is_featured) ?? m.articles[0];
+      return { vol: i + 1, key, year: m.year, month: m.month, articles: m.articles, cover };
+    })
+    .reverse();
+});
+
+export async function getIssueByVol(vol: number) {
+  return (await getIssues()).find((i) => i.vol === vol) ?? null;
+}
+
+export async function getSeriesArticles(limit?: number) {
+  const items = (await queryArticles({ tag: SERIES_TAG, perPage: 1000 })).items;
+  return limit ? items.slice(0, limit) : items;
+}
+
+export async function getAllFeatured() {
+  return (await loadArticles()).filter((a) => a.is_featured);
 }

@@ -22,6 +22,7 @@ const T = {
   editorial: tag("editorial", "編集部より"),
   price: tag("price", "料金"),
   access: tag("access", "アクセス"),
+  series: tag("rensai", "連載"),
 };
 
 const SOURCES = {
@@ -296,7 +297,7 @@ ${factCheck([
     title: "川反で働く人々 ― 連載をはじめます",
     excerpt: "お店を営む人、カウンターに立つ人、街を支える人。川反で働く人々のストーリーを届ける連載の予告です。",
     categories: ["people"],
-    tags: [T.interview, T.editorial],
+    tags: [T.series, T.interview, T.editorial],
     keyword: "川反 人",
     content: `
 <p>川反の魅力は、お店そのものだけではありません。カウンターの向こうで迎えてくれる人、長く街を見守ってきた人、新しくお店を始めた人。そこで働く人たちがいるからこそ、川反は温かい街なのだと思います。</p>

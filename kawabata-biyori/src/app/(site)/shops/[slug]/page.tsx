@@ -5,6 +5,7 @@ import { BUDGET_LABELS, shopCategoryLabel } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import { shopLd } from "@/lib/jsonld";
 import { Thumb } from "@/components/site/Thumb";
+import { photoForShop } from "@/lib/photos";
 import { BeginnerMark, CategoryBadge, SampleBadge } from "@/components/site/Badges";
 import { ArticleCard } from "@/components/site/Cards";
 import { Container } from "@/components/site/Section";
@@ -58,7 +59,7 @@ export default async function ShopPage({ params }: Props) {
         {shop.is_sample && (
           <p className="mt-3 rounded-xl bg-navy/5 px-4 py-3 text-sm">これは画面確認用の<strong>架空の店舗</strong>です。実在するお店ではありません。</p>
         )}
-        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
+        <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} photo={photoForShop(shop.category)} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
         <p className="mt-8 whitespace-pre-line text-[1.02rem] leading-9">{shop.description}</p>
 
         <section className="mt-10 border border-navy/15 bg-white p-6 md:p-8">
