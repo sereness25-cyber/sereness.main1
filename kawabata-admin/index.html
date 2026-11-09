@@ -119,7 +119,6 @@ table.list tr:hover td { background: #fbf9f6; }
 </head>
 <body>
 
-<!-- ログイン -->
 <!-- パスワードで開く -->
 <section id="unlock" class="login" hidden>
   <div class="panel stack">
@@ -128,30 +127,6 @@ table.list tr:hover td { background: #fbf9f6; }
     <label class="check"><input type="checkbox" id="stay"><span>この端末ではログインしたままにする（共用のパソコンでは使わないでください）</span></label>
     <div id="unlock-msg"></div>
     <button class="btn primary" id="unlock-btn" type="button">ログイン</button>
-    <p class="hint">パスワードを忘れたときや、GitHub のトークンの期限が切れたときは <button class="linkbtn" type="button" id="to-setup">最初の設定をやり直す</button></p>
-  </div>
-</section>
-
-<!-- 最初の設定（1回だけ） -->
-<section id="setup" class="login" hidden>
-  <div class="panel stack">
-    <div>
-      <p class="brand" style="color:var(--navy)">かわばた日和<small style="color:var(--blush)">ADMIN</small></p>
-      <h1 style="margin-top:8px">最初の設定</h1>
-      <p class="lead">管理ページは GitHub に記事を保存します。そのための「アクセストークン」を1回だけ登録し、あなたが決めたパスワードで鍵をかけます。次からはパスワードだけで開けます。</p>
-    </div>
-    <ol class="steps">
-      <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">トークン作成ページ</a>を開く（GitHub にログインした状態で）</li>
-      <li>Token name に「かわばた日和 管理」、Expiration は「Custom」で<b>1年後</b>の日付を選ぶ</li>
-      <li>Repository access で「Only select repositories」→ <b>sereness.main1</b> を選ぶ</li>
-      <li>Permissions → Repository permissions で <b>Contents</b> を「Read and write」、<b>Actions</b> を「Read-only」にする</li>
-      <li>「Generate token」を押し、表示された文字列（github_pat_…）をコピーして下に貼る</li>
-    </ol>
-    <label class="f"><span>アクセストークン</span><input id="token" type="password" autocomplete="off" placeholder="github_pat_..."></label>
-    <label class="f"><span>パスワード（12文字以上）</span><input id="pw1" type="password" autocomplete="new-password"><span class="hint">鍵のかかったトークンは誰でも見られる場所に置かれるため、推測されにくい長めのパスワードにしてください。</span></label>
-    <label class="f"><span>パスワード（確認のためもう一度）</span><input id="pw2" type="password" autocomplete="new-password"></label>
-    <div id="setup-msg"></div>
-    <div class="row"><button class="btn primary" id="setup-btn" type="button">設定してログイン</button><button class="btn" id="to-unlock" type="button" hidden>パスワードで開く画面へ戻る</button></div>
   </div>
 </section>
 
@@ -183,10 +158,9 @@ table.list tr:hover td { background: #fbf9f6; }
 /* ============================================================
    設定
    ============================================================ */
-const REPO = { owner: "sereness25-cyber", name: "sereness.main1", branch: "main" };
-const DATA = "kawabata-data";
+/* 保存先は Google Apps Script（apps-script/Code.gs）。パスワードはスクリプト プロパティの KAWABATA_PASSWORD */
+const API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec";
 const SITE = "https://sereness25-cyber.github.io/sereness.main1/kawabata";
-const MEDIA_BASE = "https://sereness25-cyber.github.io/sereness.main1/" + DATA + "/images";
 const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["snack","スナック"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
 const BUDGETS = [["","未設定"],["1","〜3,000円"],["2","3,000〜5,000円"],["3","5,000〜8,000円"],["4","8,000円〜"]];
 const STATUS = { draft: "下書き", published: "公開", scheduled: "予約公開", private: "非公開" };
@@ -208,8 +182,6 @@ function status(text, kind = "", ms = 0) {
   clearTimeout(status.t);
   if (ms) status.t = setTimeout(() => (el.hidden = true), ms);
 }
-const b64encode = (str) => { const bytes = new TextEncoder().encode(str); let bin = ""; bytes.forEach((b) => (bin += String.fromCharCode(b))); return btoa(bin); };
-const b64decode = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, "")), (c) => c.charCodeAt(0)));
 const nowIso = () => new Date().toISOString();
 const toLocal = (iso) => (iso ? new Date(new Date(iso).getTime() + 9 * 3600e3).toISOString().slice(0, 16) : "");
 const fromLocal = (v) => (v ? new Date(v + ":00+09:00").toISOString() : null);
@@ -229,51 +201,27 @@ function tagSlug(name) {
 const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 
 /* ============================================================
-   GitHub API
+   保存先（Apps Script）とのやりとり
    ============================================================ */
-let TOKEN = "";
-async function gh(path, opts = {}) {
-  const res = await fetch("https://api.github.com" + path, {
-    ...opts,
-    headers: { Authorization: "Bearer " + TOKEN, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", ...(opts.headers || {}) },
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const err = new Error(body.message || "HTTP " + res.status);
-    err.status = res.status;
-    throw err;
-  }
-  return res.status === 204 ? null : res.json();
-}
-const contentsPath = (p) => `/repos/${REPO.owner}/${REPO.name}/contents/${p.split("/").map(encodeURIComponent).join("/")}`;
-
-/* JSON ファイルを読む（1MBを超えても読めるよう blob からも取る） */
-async function readJson(file) {
-  const meta = await gh(contentsPath(`${DATA}/${file}`) + `?ref=${REPO.branch}`);
-  let text = meta.content ? b64decode(meta.content) : "";
-  if (!text) { const blob = await gh(`/repos/${REPO.owner}/${REPO.name}/git/blobs/${meta.sha}`); text = b64decode(blob.content); }
-  return { data: JSON.parse(text), sha: meta.sha };
-}
-async function putFile(path, base64, message, sha) {
-  return gh(contentsPath(path), { method: "PUT", body: JSON.stringify({ message, content: base64, sha, branch: REPO.branch }) });
+let PASS = "";
+async function api(action, payload = {}) {
+  let text = "";
+  try {
+    const res = await fetch(API, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action, passcode: PASS, ...payload }) });
+    text = await res.text();
+  } catch { throw new Error("通信できませんでした。電波の状態を確認して、もう一度お試しください。"); }
+  let j = null;
+  try { j = JSON.parse(text); } catch {}
+  if (!j) throw new Error(/accounts\.google|<html|<!doctype/i.test(text) ? "Apps Script のデプロイ設定（アクセスできるユーザー：全員）を確認してください。" : "想定外の返事が返ってきました。");
+  if (!j.kb) throw new Error("Apps Script が古いままです。apps-script/Code.gs を貼り直して「新バージョン」でデプロイしてください。");
+  if (!j.ok) { const e = new Error(j.error || "うまくいきませんでした。"); e.auth = !!j.auth; throw e; }
+  return j;
 }
 
-/* 1件だけ書き換えて保存する。保存直前に最新を読み直すので、別の端末の変更を消さない */
-async function saveItem(file, key, item, message, { remove = false } = {}) {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { data, sha } = await readJson(file);
-    const list = data[key] || [];
-    const i = list.findIndex((x) => x.id === item.id);
-    if (remove) { if (i >= 0) list.splice(i, 1); }
-    else if (i >= 0) list[i] = item; else list.unshift(item);
-    data[key] = list;
-    try {
-      await putFile(`${DATA}/${file}`, b64encode(JSON.stringify(data, null, 2) + "\n"), message, sha);
-      cache[key] = list;
-      return;
-    } catch (e) { if (e.status !== 409 && e.status !== 422) throw e; }
-  }
-  throw new Error("ほかの端末で同時に保存されたため保存できませんでした。もう一度お試しください。");
+/* 1件だけ書き換えて保存する（サーバー側で最新を読み直してから書くので、別の端末の変更を消さない） */
+async function saveItem(file, key, item, _message, { remove = false } = {}) {
+  const j = await api("kb_save", { file: key, item, remove });
+  cache[key] = j.list;
 }
 
 /* 画像を最大2000pxのWebPにしてアップロードし、公開URLを返す */
@@ -285,107 +233,44 @@ async function uploadImage(file) {
   c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
   c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
   const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.85));
-  const b64 = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(",")[1]); fr.readAsDataURL(blob); });
-  const name = `${new Date().toISOString().slice(0, 7)}/${uuid()}.webp`;
-  await putFile(`${DATA}/images/${name}`, b64, "画像を追加: " + file.name);
-  return { url: `${MEDIA_BASE}/${name}`, preview: URL.createObjectURL(blob) };
+  const mime = blob && blob.type === "image/webp" ? "image/webp" : "image/jpeg";
+  const out = mime === "image/webp" ? blob : await new Promise((r) => c.toBlob(r, "image/jpeg", 0.85));
+  const data = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(",")[1]); fr.readAsDataURL(out); });
+  const j = await api("kb_upload", { data, mime });
+  return { url: j.url, preview: URL.createObjectURL(out) };
 }
 
 /* ============================================================
    データ
    ============================================================ */
 const cache = { articles: null, shops: null, events: null, categories: null, settings: null };
-async function load(key, file) {
-  if (!cache[key]) cache[key] = (await readJson(file)).data[key];
-  return cache[key];
+async function loadAll() {
+  if (!cache.articles) Object.assign(cache, (await api("kb_load")).data);
+  return cache;
 }
-const loadArticles = () => load("articles", "articles.json");
-const loadShops = () => load("shops", "shops.json");
-const loadEvents = () => load("events", "events.json");
-const loadCategories = () => load("categories", "categories.json");
+const load = async (key) => (await loadAll())[key];
+const loadArticles = () => load("articles");
+const loadShops = () => load("shops");
+const loadEvents = () => load("events");
+const loadCategories = () => load("categories");
 
 /* ============================================================
-   ログイン
+   ログイン（パスワードだけ）
    ============================================================ */
-/* トークンをパスワードで暗号化して kawabata-admin/lock.json に置く。開くときはパスワードで復号する */
-const LOCK_PATH = "kawabata-admin/lock.json";
-const ITER = 600000;
-const bytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
-async function deriveKey(password, salt) {
-  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
-  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
-}
-async function lockToken(token, password) {
-  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await deriveKey(password, salt);
-  const data = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(token));
-  return { v: 1, kdf: "PBKDF2-SHA256", iterations: ITER, salt: b64(salt), iv: b64(iv), data: b64(data), updated_at: nowIso() };
-}
-async function unlockToken(lock, password) {
-  const key = await deriveKey(password, bytes(lock.salt));
-  try { return new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(lock.iv) }, key, bytes(lock.data))); }
-  catch { throw new Error("パスワードが違います。"); }
-}
-async function fetchLock() {
-  // 最新を取るため GitHub の生ファイルを先に見る（公開リポジトリなので誰でも読める）
-  const urls = [`https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/${REPO.branch}/${LOCK_PATH}?t=${Date.now()}`, `lock.json?t=${Date.now()}`];
-  for (const u of urls) { try { const r = await fetch(u, { cache: "no-store" }); if (r.ok) return await r.json(); } catch {} }
-  return null;
-}
-async function checkToken(token) {
-  TOKEN = token;
-  try {
-    const repo = await gh(`/repos/${REPO.owner}/${REPO.name}`);
-    if (!repo.permissions || !repo.permissions.push) throw new Error("このトークンには書き込みの権限がありません（Contents を Read and write に）。");
-  } catch (e) {
-    TOKEN = "";
-    if (e.status === 401) throw new Error("GitHub のトークンが正しくないか、期限が切れています。「最初の設定をやり直す」から新しいトークンを登録してください。");
-    if (e.status === 404) throw new Error("sereness.main1 へのアクセスが許可されていません。トークンの Repository access を確認してください。");
-    throw e;
-  }
-}
-const show = (id) => { ["unlock", "setup"].forEach((x) => ($("#" + x).hidden = x !== id)); };
-
 $("#unlock-btn").addEventListener("click", async () => {
   const msg = $("#unlock-msg"), pw = $("#pw").value;
   if (!pw) return (msg.innerHTML = '<p class="note err">パスワードを入力してください。</p>');
   $("#unlock-btn").disabled = true; msg.innerHTML = '<p class="note">確認しています…</p>';
+  PASS = pw;
   try {
-    const lock = await fetchLock();
-    if (!lock) throw new Error("設定が見つかりません。「最初の設定をやり直す」から設定してください。");
-    const token = await unlockToken(lock, pw);
-    await checkToken(token);
-    store.set("kb-token", token, $("#stay").checked);
+    await api("kb_login");
+    store.set("kb-pass", pw, $("#stay").checked);
     start();
-  } catch (e) { msg.innerHTML = `<p class="note err">${esc(e.message)}</p>`; }
+  } catch (e) { PASS = ""; msg.innerHTML = `<p class="note err">${esc(e.message)}</p>`; }
   finally { $("#unlock-btn").disabled = false; }
 });
 $("#pw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#unlock-btn").click(); });
-$("#to-setup").addEventListener("click", () => { show("setup"); $("#to-unlock").hidden = false; });
-$("#to-unlock").addEventListener("click", () => show("unlock"));
-
-$("#setup-btn").addEventListener("click", async () => {
-  const msg = $("#setup-msg"), token = $("#token").value.trim(), p1 = $("#pw1").value, p2 = $("#pw2").value;
-  const err = (t) => (msg.innerHTML = `<p class="note err">${esc(t)}</p>`);
-  if (!token) return err("アクセストークンを貼り付けてください。");
-  if ([...p1].length < 12) return err("パスワードは12文字以上にしてください。");
-  if (p1 !== p2) return err("確認用のパスワードが一致しません。");
-  $("#setup-btn").disabled = true; msg.innerHTML = '<p class="note">トークンを確認して、鍵をかけています…</p>';
-  try {
-    await checkToken(token);
-    const lock = await lockToken(token, p1);
-    let sha;
-    try { sha = (await gh(contentsPath(LOCK_PATH) + `?ref=${REPO.branch}`)).sha; } catch {}
-    await putFile(LOCK_PATH, b64encode(JSON.stringify(lock, null, 2) + "\n"), "管理ページのパスワードを設定", sha);
-    store.set("kb-token", token, false);
-    start();
-    status("設定しました。次からはパスワードだけで開けます。", "ok", 6000);
-  } catch (e) { err(e.message); }
-  finally { $("#setup-btn").disabled = false; }
-});
-
-$("#logout").addEventListener("click", () => { store.del("kb-token"); TOKEN = ""; location.reload(); });
+$("#logout").addEventListener("click", () => { store.del("kb-pass"); PASS = ""; location.reload(); });
 
 /* ============================================================
    画面の切り替え
@@ -399,7 +284,10 @@ function go(name, arg) {
   $$(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === name.split(":")[0])));
   const view = $("#view");
   view.innerHTML = '<p class="lead">読み込んでいます…</p>';
-  views[name](view, arg).catch((e) => { view.innerHTML = `<p class="note err">読み込めませんでした：${esc(e.message)}</p>`; });
+  views[name](view, arg).catch((e) => {
+    if (e.auth) { store.del("kb-pass"); PASS = ""; $("#app").hidden = true; $("#unlock").hidden = false; $("#unlock-msg").innerHTML = `<p class="note err">${esc(e.message)}</p>`; return; }
+    view.innerHTML = `<p class="note err">読み込めませんでした：${esc(e.message)}</p>`;
+  });
   window.scrollTo(0, 0);
 }
 $$(".tabs button").forEach((b) => b.addEventListener("click", () => go(b.dataset.view)));
@@ -414,7 +302,7 @@ views.home = async (el) => {
   const sched = articles.filter((a) => a.status === "scheduled" && a.published_at && new Date(a.published_at) > now);
   el.innerHTML = `
     <h1>ダッシュボード</h1>
-    <p class="lead">保存すると、数分で <a href="${SITE}/" target="_blank" rel="noopener">公開ページ</a> に反映されます。</p>
+    <p class="lead">保存すると、10〜15分ほどで <a href="${SITE}/" target="_blank" rel="noopener">公開ページ</a> に反映されます（下書き・非公開は公開されません）。</p>
     <div class="stats">
       <a class="stat" href="#" data-go="articles"><span class="sub">公開中の記事</span><b>${live.length}</b></a>
       <a class="stat" href="#" data-go="articles"><span class="sub">下書き</span><b>${articles.filter((a) => a.status === "draft").length}</b></a>
@@ -427,22 +315,10 @@ views.home = async (el) => {
       <button class="btn" data-new="event" type="button">イベントを追加</button>
     </div>
     <section class="panel" style="margin-top:18px">
-      <h2>公開ページへの反映状況</h2>
-      <div id="runs"><p class="lead">確認しています…</p></div>
-    </section>
-    <section class="panel" style="margin-top:18px">
       <h2>最近更新した記事</h2>
       <ul style="margin:0;padding-left:1.2em">${[...articles].sort((a, b) => b.updated_at.localeCompare(a.updated_at)).slice(0, 6).map((a) => `<li><button class="linkbtn" data-edit="${esc(a.id)}">${esc(a.title || "（無題）")}</button> <span class="pill ${a.status}">${STATUS[a.status]}</span></li>`).join("")}</ul>
     </section>`;
   bindCommon(el);
-  try {
-    const runs = await gh(`/repos/${REPO.owner}/${REPO.name}/actions/runs?per_page=5`);
-    const label = (r) => r.status !== "completed" ? '<span class="pill scheduled">処理中</span>' : r.conclusion === "success" ? '<span class="pill published">完了</span>' : '<span class="pill private">失敗</span>';
-    $("#runs").innerHTML = `<table class="list"><tbody>${runs.workflow_runs.map((r) => `<tr><td>${label(r)}</td><td>${esc(r.name)}</td><td class="sub">${fmt(r.created_at)}</td></tr>`).join("")}</tbody></table>
-      <p class="hint">「かわばた日和を書き出す」→「pages build and deployment」の順に完了すると、公開ページが新しくなります。</p>`;
-  } catch {
-    $("#runs").innerHTML = '<p class="hint">反映状況を見るには、トークンの Actions を「Read-only」にしてください（なくても保存はできます）。</p>';
-  }
 };
 
 function bindCommon(el) {
@@ -694,7 +570,7 @@ views["articles:edit"] = async (el, id) => {
     try {
       await saveItem("articles.json", "articles", item, `記事を保存: ${item.title || item.slug}（${STATUS[st]}）`);
       dirty = false; try { localStorage.removeItem(backupKey); } catch {}
-      status(st === "draft" || st === "private" ? "保存しました（サイトには表示されません）。" : "保存しました。数分で公開ページに反映されます。", "ok", 5000);
+      status(st === "draft" || st === "private" ? "保存しました（サイトには表示されません）。" : "保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000);
       go("articles:edit", item.id);
     } catch (e2) { status("保存できませんでした：" + e2.message, "err", 8000); $("#a-save").disabled = false; }
   };
@@ -817,7 +693,7 @@ views["shops:edit"] = async (el, id) => {
       sources, shop_confirmed: $("#s-confirmed").checked, updated_at: nowIso(),
     };
     $("#s-save").disabled = true; status("保存しています…");
-    try { await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false; status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("shops:edit", item.id); }
+    try { await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("shops:edit", item.id); }
     catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#s-save").disabled = false; }
   };
   if ($("#s-del")) $("#s-del").onclick = async () => {
@@ -895,7 +771,7 @@ views["events:edit"] = async (el, id) => {
     const content = $("#e-content").value.trim().split(/\n{2,}/).filter(Boolean).map((p) => `<p>${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
     const item = { ...e, title, slug, starts_at: starts, ends_at: ends, venue: $("#e-venue").value.trim(), fee: $("#e-fee").value.trim(), organizer: $("#e-org").value.trim(), how_to_apply: $("#e-apply").value.trim(), content, image_alt: $("#e-img-alt").value.trim(), is_published: $("#e-pub").checked, updated_at: nowIso() };
     $("#e-save").disabled = true; status("保存しています…");
-    try { await saveItem("events.json", "events", item, `イベントを保存: ${title}`); dirty = false; status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("events:edit", item.id); }
+    try { await saveItem("events.json", "events", item, `イベントを保存: ${title}`); dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("events:edit", item.id); }
     catch (x) { status("保存できませんでした：" + x.message, "err", 8000); $("#e-save").disabled = false; }
   };
   if ($("#e-del")) $("#e-del").onclick = async () => {
@@ -909,7 +785,7 @@ views["events:edit"] = async (el, id) => {
    設定（SNSリンク）
    ============================================================ */
 views.settings = async (el) => {
-  const { data, sha } = await readJson("settings.json");
+  const data = (await load("settings")) || {};
   el.innerHTML = `
     <h1>設定</h1><p class="lead">フッターに表示するSNSのリンクです。空欄の項目は表示しません。</p>
     <section class="panel stack" style="max-width:640px">
@@ -924,7 +800,7 @@ views.settings = async (el) => {
       if (v && !/^https:\/\//.test(v)) return ($("#st-msg").innerHTML = '<p class="note err">URLは https:// から始めてください。</p>');
       next[k] = v;
     }
-    try { status("保存しています…"); await putFile(`${DATA}/settings.json`, b64encode(JSON.stringify(next, null, 2) + "\n"), "SNSリンクを更新", sha); status("保存しました。数分で公開ページに反映されます。", "ok", 5000); go("settings"); }
+    try { status("保存しています…"); cache.settings = (await api("kb_settings", { settings: next })).settings; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("settings"); }
     catch (e) { status("保存できませんでした：" + e.message, "err", 8000); }
   };
 };
@@ -933,19 +809,14 @@ views.settings = async (el) => {
    起動
    ============================================================ */
 function start() {
-  $("#unlock").hidden = true; $("#setup").hidden = true; $("#app").hidden = false;
+  $("#unlock").hidden = true; $("#app").hidden = false;
   const setHead = () => document.documentElement.style.setProperty("--head-h", $("#head").offsetHeight + "px");
   setHead(); window.addEventListener("resize", setHead);
   go("home");
 }
-(async () => {
-  const saved = store.get("kb-token");
-  if (saved) {
-    try { await checkToken(saved); return start(); }
-    catch { store.del("kb-token"); }
-  }
-  show((await fetchLock()) ? "unlock" : "setup");
-})();
+store.del("kb-token"); // 以前のトークン方式の名残を消す
+PASS = store.get("kb-pass") || "";
+if (PASS) start(); else $("#unlock").hidden = false;
 </script>
 </body>
 </html>

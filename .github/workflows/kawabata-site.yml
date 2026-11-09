@@ -1,6 +1,6 @@
 # かわばた日和の公開ページ（/kawabata/）を作り直す。
-# 管理ページ（/kawabata-admin/）で記事・お店・イベントを保存すると kawabata-data/ が更新され、これが動く。
-# 予約公開の記事を時間どおりに出すため、1時間ごとにも動く（変更がなければ何もしない）。
+# 管理ページ（/kawabata-admin/）の保存先は Google Apps Script。10分ごとにそこから公開中のデータを取り込み、
+# 変わっていたら（予約公開の時間が来た記事も含む）kawabata-data/ を更新して公開ページを作り直す。
 name: かわばた日和を書き出す
 
 on:
@@ -11,7 +11,7 @@ on:
       - "kawabata-biyori/**"
       - ".github/workflows/kawabata-site.yml"
   schedule:
-    - cron: "17 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -29,17 +29,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: 管理ページのデータを取り込む
+        id: pull
+        run: |
+          python3 -I kawabata-biyori/scripts/pull_data.py "$KB_API" kawabata-data
+          git add -A kawabata-data
+          if git diff --cached --quiet; then changed=false; else changed=true; fi
+          echo "データの変更: $changed"
+          if [ "$changed" = true ] || [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          KB_API: https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec
+
       - uses: actions/setup-node@v4
+        if: steps.pull.outputs.build == 'true'
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: kawabata-biyori/package-lock.json
 
       - name: 依存パッケージを入れる
+        if: steps.pull.outputs.build == 'true'
         working-directory: kawabata-biyori
         run: npm ci
 
       - name: 公開ページを書き出す
+        if: steps.pull.outputs.build == 'true'
         working-directory: kawabata-biyori
         env:
           NEXT_PUBLIC_SITE_URL: https://sereness25-cyber.github.io/sereness.main1/kawabata
@@ -47,17 +65,18 @@ jobs:
         run: ./scripts/export-static.sh ../kawabata
 
       - name: 変更があれば保存する
+        if: steps.pull.outputs.build == 'true'
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add kawabata
+          git add -A kawabata kawabata-data
           if git diff --cached --quiet; then
             echo "公開ページに変更はありません"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "かわばた日和の公開ページを更新"
+          git commit -m "かわばた日和の公開ページを更新（管理ページの内容を取り込み）"
           git pull --rebase origin main
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
