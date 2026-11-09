@@ -19,7 +19,7 @@ export default async function SearchPage({ searchParams }: { searchParams: SP })
         <Breadcrumbs items={[{ name: "サイト内検索", href: "/search" }]} />
       </PageHeader>
       <Container className="py-10">
-        <form method="get" role="search" className="flex flex-col gap-3 rounded-3xl bg-white p-5 shadow-soft sm:flex-row">
+        <form method="get" role="search" className="flex flex-col gap-3 border border-navy/15 bg-white p-5 sm:flex-row">
           <label className="flex-1">
             <span className="sr-only">キーワード</span>
             <input type="search" name="q" defaultValue={q} placeholder="記事・お店・イベントを検索" className="h-12 w-full rounded-xl border border-beige px-4" />
@@ -33,7 +33,7 @@ export default async function SearchPage({ searchParams }: { searchParams: SP })
               <option value="events">イベント</option>
             </select>
           </label>
-          <button type="submit" className="h-12 rounded-full bg-navy px-8 font-bold text-white">検索</button>
+          <button type="submit" className="h-12 bg-navy px-8 font-bold text-white">検索</button>
         </form>
 
         {q && <p className="mt-6 text-sm text-muted">「{q}」の検索結果：{count}件</p>}

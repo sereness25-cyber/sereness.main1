@@ -61,7 +61,7 @@ export default async function ShopPage({ params }: Props) {
         <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
         <p className="mt-8 whitespace-pre-line text-[1.02rem] leading-9">{shop.description}</p>
 
-        <section className="mt-10 rounded-3xl bg-white p-6 shadow-soft md:p-8">
+        <section className="mt-10 border border-navy/15 bg-white p-6 md:p-8">
           <h2 className="text-xl text-navy">店舗情報</h2>
           <dl className="mt-4 divide-y divide-beige">
             {rows.map(([k, v]) => (
@@ -91,7 +91,7 @@ export default async function ShopPage({ params }: Props) {
             <h2 className="mb-4 text-xl text-navy">地図</h2>
             <MapClient shops={[{ slug: shop.slug, name: shop.name, category: shop.category, categoryLabel: shopCategoryLabel(shop.category), lat: shop.lat, lng: shop.lng, isSample: shop.is_sample }]} height={340} />
             {!shop.is_sample && (
-              <a href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center rounded-full bg-navy px-5 text-sm font-bold text-white">
+              <a href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
                 Googleマップで経路を見る
               </a>
             )}

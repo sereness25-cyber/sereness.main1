@@ -16,6 +16,7 @@
   --font-maru: var(--font-zen-maru), "Hiragino Maru Gothic ProN", sans-serif;
   --font-sans: var(--font-noto-sans), "Hiragino Sans", "Yu Gothic", sans-serif;
   --font-en: var(--font-cormorant), "Times New Roman", serif;
+  --font-mincho: var(--font-old-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
 
   --shadow-soft: 0 6px 24px -8px rgb(52 68 92 / 0.18);
   --shadow-lift: 0 14px 34px -12px rgb(52 68 92 / 0.28);
@@ -34,11 +35,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-maru);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.5;
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-maru);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
 }
 
 :focus-visible {
@@ -140,3 +143,94 @@ h1, h2, h3, h4 {
 
 /* Leaflet のポップアップを馴染ませる */
 .leaflet-container { font-family: var(--font-sans); border-radius: 20px; }
+
+/* ---------------------------------------------------------------
+   雑誌風のタイポグラフィ
+   --------------------------------------------------------------- */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-en);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  color: var(--color-rose-deep);
+}
+.kicker::before {
+  content: "";
+  width: 2.2em;
+  height: 1px;
+  background: currentColor;
+}
+.rule-double {
+  border-top: 3px double var(--color-navy);
+}
+.headline {
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+@utility tate {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.18em;
+}
+.grain {
+  background-image: radial-gradient(rgb(52 68 92 / 0.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* 記事本文を雑誌風に */
+.article-body.magazine > div:first-child > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.08em 0.14em 0 0;
+  font-family: var(--font-mincho);
+  font-weight: 900;
+  font-size: 3.6em;
+  line-height: 0.9;
+  color: var(--color-navy);
+}
+.article-body.magazine h2 {
+  margin: 3em 0 1.1em;
+  padding: 0.9em 0 0;
+  border: 0;
+  border-top: 3px double var(--color-navy);
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-mincho);
+  font-size: 1.45rem;
+  line-height: 1.55;
+}
+.article-body.magazine h3 {
+  border-bottom: 0;
+  padding-bottom: 0;
+  font-family: var(--font-mincho);
+  font-size: 1.15rem;
+}
+.article-body.magazine h3::before {
+  content: "— ";
+  color: var(--color-rose-deep);
+}
+.article-body.magazine blockquote {
+  margin: 2.4em 0;
+  padding: 1.2em 0;
+  border-left: 0;
+  border-top: 1px solid var(--color-navy);
+  border-bottom: 1px solid var(--color-navy);
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-mincho);
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: var(--color-navy);
+  text-align: center;
+}
+.article-body.magazine .callout {
+  border-radius: 0;
+  border: 0;
+  border-left: 3px solid var(--color-rose);
+  background: #fbf3f3;
+}

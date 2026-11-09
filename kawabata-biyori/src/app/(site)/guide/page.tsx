@@ -41,7 +41,7 @@ export default async function GuidePage() {
             ["スナック", "ママとの会話やカラオケを楽しむ。"],
             ["ダイニング", "食事が主役。落ち着いた空間で。"],
           ].map(([k, v]) => (
-            <li key={k} className="rounded-2xl bg-ivory p-4"><strong className="font-maru text-navy">{k}</strong><br /><span className="text-sm">{v}</span></li>
+            <li key={k} className="border-l-2 border-rose bg-ivory px-4 py-3"><strong className="font-maru text-navy">{k}</strong><br /><span className="text-sm">{v}</span></li>
           ))}
         </ul>
       ),
@@ -70,11 +70,11 @@ export default async function GuidePage() {
         <>
           <p>はじめてなら、<BeginnerMark />マークのお店がおすすめ。料金が明確で、はじめてのお客さまを歓迎しているお店です。</p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/shops?beginner=1" className="rounded-full bg-navy px-4 py-2 text-sm text-white">初心者歓迎のお店</Link>
-            <Link href="/shops?solo=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">一人で入りやすいお店</Link>
-            <Link href="/shops?nonalc=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">ノンアル対応のお店</Link>
+            <Link href="/shops?beginner=1" className="bg-navy px-4 py-2 text-sm text-white">初心者歓迎のお店</Link>
+            <Link href="/shops?solo=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy">一人で入りやすいお店</Link>
+            <Link href="/shops?nonalc=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy">ノンアル対応のお店</Link>
             {SHOP_CATEGORIES.slice(0, 3).map((c) => (
-              <Link key={c.value} href={`/shops?category=${c.value}`} className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">{c.label}</Link>
+              <Link key={c.value} href={`/shops?category=${c.value}`} className="rounded-full bg-white px-4 py-2 text-sm text-navy">{c.label}</Link>
             ))}
           </div>
         </>
@@ -101,7 +101,7 @@ export default async function GuidePage() {
       <Container className="max-w-[860px] py-10">
         <nav aria-label="ステップ" className="mb-10 grid grid-cols-5 gap-1.5 text-center">
           {steps.map((s, i) => (
-            <a key={s.id} href={`#${s.id}`} className="rounded-2xl bg-white px-1 py-3 shadow-soft">
+            <a key={s.id} href={`#${s.id}`} className="border border-navy/15 bg-white px-1 py-3">
               <span className="block font-en text-xs italic text-rose-deep">STEP</span>
               <span className="font-en text-xl font-semibold text-navy">{i + 1}</span>
             </a>
@@ -109,9 +109,9 @@ export default async function GuidePage() {
         </nav>
         <ol className="space-y-8">
           {steps.map((s, i) => (
-            <li key={s.id} id={s.id} className="scroll-mt-24 rounded-3xl bg-white p-6 shadow-soft md:p-8">
+            <li key={s.id} id={s.id} className="scroll-mt-24 border border-navy/15 bg-white p-6 md:p-8">
               <p className="font-en text-sm italic tracking-widest text-rose-deep">STEP {i + 1}</p>
-              <h2 className="mt-1 text-xl text-navy md:text-2xl">{s.title}</h2>
+              <h2 className="headline mt-1 text-xl text-navy md:text-2xl">{s.title}</h2>
               <div className="mt-4 space-y-3 leading-8">{s.body}</div>
               {s.links.map(find).filter(Boolean).length > 0 && (
                 <div className="mt-5 grid gap-3">

@@ -15,7 +15,8 @@ export async function Footer() {
   return (
     <footer className="mt-24 bg-navy text-white">
       <div className="mx-auto max-w-[1200px] px-5 py-14 md:px-6">
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+        <p className="border-b border-white/20 pb-8 font-en text-[3rem] font-semibold leading-none tracking-tight md:text-[5.5rem]">KAWABATA BIYORI</p>
+        <div className="mt-10 flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
             <Logo light />
             <p className="mt-4 max-w-sm text-sm leading-7 text-white/80">{SITE.description}</p>
@@ -51,7 +52,7 @@ export async function Footer() {
           </nav>
         </div>
         <p className="mt-12 border-t border-white/15 pt-6 text-xs text-white/60">
-          © {SITE.name} ／ 運営：{SITE.operator}
+          発行：{SITE.operator} ／ 秋田市・川反 ／ © {SITE.name}
         </p>
       </div>
     </footer>

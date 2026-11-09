@@ -35,7 +35,7 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
         <Breadcrumbs items={[{ name: "お店を探す", href: "/shops" }]} />
       </PageHeader>
       <Container className="py-10">
-        <form method="get" className="grid gap-3 rounded-3xl bg-white p-5 shadow-soft md:grid-cols-4">
+        <form method="get" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-4">
           <label className="md:col-span-2">
             <span className="mb-1 block text-xs font-bold text-navy">店名・キーワード</span>
             <input type="search" name="q" defaultValue={sp.q} className={field} placeholder="例：カウンター" />
@@ -60,7 +60,7 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
             <label className={check}><input type="checkbox" name="solo" value="1" defaultChecked={sp.solo === "1"} className="size-5 accent-rose-deep" /> 一人利用OK</label>
             <label className={check}><input type="checkbox" name="nonalc" value="1" defaultChecked={sp.nonalc === "1"} className="size-5 accent-rose-deep" /> ノンアル対応</label>
           </fieldset>
-          <div className="flex items-end"><button type="submit" className="h-11 w-full rounded-full bg-navy text-sm font-bold text-white">この条件で探す</button></div>
+          <div className="flex items-end"><button type="submit" className="h-11 w-full bg-navy text-sm font-bold text-white">この条件で探す</button></div>
         </form>
 
         <details className="mt-5 rounded-2xl bg-[#fdf6ea] p-4 text-sm">

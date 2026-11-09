@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/format";
 import { siteUrl } from "@/lib/constants";
 import { Thumb } from "./Thumb";
 import { ArticleCard, ShopCard } from "./Cards";
-import { CategoryBadge, DraftBadge, PrBadge } from "./Badges";
+import { DraftBadge, PrBadge } from "./Badges";
 import { ShareButtons } from "./ShareButtons";
 import { Container } from "./Section";
 
@@ -29,17 +29,19 @@ export function ArticleView({ article, related, shops, embedShops, embedArticles
 
   return (
     <article>
-      <Container className="max-w-[860px] pt-6 md:pt-10">
+      <Container className="max-w-[920px] pt-6 md:pt-10">
         {breadcrumbs}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="rule-double flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 pt-6 text-center">
           {article.categories.map((c) => (
-            <Link key={c.id} href={`/category/${c.slug}`}><CategoryBadge name={c.name} /></Link>
+            <Link key={c.id} href={`/category/${c.slug}`} className="font-en text-base italic tracking-[0.2em] text-rose-deep hover:underline">{c.name}</Link>
           ))}
           {article.is_sponsored && <PrBadge />}
           {(article.is_sample || preview) && <DraftBadge />}
         </div>
-        <h1 className="mt-3 text-[1.6rem] leading-snug text-navy md:text-[2.1rem]">{article.title}</h1>
-        <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
+        <h1 className="headline mx-auto mt-5 max-w-[22em] text-center text-[1.9rem] text-navy md:text-[2.7rem]">{article.title}</h1>
+        <p className="mx-auto mt-5 max-w-[34em] text-center text-[1.02rem] leading-8 text-ink">{article.excerpt}</p>
+        <p className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-muted">
+          <span>文・かわばた日和編集部</span>
           {article.published_at ? (
             <span>公開日 <time dateTime={article.published_at}>{formatDate(article.published_at)}</time></span>
           ) : (
@@ -53,16 +55,18 @@ export function ArticleView({ article, related, shops, embedShops, embedArticles
         )}
       </Container>
 
-      <Container className="mt-6 max-w-[960px]">
-        <Thumb src={article.thumbnail} alt={article.thumbnail_alt} label={article.categories[0]?.name} seed={article.slug} isAi={article.thumbnail_is_ai} priority className="rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
+      <Container className="mt-8 max-w-[1100px]">
+        <figure>
+          <Thumb src={article.thumbnail} alt={article.thumbnail_alt} label={article.categories[0]?.name} seed={article.slug} isAi={article.thumbnail_is_ai} priority className="aspect-[21/9]" sizes="(min-width: 1100px) 1100px, 100vw" />
+          {article.thumbnail_alt && <figcaption className="mt-2 text-right text-xs text-muted">{article.thumbnail_alt}</figcaption>}
+        </figure>
       </Container>
 
-      <Container className="mt-8 max-w-[760px]">
-        <p className="text-[1.05rem] leading-9 text-ink">{article.excerpt}</p>
+      <Container className="mt-10 max-w-[720px]">
 
         {toc.length > 2 && (
-          <nav aria-label="目次" className="my-8 rounded-3xl bg-white p-6 shadow-soft">
-            <p className="font-maru font-bold text-navy">目次</p>
+          <nav aria-label="目次" className="my-10 border-y border-navy/30 py-6">
+            <p className="font-en text-lg italic tracking-[0.2em] text-navy">Contents</p>
             <ol className="mt-3 space-y-1.5 text-[0.95rem]">
               {toc.map((t) => (
                 <li key={t.id} className={t.level === 3 ? "pl-5 text-sm" : ""}>
@@ -75,7 +79,7 @@ export function ArticleView({ article, related, shops, embedShops, embedArticles
           </nav>
         )}
 
-        <div className="article-body">
+        <div className="article-body magazine">
           {segments.map((seg, i) => {
             if (seg.type === "html") return <div key={i} dangerouslySetInnerHTML={{ __html: seg.html }} />;
             if (seg.type === "shop") {
@@ -104,15 +108,15 @@ export function ArticleView({ article, related, shops, embedShops, embedArticles
 
       {shops.length > 0 && (
         <Container className="mt-14">
-          <h2 className="mb-5 text-xl text-navy">この記事で紹介したお店</h2>
+          <h2 className="rule-double headline mb-6 pt-4 text-xl text-navy">この記事で紹介したお店</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shops.map((s) => <ShopCard key={s.id} shop={s} />)}</div>
         </Container>
       )}
 
       {related.length > 0 && (
         <Container className="mt-14">
-          <h2 className="mb-5 text-xl text-navy">関連記事</h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{related.map((a) => <ArticleCard key={a.id} article={a} />)}</div>
+          <h2 className="rule-double mb-8 pt-4"><span className="block font-en text-[2rem] italic leading-none text-navy">Read next</span><span className="headline mt-2 block text-[1.05rem] text-navy">関連記事</span></h2>
+          <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">{related.map((a) => <ArticleCard key={a.id} article={a} />)}</div>
         </Container>
       )}
     </article>

@@ -7,7 +7,7 @@ export function DraftBadge() {
 }
 
 export function SampleBadge() {
-  return <span className="inline-block rounded-full bg-navy px-2.5 py-0.5 text-[0.7rem] font-bold text-white">架空のサンプル</span>;
+  return <span className="inline-block bg-navy px-2.5 py-0.5 text-[0.7rem] font-bold text-white">架空のサンプル</span>;
 }
 
 export function PrBadge() {

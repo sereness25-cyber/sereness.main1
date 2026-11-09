@@ -22,7 +22,7 @@ export default function CompanyPage() {
         <Breadcrumbs items={[{ name: "運営者情報", href: "/company" }]} />
       </PageHeader>
       <Container className="max-w-[760px] py-10">
-        <dl className="divide-y divide-beige rounded-3xl bg-white p-6 shadow-soft">
+        <dl className="divide-y divide-beige border border-navy/15 bg-white p-6">
           {ROWS.map(([k, v]) => (
             <div key={k} className="grid grid-cols-[8em_1fr] gap-3 py-3">
               <dt className="font-bold text-navy">{k}</dt>

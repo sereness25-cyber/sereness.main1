@@ -14,7 +14,7 @@ export function ArticleFilters({
 }) {
   const field = "h-11 w-full rounded-xl border border-beige bg-white px-3 text-sm";
   return (
-    <form action={action} method="get" className="grid gap-3 rounded-3xl bg-white p-5 shadow-soft md:grid-cols-6">
+    <form action={action} method="get" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-6">
       <label className="md:col-span-2">
         <span className="mb-1 block text-xs font-bold text-navy">キーワード</span>
         <input type="search" name="q" defaultValue={values.q} placeholder="例：一人飲み" className={field} />
@@ -42,7 +42,7 @@ export function ArticleFilters({
         </select>
       </label>
       <div className="flex items-end">
-        <button type="submit" className="h-11 w-full rounded-full bg-navy text-sm font-bold text-white">絞り込む</button>
+        <button type="submit" className="h-11 w-full bg-navy text-sm font-bold text-white">絞り込む</button>
       </div>
       <details className="md:col-span-6" open={!!(values.from || values.to)}>
         <summary className="cursor-pointer text-xs text-muted">公開日で絞り込む</summary>

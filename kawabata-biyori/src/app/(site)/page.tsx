@@ -2,60 +2,89 @@ import Link from "next/link";
 import { SITE, SHOP_CATEGORIES } from "@/lib/constants";
 import { getFeaturedArticles, getLatestArticles, getArticlesByCategory, getUpcomingEvents } from "@/lib/data";
 import { HeroArt } from "@/components/site/HeroArt";
-import { ArticleCard, EventCard } from "@/components/site/Cards";
+import { ArticleCard, ArticleRow, EventCard } from "@/components/site/Cards";
 import { Container, EmptyState, SectionTitle } from "@/components/site/Section";
+import { Thumb } from "@/components/site/Thumb";
 
 export const revalidate = 60;
 
-const GUIDE_TOPICS = [
-  { n: "01", title: "川反ってどんな街？", href: "/guide#step1", icon: "M12 3c-3 0-5 2-5 4v8c0 2 2 4 5 4s5-2 5-4V7c0-2-2-4-5-4ZM7 9h10M7 13h10M12 1v2M12 19v3" },
-  { n: "02", title: "初めてのお店選び", href: "/guide#step4", icon: "M4 10h16l-1.5 10h-13ZM7 10l2-6M17 10l-2-6M9 14v3M15 14v3" },
-  { n: "03", title: "料金システム", href: "/guide#step3", icon: "M4 6h16v12H4ZM4 10h16M8 15h3" },
-  { n: "04", title: "一人飲み", href: "/articles/solo-drinking", icon: "M6 4h12l-1 7a5 5 0 0 1-10 0ZM12 16v4M8 20h8" },
-  { n: "05", title: "お酒を飲まない楽しみ方", href: "/articles/without-alcohol", icon: "M5 8h12v5a6 6 0 0 1-12 0ZM17 9h1.5a2.5 2.5 0 0 1 0 5H17M8 2v3M12 2v3" },
+const GUIDE_STEPS = [
+  { title: "川反ってどんな街？", body: "旭川沿いに広がる、秋田いちばんの繁華街。", href: "/guide#step1" },
+  { title: "お店の種類を知ろう", body: "居酒屋、BAR、スナック。それぞれの楽しみ方。", href: "/guide#step2" },
+  { title: "料金システムを知ろう", body: "チャージ、セット料金。注文の前に知っておくと安心。", href: "/guide#step3" },
+  { title: "自分に合うお店を探そう", body: "一人飲みも、お酒を飲まない夜も。", href: "/guide#step4" },
+  { title: "川反を楽しもう", body: "早めの一軒目から、帰り道まで気持ちよく。", href: "/guide#step5" },
 ];
 
 export default async function HomePage() {
   const [featured, latest, people, events] = await Promise.all([
     getFeaturedArticles(3),
     getLatestArticles(6),
-    getArticlesByCategory("people", 3),
+    getArticlesByCategory("people", 1),
     getUpcomingEvents(3),
   ]);
+  const [cover, ...subs] = featured;
+  const now = new Date();
+  const issue = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const person = people[0];
 
   return (
     <>
-      {/* メインビジュアル */}
-      <section className="relative isolate overflow-hidden">
-        <div className="relative h-[78svh] min-h-[460px] max-h-[720px]">
-          <HeroArt />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy/5 via-transparent to-navy/50" />
-          <Container className="relative flex h-full flex-col justify-end pb-8 md:justify-center md:pb-0">
-            <div className="fade-up max-w-xl rounded-[28px] bg-navy/40 p-6 text-white ring-1 ring-white/15 backdrop-blur-md md:p-9">
-              <p className="font-en text-sm italic tracking-[0.35em] text-white/90">{SITE.nameEn}</p>
-              <h1 className="mt-2 font-maru text-[2.6rem] leading-tight drop-shadow md:text-[3.6rem]">{SITE.name}</h1>
-              <p className="mt-4 font-maru text-[1.35rem] font-bold drop-shadow md:text-[1.6rem]">{SITE.catch}</p>
-              <p className="mt-3 text-[0.95rem] leading-8 text-white/95 drop-shadow">
-                {SITE.sub[0]}
-                <br />
-                {SITE.sub[1]}
-              </p>
-              <Link href="/guide" className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-7 py-3 font-maru font-bold text-navy shadow-lift transition hover:-translate-y-0.5">
-                川反を知る <span aria-hidden="true" className="text-rose-deep">→</span>
-              </Link>
+      {/* 表紙 */}
+      <section className="grain">
+        <Container className="grid gap-8 pb-14 pt-8 md:pt-12 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-0">
+          <div className="order-1 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-start-1">
+            <p className="flex items-center justify-between border-b border-navy pb-2 font-en text-sm italic tracking-[0.2em] text-navy">
+              <span>Akita Kawabata Web Magazine</span>
+              <span>No. {issue}</span>
+            </p>
+            <h1 className="mt-5 font-en text-[3.4rem] font-semibold leading-[0.92] tracking-tight text-navy md:text-[5rem] lg:text-[4.6rem]">
+              KAWABATA
+              <br />
+              BIYORI
+            </h1>
+            <p className="headline mt-4 text-[1.9rem] text-navy md:text-[2.2rem]">{SITE.name}</p>
+            <p className="mt-4 text-[0.95rem] leading-8 text-ink">
+              {SITE.sub[0]}
+              <br />
+              {SITE.sub[1]}
+            </p>
+            <Link href="/guide" className="mt-6 inline-flex min-h-12 w-fit items-center gap-3 border border-navy bg-navy px-7 font-mincho font-bold tracking-widest text-white transition hover:bg-ivory hover:text-navy">
+              川反を知る <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+
+          <nav aria-label="今号の目次" className="order-3 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-start-2 lg:self-end">
+            <p className="rule-double pt-3 font-en text-lg italic tracking-[0.2em] text-navy">In this issue</p>
+            <ol>
+              {featured.map((a, i) => <li key={a.id}><ArticleRow article={a} index={i + 1} /></li>)}
+            </ol>
+          </nav>
+
+          <div className="relative order-2 lg:order-none lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+            <div className="relative aspect-[4/5] overflow-hidden md:aspect-[5/4] lg:aspect-[4/5]">
+              <HeroArt />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent" />
+              <p className="tate headline absolute right-5 top-6 text-[1.7rem] text-white drop-shadow md:right-8 md:text-[2.2rem]">{SITE.catch}</p>
+              <p className="absolute bottom-4 left-5 font-en text-sm italic tracking-[0.2em] text-white/90">Cover — 川反の夜、旭川のほとり</p>
             </div>
-          </Container>
-        </div>
-        <p className="absolute right-3 top-3 rounded-full bg-black/30 px-2.5 py-0.5 text-[0.68rem] text-white">イラスト（写真は準備中）</p>
+            <p className="mt-2 text-right text-[0.7rem] text-muted">表紙はイラストです（写真は準備中）</p>
+          </div>
+        </Container>
       </section>
 
-      {/* 注目記事 */}
+      {/* 特集 */}
       <section className="py-14 md:py-20">
         <Container>
-          <SectionTitle en="Pick up" ja="注目の記事" lead="編集部のおすすめ" />
-          {featured.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featured.map((a, i) => <ArticleCard key={a.id} article={a} priority={i === 0} />)}
+          <SectionTitle en="Feature" ja="特集" lead="編集部がいま届けたい、川反の話。" href="/articles" linkLabel="記事をすべて見る" />
+          {cover ? (
+            <div className="grid gap-10 lg:grid-cols-12">
+              <div className="lg:col-span-8">
+                <ArticleCard article={cover} size="lg" priority />
+              </div>
+              <div className="grid content-start gap-10 lg:col-span-4 lg:border-l lg:border-navy/15 lg:pl-10">
+                {subs.map((a) => <ArticleCard key={a.id} article={a} />)}
+              </div>
             </div>
           ) : (
             <EmptyState title="記事を準備しています" />
@@ -63,32 +92,42 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* はじめての川反 */}
-      <section className="bg-white py-14 md:py-20">
-        <Container>
-          <SectionTitle en="First time" ja="はじめての川反" lead="知っておくと安心。川反デビューの手引き" href="/guide" linkLabel="ガイドを読む" />
-          <ul className="grid grid-cols-2 gap-3 md:grid-cols-5">
-            {GUIDE_TOPICS.map((t) => (
-              <li key={t.n} className={t.n === "05" ? "col-span-2 md:col-span-1" : ""}>
-                <Link href={t.href} className="flex h-full flex-col gap-2 rounded-3xl bg-ivory p-5 transition hover:-translate-y-1 hover:shadow-soft">
-                  <span className="grid size-11 place-items-center rounded-full bg-white text-rose-deep shadow-soft" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={t.icon} /></svg>
-                  </span>
-                  <span className="font-en text-sm italic text-rose-deep">{t.n}</span>
-                  <span className="font-maru font-bold leading-snug text-navy">{t.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+      {/* はじめての川反（特別編） */}
+      <section className="bg-navy py-14 text-white md:py-20">
+        <Container className="grid gap-10 md:grid-cols-[auto_1fr] md:gap-16">
+          <div className="flex items-start gap-6 md:flex-col">
+            <p className="font-en text-lg italic tracking-[0.25em] text-rose">Special</p>
+            <h2 className="headline text-[2rem] md:tate md:text-[2.6rem]">はじめての川反</h2>
+          </div>
+          <div>
+            <p className="max-w-xl leading-8 text-white/85">料金のこと、お店の種類、一人でも入れるか。はじめての人がつまずきやすいところを、5つのステップにまとめました。</p>
+            <ol className="mt-8 border-t border-white/25">
+              {GUIDE_STEPS.map((s, i) => (
+                <li key={s.title}>
+                  <Link href={s.href} className="group grid grid-cols-[3.2rem_1fr_auto] items-baseline gap-3 border-b border-white/25 py-5">
+                    <span className="font-en text-[2rem] italic leading-none text-rose">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="min-w-0">
+                      <span className="headline block text-[1.2rem] group-hover:underline">{s.title}</span>
+                      <span className="mt-1 block text-sm text-white/70">{s.body}</span>
+                    </span>
+                    <span aria-hidden="true" className="text-rose">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+            <Link href="/guide" className="mt-8 inline-flex min-h-12 items-center gap-3 border border-white px-7 font-mincho font-bold tracking-widest transition hover:bg-white hover:text-navy">
+              ガイドを読む <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </Container>
       </section>
 
-      {/* 新着記事 */}
+      {/* 新着 */}
       <section className="py-14 md:py-20">
         <Container>
-          <SectionTitle en="New" ja="新着記事" href="/articles" />
+          <SectionTitle en="Latest" ja="新着記事" href="/articles" />
           {latest.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {latest.map((a) => <ArticleCard key={a.id} article={a} />)}
             </div>
           ) : (
@@ -97,25 +136,27 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* お店を探す */}
+      {/* お店の索引 */}
       <section className="bg-beige/60 py-14 md:py-20">
         <Container>
-          <SectionTitle en="Find a shop" ja="お店を探す" lead="気分に合わせて、今夜の一軒を。" href="/shops" linkLabel="すべてのお店" />
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <SectionTitle en="Directory" ja="お店を探す" lead="気分に合わせて、今夜の一軒を。" href="/shops" linkLabel="すべてのお店" />
+          <ul className="grid gap-x-12 md:grid-cols-2">
             {SHOP_CATEGORIES.map((c) => (
               <li key={c.value}>
-                <Link href={`/shops?category=${c.value}`} className="flex flex-col items-center gap-1 rounded-3xl bg-white px-3 py-6 text-center shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
-                  <span className="font-en text-xs italic tracking-widest text-rose-deep">{c.en}</span>
-                  <span className="font-maru text-lg font-bold text-navy">{c.label}</span>
+                <Link href={`/shops?category=${c.value}`} className="group flex items-baseline gap-3 border-b border-navy/20 py-4">
+                  <span className="headline text-[1.25rem] text-navy">{c.label}</span>
+                  <span className="font-en text-sm italic tracking-widest text-rose-deep">{c.en}</span>
+                  <span aria-hidden="true" className="mb-1 flex-1 border-b border-dotted border-navy/30" />
+                  <span aria-hidden="true" className="text-navy transition group-hover:translate-x-1">→</span>
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Link href="/shops?beginner=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">初心者歓迎のお店</Link>
-            <Link href="/shops?solo=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">一人で入りやすいお店</Link>
-            <Link href="/shops?nonalc=1" className="rounded-full bg-white px-4 py-2 text-sm text-navy shadow-soft">ノンアル対応のお店</Link>
-            <Link href="/map" className="rounded-full bg-navy px-4 py-2 text-sm text-white shadow-soft">地図で探す</Link>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+            <Link href="/shops?beginner=1" className="border-b border-navy text-navy hover:text-rose-deep">初心者歓迎のお店</Link>
+            <Link href="/shops?solo=1" className="border-b border-navy text-navy hover:text-rose-deep">一人で入りやすいお店</Link>
+            <Link href="/shops?nonalc=1" className="border-b border-navy text-navy hover:text-rose-deep">ノンアル対応のお店</Link>
+            <Link href="/map" className="border-b border-navy text-navy hover:text-rose-deep">地図で探す</Link>
           </div>
         </Container>
       </section>
@@ -124,10 +165,17 @@ export default async function HomePage() {
       <section className="py-14 md:py-20">
         <Container>
           <SectionTitle en="People" ja="川反の人々" lead="この街で働く人の、それぞれの物語。" href="/category/people" />
-          {people.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {people.map((a) => <ArticleCard key={a.id} article={a} />)}
-            </div>
+          {person ? (
+            <Link href={`/articles/${person.slug}`} className="group grid items-center gap-8 md:grid-cols-2 md:gap-14">
+              <Thumb src={person.thumbnail} alt={person.thumbnail_alt} label="Interview" seed={person.slug} isAi={person.thumbnail_is_ai} className="aspect-[4/3]" />
+              <div>
+                <p className="kicker">Interview</p>
+                <p aria-hidden="true" className="mt-4 font-mincho text-[4rem] leading-none text-rose">“</p>
+                <h3 className="headline -mt-4 text-[1.5rem] text-navy group-hover:underline md:text-[1.9rem]">{person.title}</h3>
+                <p className="mt-4 leading-8 text-muted">{person.excerpt}</p>
+                <span className="mt-6 inline-block border-b border-navy pb-0.5 text-sm text-navy">続きを読む →</span>
+              </div>
+            </Link>
           ) : (
             <EmptyState title="インタビュー記事を準備しています" />
           )}
@@ -135,11 +183,11 @@ export default async function HomePage() {
       </section>
 
       {/* イベント */}
-      <section className="bg-white py-14 md:py-20">
+      <section className="pb-6 pt-4 md:pb-10">
         <Container>
-          <SectionTitle en="Events" ja="イベント情報" href="/events" />
+          <SectionTitle en="Calendar" ja="イベント情報" href="/events" />
           {events.length ? (
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-x-12 md:grid-cols-3">
               {events.map((e) => <EventCard key={e.id} event={e} />)}
             </div>
           ) : (

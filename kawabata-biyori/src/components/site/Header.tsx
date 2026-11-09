@@ -24,9 +24,17 @@ export function Header() {
   }, [open]);
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const now = new Date();
+  const issue = `${now.getFullYear()}年${now.getMonth() + 1}月号`;
 
   return (
-    <header className={`sticky top-0 z-40 border-b transition-colors ${scrolled ? "border-beige bg-ivory/95 backdrop-blur" : "border-transparent bg-ivory"}`}>
+    <header className={`sticky top-0 z-40 border-b transition-colors ${scrolled ? "border-navy/20 bg-ivory/95 backdrop-blur" : "border-navy/20 bg-ivory"}`}>
+      <div className="hidden border-b border-navy/10 lg:block">
+        <div className="mx-auto flex h-8 max-w-[1200px] items-center justify-between px-6 text-[0.72rem] tracking-wider text-muted">
+          <span>秋田・川反のWebマガジン</span>
+          <span className="font-en italic">{issue}</span>
+        </div>
+      </div>
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4 md:px-6">
         <Logo />
         <nav aria-label="メインメニュー" className="hidden lg:block">
@@ -36,7 +44,7 @@ export function Header() {
                 <Link
                   href={n.href}
                   aria-current={isActive(n.href) ? "page" : undefined}
-                  className={`rounded-full px-4 py-2 text-[0.92rem] font-medium transition-colors hover:bg-white ${isActive(n.href) ? "bg-white text-navy shadow-soft" : "text-ink"}`}
+                  className={`border-b-2 px-3 py-2 text-[0.9rem] font-medium tracking-wider transition-colors hover:text-rose-deep ${isActive(n.href) ? "border-rose text-navy" : "border-transparent text-ink"}`}
                 >
                   {n.label}
                 </Link>
@@ -59,7 +67,7 @@ export function Header() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "メニューを閉じる" : "メニューを開く"}
-            className="grid size-11 place-items-center rounded-full bg-white text-navy shadow-soft"
+            className="grid size-11 place-items-center border border-navy/30 bg-white text-navy"
           >
             <span className="relative block h-3.5 w-5">
               <span className={`absolute left-0 h-0.5 w-5 rounded bg-current transition ${open ? "top-1.5 rotate-45" : "top-0"}`} />
@@ -73,7 +81,7 @@ export function Header() {
         <ul className="space-y-2">
           {NAV.map((n) => (
             <li key={n.href}>
-              <Link href={n.href} className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-maru font-bold text-navy shadow-soft">
+              <Link href={n.href} className="flex items-center justify-between border-b border-navy/15 px-1 py-4 font-mincho text-lg font-bold text-navy">
                 {n.label}
                 <span aria-hidden="true" className="text-rose">→</span>
               </Link>

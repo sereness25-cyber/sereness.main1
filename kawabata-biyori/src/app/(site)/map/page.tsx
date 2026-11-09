@@ -22,9 +22,9 @@ export default async function MapPage({ searchParams }: { searchParams: Promise<
       </PageHeader>
       <Container className="py-10">
         <nav aria-label="業種で絞り込む" className="mb-5 flex flex-wrap gap-2">
-          <Link href="/map" aria-current={!active ? "true" : undefined} className={`rounded-full px-4 py-2 text-sm shadow-soft ${!active ? "bg-navy text-white" : "bg-white text-navy"}`}>すべて</Link>
+          <Link href="/map" aria-current={!active ? "true" : undefined} className={`rounded-full px-4 py-2 text-sm ${!active ? "bg-navy text-white" : "bg-white text-navy"}`}>すべて</Link>
           {SHOP_CATEGORIES.map((c) => (
-            <Link key={c.value} href={`/map?category=${c.value}`} aria-current={active === c.value ? "true" : undefined} className={`rounded-full px-4 py-2 text-sm shadow-soft ${active === c.value ? "bg-navy text-white" : "bg-white text-navy"}`}>
+            <Link key={c.value} href={`/map?category=${c.value}`} aria-current={active === c.value ? "true" : undefined} className={`rounded-full px-4 py-2 text-sm ${active === c.value ? "bg-navy text-white" : "bg-white text-navy"}`}>
               {c.label}
             </Link>
           ))}
@@ -38,7 +38,7 @@ export default async function MapPage({ searchParams }: { searchParams: Promise<
           <ul className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {shops.map((s) => (
               <li key={s.id}>
-                <Link href={`/shops/${s.slug}`} className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm shadow-soft">
+                <Link href={`/shops/${s.slug}`} className="flex items-center justify-between border border-navy/15 bg-white px-4 py-3 text-sm">
                   <span className="text-navy">{s.name}</span>
                   <span className="text-xs text-muted">{shopCategoryLabel(s.category)}</span>
                 </Link>

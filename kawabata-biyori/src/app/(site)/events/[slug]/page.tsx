@@ -39,7 +39,7 @@ export default async function EventPage({ params }: Props) {
       </div>
       <h1 className="mt-3 text-[1.6rem] text-navy md:text-[2rem]">{e.title}</h1>
       <Thumb src={e.image} alt={e.image_alt || e.title} label="EVENT" seed={e.slug} priority className="mt-6 rounded-3xl" />
-      <dl className="mt-8 divide-y divide-beige rounded-3xl bg-white p-6 shadow-soft">
+      <dl className="mt-8 divide-y divide-beige border border-navy/15 bg-white p-6">
         {rows.map(([k, v]) => (
           <div key={k} className="grid grid-cols-[6em_1fr] gap-3 py-3"><dt className="font-bold text-navy">{k}</dt><dd className="whitespace-pre-line">{v}</dd></div>
         ))}
