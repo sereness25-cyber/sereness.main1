@@ -15,7 +15,12 @@ import { DEMO_EVENTS } from "@/lib/demo/events";
  * 記事数が数千件規模になるまでは、公開データを丸ごと取得してアプリ側で絞り込む。
  */
 
-export const isDemo = () => !isSupabaseConfigured();
+import { isJsonSource, jsonArticles, jsonCategories, jsonEvents, jsonSettings, jsonShops } from "./json-source";
+
+/** GitHub 版の管理ページが保存した JSON を使うか（Supabase 未接続で kawabata-data/ があるとき） */
+const isJson = () => !isSupabaseConfigured() && isJsonSource();
+/** どちらもないときはデモデータを使う */
+export const isDemo = () => !isSupabaseConfigured() && !isJsonSource();
 
 // ---------------------------------------------------------------
 // 生データの取得
@@ -44,6 +49,7 @@ export function mapArticleRow(row: ArticleRow): Article {
 }
 
 const loadArticles = cache(async (): Promise<Article[]> => {
+  if (isJson()) return jsonArticles();
   if (isDemo()) return DEMO_ARTICLES;
   // RLS が「公開済み」または「予約時刻を過ぎた予約記事」だけを返す
   const { data, error } = await publicClient()
@@ -55,6 +61,7 @@ const loadArticles = cache(async (): Promise<Article[]> => {
 });
 
 export const getCategories = cache(async (): Promise<Category[]> => {
+  if (isJson()) return jsonCategories();
   if (isDemo()) return DEMO_CATEGORIES;
   const { data, error } = await publicClient().from("categories").select("*").order("sort_order");
   if (error) throw new Error(`カテゴリーの取得に失敗しました: ${error.message}`);
@@ -62,9 +69,9 @@ export const getCategories = cache(async (): Promise<Category[]> => {
 });
 
 export const getTags = cache(async (): Promise<Tag[]> => {
-  if (isDemo()) {
+  if (isJson() || isDemo()) {
     const map = new Map<string, Tag>();
-    DEMO_ARTICLES.flatMap((a) => a.tags).forEach((t) => map.set(t.slug, t));
+    (await loadArticles()).flatMap((a) => a.tags).forEach((t) => map.set(t.slug, t));
     return [...map.values()];
   }
   const { data, error } = await publicClient().from("tags").select("*").order("name");
@@ -73,6 +80,7 @@ export const getTags = cache(async (): Promise<Tag[]> => {
 });
 
 const loadShops = cache(async (): Promise<Shop[]> => {
+  if (isJson()) return jsonShops();
   if (isDemo()) return RESEARCHED_SHOPS;
   const { data, error } = await publicClient().from("shops").select("*").order("name");
   if (error) throw new Error(`店舗の取得に失敗しました: ${error.message}`);
@@ -80,6 +88,7 @@ const loadShops = cache(async (): Promise<Shop[]> => {
 });
 
 const loadEvents = cache(async (): Promise<EventItem[]> => {
+  if (isJson()) return jsonEvents();
   if (isDemo()) return DEMO_EVENTS;
   const { data, error } = await publicClient().from("events").select("*").order("starts_at");
   if (error) throw new Error(`イベントの取得に失敗しました: ${error.message}`);
@@ -88,6 +97,7 @@ const loadEvents = cache(async (): Promise<EventItem[]> => {
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const empty: SiteSettings = { instagram: "", x: "", facebook: "", youtube: "" };
+  if (isJson()) return { ...empty, ...jsonSettings() };
   if (isDemo()) return empty;
   const { data } = await publicClient().from("site_settings").select("value").eq("key", "site").maybeSingle();
   return { ...empty, ...((data?.value as Partial<SiteSettings>) ?? {}) };
