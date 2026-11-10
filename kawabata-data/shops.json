@@ -257,34 +257,39 @@
       "name": "BAR ル・ヴェール",
       "slug": "bar-le-verre",
       "category": "bar",
-      "description": "秋田市大町・川反のバー。公式サイトでは「女性の一人飲みに人気」と紹介されています。JR秋田駅西口から徒歩16分。",
+      "description": "古き良きビンテージ感あふれる大人の社交場\n王道から希少な銘柄まで様々な洋酒をそろえております\n彩りも華やかなカクテル等、ノンアルコールカクテルも幅広くご対応いたします。高級感ただよう空間で、上質なひと時をお過ごしください…",
       "address": "秋田県秋田市大町4-1-5",
       "lat": null,
       "lng": null,
       "business_hours": "18:00〜1:00（L.O. 0:30）",
       "closed_days": "日曜日、第1・第3月曜日（月曜が祝日の場合は日曜営業・翌月曜休み）",
       "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
+      "budget_level": 3,
+      "payment_methods": "現金/クレジットカード",
+      "seats": "10",
       "solo_ok": true,
-      "non_alcohol": null,
+      "non_alcohol": true,
       "beginner_welcome": false,
-      "sns": {},
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
       "website": "https://www.bar-leverre.com/",
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1XpwxowzK7qRKXvMAlqorVmH2ER6Y95hr.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T03:00:00Z",
+      "updated_at": "2026-11-10T23:52:17.230Z",
       "sources": [
         {
           "label": "BAR ル・ヴェール 公式サイト",
           "url": "https://www.bar-leverre.com/"
         }
       ],
-      "shop_confirmed": false,
+      "shop_confirmed": true,
       "hours": {
         "0": {
           "closed": true,
@@ -349,7 +354,11 @@
           ]
         }
       },
-      "specials": []
+      "specials": [],
+      "gallery": [],
+      "features": [
+        "card"
+      ]
     },
     {
       "id": "shop-bar-aladdin",
