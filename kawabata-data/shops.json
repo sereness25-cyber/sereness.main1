@@ -5,29 +5,32 @@
       "name": "Café & Bar Sereness",
       "slug": "cafe-bar-sereness",
       "category": "bar",
-      "description": "カラオケ・ゲーム・スポーツ観戦も楽しめるカフェ&バー。飲み放題が基本料金で、ソフトドリンクの飲み放題もあり、お酒を飲まない人や一人での来店も歓迎と案内されています。かわばた日和の運営元です。",
+      "description": "カラオケ・ゲーム・スポーツ観戦も楽しめるカフェ&バー。ひとりでも、みんなでも楽しめるBar。\n飲み放題が基本料金で、ソフトドリンクの飲み放題もあり、お酒を飲まない人や一人での来店も歓迎と案内されています。",
       "address": "秋田県秋田市大町5-2-7 SCビル2F",
       "lat": null,
       "lng": null,
       "business_hours": "月・火・木 19:00〜1:00／金・土・祝前日 19:00〜3:00",
       "closed_days": "水曜日",
       "price_range": "アルコール飲み放題 男性2,650円・女性1,100円／ソフトドリンク飲み放題 男性1,100円・女性550円",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
+      "budget_level": 1,
+      "payment_methods": "現金・クレジットカード・バーコード決済",
+      "seats": "18",
       "solo_ok": true,
       "non_alcohol": true,
-      "beginner_welcome": false,
+      "beginner_welcome": true,
       "sns": {
-        "instagram": "https://www.instagram.com/cafe_bar.sereness/"
+        "instagram": "https://www.instagram.com/cafe_bar.sereness/",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
       },
       "website": "https://sereness25-cyber.github.io/sereness.main1/",
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1fxMJzJLTOC5GqBU4Abo3vJ0sSmDNqp4d.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T03:00:00Z",
+      "updated_at": "2026-11-10T10:29:34.486Z",
       "sources": [
         {
           "label": "Café & Bar Sereness 公式サイト（運営元）",
@@ -96,9 +99,12 @@
         }
       },
       "features": [
-        "karaoke"
+        "karaoke",
+        "darts",
+        "card"
       ],
-      "specials": []
+      "specials": [],
+      "gallery": []
     },
     {
       "id": "shop-kawabata-isariya-sakaba",
@@ -350,27 +356,32 @@
       "name": "BARアラジン",
       "slug": "bar-aladdin",
       "category": "bar",
-      "description": "ダーツとカラオケを楽しめる飲み放題のバーとして紹介されています。赤れんが郷土館前バス停から徒歩約1分。",
+      "description": "ダーツとカラオケを楽しめる飲み放題のバーとして紹介されています。3,300円で飲み放題のコスパがいいBar。赤れんが郷土館前バス停から徒歩約1分。",
       "address": "秋田県秋田市大町3-2-22 ジャスマックビル1F",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
+      "business_hours": "20:00～5時",
+      "closed_days": "無休",
+      "price_range": "3,300円",
+      "budget_level": 2,
+      "payment_methods": "現金/カード/QR決済/電子マネー",
+      "seats": "60",
+      "solo_ok": true,
+      "non_alcohol": true,
       "beginner_welcome": false,
-      "sns": {},
-      "website": null,
-      "image": null,
+      "sns": {
+        "instagram": "https://www.instagram.com/arajin_akita?cplk=MTExYXE1NzdnaHl6Yw%3D%3D&utm_source=qr",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": "https://www.akita-aladdin.com",
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1qtFzGic4lxOFNgEId3Z9-ZVZplHfcjw8.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T03:00:00Z",
+      "updated_at": "2026-11-10T10:43:12.917Z",
       "sources": [
         {
           "label": "エキテン",
@@ -379,9 +390,77 @@
       ],
       "shop_confirmed": false,
       "features": [
+        "karaoke",
         "darts",
-        "karaoke"
-      ]
+        "card"
+      ],
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "05:00"
+            }
+          ]
+        }
+      },
+      "specials": []
     },
     {
       "id": "shop-ichinotori-kawabata",
