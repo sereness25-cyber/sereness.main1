@@ -33,15 +33,30 @@ def main():
         print("::warning::Apps Script の返事が想定と違います（新しいバージョンでデプロイされていない可能性があります）。今回は取り込みません。")
         return
     if not payload["categories"]:
-        print("::warning::カテゴリーが空です。念のため取り込みません（Apps Script のエディタで kawabataSetup を実行してください）。")
-        return
+        # カテゴリーは管理画面では編集しないので、保存先が空なら今のファイルをそのまま使う
+        try:
+            with open(os.path.join(data_dir, "categories.json"), encoding="utf-8") as f:
+                payload["categories"] = json.load(f)["categories"]
+        except Exception:  # noqa: BLE001
+            payload["categories"] = []
+        if not payload["categories"]:
+            print("::warning::カテゴリーが空です。念のため取り込みません。")
+            return
     try:
         with open(os.path.join(data_dir, "articles.json"), encoding="utf-8") as f:
             had = len(json.load(f)["articles"])
     except Exception:  # noqa: BLE001
         had = 0
     if had and not payload["articles"]:
-        print("::warning::公開中の記事が0件の返事でした。念のため取り込みません。")
+        print("::warning::公開中の記事が0件の返事でした（管理画面で「公開中のお店・記事を取り込む」を押してください）。今回は取り込みません。")
+        return
+    try:
+        with open(os.path.join(data_dir, "shops.json"), encoding="utf-8") as f:
+            had_shops = len(json.load(f)["shops"])
+    except Exception:  # noqa: BLE001
+        had_shops = 0
+    if had_shops and not payload["shops"]:
+        print("::warning::公開中のお店が0件の返事でした。念のため取り込みません。")
         return
 
     text = json.dumps(payload, ensure_ascii=False)

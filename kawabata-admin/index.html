@@ -259,9 +259,57 @@ async function uploadImage(file) {
    ============================================================ */
 const cache = { articles: null, shops: null, events: null, categories: null, settings: null };
 async function loadAll() {
-  if (!cache.articles) Object.assign(cache, (await api("kb_load")).data);
+  if (!cache.articles) {
+    Object.assign(cache, (await api("kb_load")).data);
+    // 保存先（ドライブ）が空のとき：公開中のデータ（GitHub）と比べて、足りないものを取り込めるようにする
+    try {
+      const gh = await githubData();
+      if (!(cache.categories || []).length) cache.categories = gh.categories; // カテゴリーは管理画面では編集しないので、公開中のものを使う
+      const have = (k) => new Set((cache[k] || []).map((x) => x.id));
+      cache.missing = ["articles", "shops", "events"].reduce((n, k) => n + gh[k].filter((x) => !have(k).has(x.id)).length, 0);
+      cache.github = gh;
+    } catch { cache.missing = 0; }
+  }
   return cache;
 }
+
+/* いま公開ページに出ているデータ（GitHub の kawabata-data） */
+const RAW = "https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/kawabata-data/";
+async function githubData() {
+  const get = async (k) => { const r = await fetch(RAW + k + ".json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) throw new Error(k); return (await r.json())[k] || []; };
+  const [articles, shops, events, categories] = await Promise.all(["articles", "shops", "events", "categories"].map(get));
+  return { articles, shops, events, categories };
+}
+
+/* 公開中のお店・記事・イベントのうち、管理画面にないものを取り込む（すでにあるものは上書きしない） */
+function restoreBanner() {
+  if (!cache.missing) return "";
+  return `<div class="note warn" style="margin-bottom:16px"><b>公開ページに出ているお店・記事のうち ${cache.missing} 件が、管理画面に入っていません。</b><br>
+    「取り込む」を押すと、編集できるようになります（管理画面にすでにあるものは上書きしません）。
+    <div style="margin-top:8px"><button class="btn primary small" type="button" data-restore>公開中のお店・記事を取り込む</button></div></div>`;
+}
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-restore]");
+  if (!b) return;
+  b.disabled = true;
+  try {
+    const gh = await githubData();
+    const todo = [];
+    for (const k of ["shops", "articles", "events"]) {
+      const have = new Set((cache[k] || []).map((x) => x.id));
+      // 一覧の並びが今と同じになるよう、後ろから順に追加する（保存すると先頭に入るため）
+      [...gh[k]].reverse().forEach((x) => { if (!have.has(x.id)) todo.push([k, x]); });
+    }
+    let n = 0;
+    for (const [k, item] of todo) {
+      status(`取り込んでいます…（${++n}/${todo.length}）`);
+      await saveItem(k + ".json", k, item, "");
+    }
+    cache.missing = 0;
+    status(`${todo.length}件を取り込みました。編集できます。`, "ok", 6000);
+    go(location.hash ? "home" : "home");
+  } catch (err) { status("取り込めませんでした：" + err.message, "err", 8000); b.disabled = false; }
+});
 const load = async (key) => (await loadAll())[key];
 const loadArticles = () => load("articles");
 const loadShops = () => load("shops");
@@ -314,6 +362,7 @@ views.home = async (el) => {
   const live = articles.filter((a) => (a.status === "published" || a.status === "scheduled") && a.published_at && new Date(a.published_at) <= now);
   const sched = articles.filter((a) => a.status === "scheduled" && a.published_at && new Date(a.published_at) > now);
   el.innerHTML = `
+    ${restoreBanner()}
     <h1>ダッシュボード</h1>
     <p class="lead">保存すると、10〜15分ほどで <a href="${SITE}/" target="_blank" rel="noopener">公開ページ</a> に反映されます（下書き・非公開は公開されません）。</p>
     <div class="stats">
@@ -348,6 +397,7 @@ views.articles = async (el) => {
   const cats = await loadCategories();
   const catName = Object.fromEntries(cats.map((c) => [c.slug, c.name]));
   el.innerHTML = `
+    ${restoreBanner()}
     <div class="row between"><div><h1>記事</h1><p class="lead">下書きはサイトに表示されません。「公開」または予約時刻を過ぎた「予約公開」だけが表示されます。</p></div>
     <button class="btn primary" data-new="article" type="button">新しい記事を書く</button></div>
     <div class="row" style="margin-bottom:12px">
@@ -608,6 +658,7 @@ views.shops = async (el) => {
   const shops = await loadShops();
   const cat = Object.fromEntries(SHOP_CATS);
   el.innerHTML = `
+    ${restoreBanner()}
     <div class="row between"><div><h1>お店</h1><p class="lead">お店に確認できた内容だけを載せましょう。確認前の情報は「公開情報をもとに掲載」と表示されます。</p></div>
     <button class="btn primary" type="button" data-new="shop">お店を追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>店名</th><th>業種</th><th>公開</th><th>お店に確認</th><th>確認日</th></tr></thead><tbody>
@@ -824,6 +875,7 @@ views.events = async (el) => {
   const events = await loadEvents();
   const now = Date.now();
   el.innerHTML = `
+    ${restoreBanner()}
     <div class="row between"><div><h1>イベント</h1><p class="lead">終了日時（なければ開始日時）を過ぎると、自動で「過去のイベント」になります。</p></div>
     <button class="btn primary" type="button" data-new="event">イベントを追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>イベント</th><th>開始</th><th>状態</th><th>公開</th></tr></thead><tbody>
