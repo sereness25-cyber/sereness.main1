@@ -4,6 +4,7 @@ next start で動かしたサイトを wget で写したファイルを、GitHub
 - JavaScript とフォントの分割ファイルを外し、Google Fonts に置き換える
 - localhost への絶対URLを、ページ同士の相対リンクに直す
 - スマホのメニュー開閉だけは小さなスクリプトで動かす
+- 「本日営業のお店」があるページには public/js の営業判定スクリプトを入れる（js/ は書き出しのあとで写す）
 """
 import os, re, sys, posixpath
 root = sys.argv[1]
@@ -41,6 +42,10 @@ for rel in htmls:
         if target not in existing: return f'{attr}="#"'
         return f'{attr}="{posixpath.relpath(target, base or ".")}"'
     s = re.sub(r'(href|action)="(https?://localhost:' + PORT + r'[^"]*)"', fix, s)
-    s = s.replace('</head>', FONTS + OVR + '</head>', 1).replace('</body>', MENU + '</body>', 1)
+    extra = ''
+    if 'data-kb-today=' in s:
+        js = posixpath.relpath('js', base or '.')
+        extra = f'<script src="{js}/kawabata-hours.js"></script><script src="{js}/kawabata-today.js"></script>'
+    s = s.replace('</head>', FONTS + OVR + '</head>', 1).replace('</body>', MENU + extra + '</body>', 1)
     open(rel,'w',encoding='utf-8').write(s)
 print(len(htmls), 'pages')

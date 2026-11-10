@@ -27,6 +27,17 @@ export function shopCategoryLabel(c: ShopCategory): string {
   return SHOP_CATEGORIES.find((x) => x.value === c)?.label ?? "その他";
 }
 
+/** 管理ページの保存先（Apps Script）。公開ページは、ここから最新の営業時間を読む */
+export const KAWABATA_API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec";
+
+/** お店の設備・サービス（絞り込みに使う） */
+export const SHOP_FEATURES: { value: string; label: string }[] = [
+  { value: "karaoke", label: "カラオケあり" },
+  { value: "darts", label: "ダーツあり" },
+  { value: "card", label: "カード払い可" },
+  { value: "smoke_free", label: "禁煙" },
+];
+
 export const BUDGET_LABELS: Record<number, string> = {
   1: "〜3,000円",
   2: "3,000〜5,000円",

@@ -239,3 +239,85 @@ body {
   border-left: 3px solid var(--color-rose);
   background: #fbf3f3;
 }
+
+/* ============================================================
+   本日営業のお店（カードは public/js/kawabata-today.js が描く）
+   ============================================================ */
+.kb-today { --kb-gap: 14px; }
+.kb-track-wrap { max-width: 1200px; margin: 18px auto 0; }
+.kb-track {
+  display: flex; gap: var(--kb-gap); overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth; scroll-padding-inline: 16px;
+  padding: 4px 16px 18px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.kb-track::-webkit-scrollbar { display: none; }
+.kb-track.is-dragging { scroll-snap-type: none; scroll-behavior: auto; cursor: grabbing; user-select: none; }
+.kb-track:focus-visible { outline: 3px solid #34445c; outline-offset: 2px; }
+@media (min-width: 768px) { .kb-track { padding-inline: 24px; scroll-padding-inline: 24px; } }
+.kb-card {
+  flex: 0 0 78%; scroll-snap-align: start; display: flex; flex-direction: column;
+  background: #fff; border-radius: 14px; overflow: hidden; color: #333;
+  box-shadow: 0 8px 22px -14px rgba(52, 68, 92, .45); transition: transform .25s ease, box-shadow .25s ease;
+}
+.kb-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -16px rgba(52, 68, 92, .55); }
+@media (min-width: 640px) { .kb-card { flex-basis: calc((100% - 2 * var(--kb-gap)) / 2.4); } }
+@media (min-width: 1024px) { .kb-card { flex-basis: calc((100% - 3 * var(--kb-gap)) / 3.4); } }
+.kb-card-photo { position: relative; display: block; aspect-ratio: 4 / 3; background: #ede2d5; }
+.kb-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.kb-card-body { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px 16px; }
+.kb-card-cat { font-size: .72rem; letter-spacing: .12em; color: #c9768a; font-weight: 700; }
+.kb-card-name { font-family: var(--font-old-mincho), "Zen Old Mincho", serif; font-weight: 700; font-size: 1.08rem; color: #34445c; line-height: 1.5; }
+.kb-card-hours { font-size: .86rem; color: #555; line-height: 1.6; }
+.kb-note { font-size: .78rem; color: #8a5a00; }
+.kb-badge { position: absolute; left: 10px; top: 10px; padding: 3px 10px; border-radius: 999px; font-size: .74rem; font-weight: 700; background: rgba(255, 255, 255, .94); color: #34445c; box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.kb-list .kb-badge { position: static; box-shadow: none; }
+.kb-badge--open { color: #1f6b3a; }
+.kb-badge--soon { color: #34445c; }
+.kb-badge--ended { color: #777; }
+.kb-badge--closed { color: #b3263e; }
+.kb-empty { padding: 28px 8px; color: #777; font-size: .92rem; }
+.kb-arrows { display: none; gap: 8px; }
+@media (min-width: 768px) { .kb-arrows { display: flex; } }
+.kb-arrow { width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgba(52, 68, 92, .25); background: #fff; color: #34445c; font-size: 1.6rem; line-height: 1; cursor: pointer; transition: background .2s; }
+.kb-arrow:hover:not(:disabled) { background: #d9a7ad; color: #fff; border-color: #d9a7ad; }
+.kb-arrow:disabled { opacity: .35; cursor: default; }
+.kb-dots { display: flex; justify-content: center; gap: 7px; min-height: 10px; }
+.kb-dot { width: 7px; height: 7px; border-radius: 999px; background: #ede2d5; transition: background .2s, width .2s; }
+.kb-dot.is-on { width: 18px; background: #d9a7ad; }
+.kb-dots-text { font-size: .75rem; color: #777; letter-spacing: .1em; }
+
+/* 一覧ページ */
+.kb-filters { display: grid; gap: 10px; }
+.kb-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.kb-chip { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #ede2d5; background: #fff; color: #34445c; font-size: .86rem; cursor: pointer; }
+.kb-chip[aria-pressed="true"] { background: #34445c; border-color: #34445c; color: #fff; }
+.kb-chip--reset { border-style: dashed; color: #777; }
+.kb-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 18px 0 14px; }
+.kb-views { display: inline-flex; padding: 3px; border-radius: 999px; background: #ede2d5; }
+.kb-views button { min-height: 36px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: #34445c; font-size: .86rem; cursor: pointer; }
+.kb-views button[aria-pressed="true"] { background: #fff; font-weight: 700; box-shadow: 0 2px 6px rgba(0, 0, 0, .08); }
+.kb-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .kb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.kb-card--grid { flex: none; }
+.kb-list { list-style: none; margin: 0; padding: 0; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 22px -16px rgba(52, 68, 92, .45); }
+.kb-list li + li { border-top: 1px solid #f1ebe3; }
+.kb-list a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; min-height: 56px; color: #333; }
+.kb-list a:hover { background: #faf8f5; }
+.kb-list-main { display: flex; flex-direction: column; min-width: 0; }
+.kb-list-name { font-family: var(--font-old-mincho), "Zen Old Mincho", serif; font-weight: 700; color: #34445c; }
+.kb-list-cat { font-size: .74rem; color: #c9768a; }
+.kb-list-side { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.kb-list-hours { font-size: .78rem; color: #555; }
+.kb-map { height: 440px; border-radius: 14px; overflow: hidden; background: #ede2d5; }
+.kb-nopos-title { margin: 18px 0 8px; font-size: .86rem; font-weight: 700; color: #34445c; }
+
+/* スマホ下部の固定ボタン */
+.kb-fab {
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 40; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 0 22px; border-radius: 999px;
+  background: #34445c; color: #fff; font-family: var(--font-old-mincho), "Zen Old Mincho", serif; font-weight: 700; letter-spacing: .08em;
+  box-shadow: 0 10px 24px -10px rgba(38, 51, 71, .7); white-space: nowrap;
+}
+@media (min-width: 768px) { .kb-fab, .kb-fab-space { display: none; } }
+.kb-fab-space { height: 76px; }

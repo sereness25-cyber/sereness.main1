@@ -56,6 +56,11 @@ jobs:
         working-directory: kawabata-biyori
         run: npm ci
 
+      - name: 営業判定のテスト
+        if: steps.pull.outputs.build == 'true'
+        working-directory: kawabata-biyori
+        run: node scripts/test-hours.mjs
+
       - name: 公開ページを書き出す
         if: steps.pull.outputs.build == 'true'
         working-directory: kawabata-biyori

@@ -163,6 +163,8 @@ table.list tr:hover td { background: #fbf9f6; }
 
 <div id="status" class="status-bar" role="status" hidden></div>
 
+<script src="../kawabata/js/kawabata-hours.js"></script>
+<script src="hours-editor.js"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -171,6 +173,8 @@ table.list tr:hover td { background: #fbf9f6; }
 /* 保存先は Google Apps Script（apps-script/Code.gs）。ログインなしで開ける */
 const API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec";
 const SITE = "https://sereness25-cyber.github.io/sereness.main1/kawabata";
+const SHOP_FEATURES = [["karaoke", "カラオケあり"], ["darts", "ダーツあり"], ["card", "カード払い可"], ["smoke_free", "禁煙"]];
+const SERENESS = "cafe-bar-sereness";
 const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["snack","スナック"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
 const BUDGETS = [["","未設定"],["1","〜3,000円"],["2","3,000〜5,000円"],["3","5,000〜8,000円"],["4","8,000円〜"]];
 const STATUS = { draft: "下書き", published: "公開", scheduled: "予約公開", private: "非公開" };
@@ -662,6 +666,17 @@ views["shops:edit"] = async (el, id) => {
             <label class="f"><span>一人での利用</span>${triSel("s-solo", s.solo_ok, "OK", "グループ向け")}</label>
             <label class="f"><span>ノンアル対応</span>${triSel("s-nonalc", s.non_alcohol, "あり", "なし")}</label></div>
         </section>
+        <section class="panel stack"><h2>営業時間（本日営業のお店）</h2>
+          ${s.slug === SERENESS
+            ? '<p class="note">Serenessの営業時間は、お店の<a href="../schedule-admin.html" target="_blank" rel="noopener">営業スケジュール管理ページ</a>の内容が自動で使われます（臨時休業もそちらで）。</p>'
+            : '<div id="s-hours-ed"></div>'}
+          <div id="s-preview"></div>
+          ${s.slug === SERENESS ? "" : '<div><span class="flabel">臨時休業・臨時営業・時間変更</span><div id="s-specials"></div></div>'}
+          <div><span class="flabel">設備・サービス（一覧ページの絞り込みに使います）</span>
+            <div class="row">${SHOP_FEATURES.map(([v, l]) => `<label class="check" style="margin:0 10px 0 0"><input type="checkbox" class="s-feat" value="${v}" ${(s.features || []).includes(v) ? "checked" : ""}><span>${l}</span></label>`).join("")}</div></div>
+          <label class="f"><span>地図の位置（緯度, 経度）</span><input type="text" id="s-latlng" value="${s.lat != null && s.lng != null ? esc(s.lat + ", " + s.lng) : ""}" placeholder="例：39.7195, 140.1155">
+            <span class="hint">Googleマップでお店の場所を長押し（パソコンは右クリック）すると出る数字を貼り付けます。一覧ページの地図に表示されます。</span></label>
+        </section>
         <section class="panel stack"><h2>リンク・出典</h2>
           <div class="grid2">${t("s-web", "公式サイト", s.website || "")}${t("s-ig", "Instagram", (s.sns || {}).instagram || "")}${t("s-x", "X", (s.sns || {}).x || "")}${t("s-fb", "Facebook", (s.sns || {}).facebook || "")}</div>
           <label class="f"><span>情報の出典</span><textarea id="s-sources" rows="3" placeholder="公式サイト | https://example.com">${esc((s.sources || []).map((x) => `${x.label} | ${x.url}`).join("\n"))}</textarea><span class="hint">1行に1つ、「表示名 | URL」の形で入力</span></label>
@@ -679,6 +694,14 @@ views["shops:edit"] = async (el, id) => {
           <p class="hint" style="margin:0">次の4点をすべて、お店に確認できた場合だけ付けてください。</p>
           ${["料金が明確", "初来店客を歓迎", "料金説明に対応", "不明瞭な追加料金がない"].map((x, i) => `<label class="check"><input type="checkbox" class="bw" ${s.beginner_welcome ? "checked" : ""}><span>${x}</span></label>`).join("")}
           <label class="check" style="border-top:1px solid var(--line);padding-top:8px"><input type="checkbox" id="s-bw" ${s.beginner_welcome ? "checked" : ""}><b>初心者歓迎マークを表示</b></label>
+        </div>
+        <div class="panel stack"><h2 style="margin:0">お店用の管理ページ</h2>
+          <p class="hint" style="margin:0">お店の人が、自分のお店の営業時間・臨時休業だけを変えられるページです。合言葉を発行して、URLと一緒にお店に伝えてください。</p>
+          ${!src ? '<p class="hint" style="margin:0">お店を保存すると発行できます。</p>'
+            : s.slug === SERENESS ? '<p class="hint" style="margin:0">Serenessは営業スケジュール管理ページを使います。</p>'
+            : `<p style="margin:0">${(cache.shop_keys || []).includes(s.slug) ? '<span class="pill published">発行済み</span>' : '<span class="pill draft">未発行</span>'}</p>
+               <div id="s-key-box"></div>
+               <button class="btn small" type="button" id="s-key">${(cache.shop_keys || []).includes(s.slug) ? "合言葉を発行し直す" : "合言葉を発行する"}</button>`}
         </div>
         ${src ? '<button class="btn danger" type="button" id="s-del">お店を削除</button>' : ""}
       </aside>
@@ -726,6 +749,26 @@ views["shops:edit"] = async (el, id) => {
 
   const v = (idn) => $("#" + idn).value.trim();
   const fromTri = (x) => (x === "" ? null : x === "yes");
+
+  /* 営業時間・臨時変更 */
+  const hoursEd = $("#s-hours-ed") ? HoursEditor.weekly($("#s-hours-ed"), s.hours, () => { dirty = true; redraw(); }) : null;
+  const spEd = $("#s-specials") ? HoursEditor.specials($("#s-specials"), s.specials, () => { dirty = true; redraw(); }) : null;
+  const redraw = HoursEditor.preview($("#s-preview"), () => ({ hours: hoursEd ? hoursEd.get() : s.hours, specials: spEd ? spEd.get() : s.specials || [] }));
+  if ($("#s-key")) $("#s-key").onclick = async () => {
+    const again = (cache.shop_keys || []).includes(s.slug);
+    if (again && !confirm("発行し直すと、いまの合言葉は使えなくなります。よろしいですか？")) return;
+    $("#s-key").disabled = true;
+    try {
+      const j = await api("kb_shop_key", { slug: s.slug });
+      cache.shop_keys = [...new Set([...(cache.shop_keys || []), s.slug])];
+      const url = new URL("shop.html?s=" + encodeURIComponent(s.slug), location.href).href;
+      $("#s-key-box").innerHTML = `<div class="note ok" style="word-break:break-all"><b>お店に伝える内容</b><br>ページ：<a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a><br>合言葉：<b style="font-size:1.1rem;letter-spacing:.08em">${esc(j.key)}</b><br><span class="hint">合言葉はこの画面でしか表示されません。忘れたときは発行し直してください。</span></div>
+        <button class="btn small" type="button" id="s-key-copy" style="margin-top:6px">まとめてコピー</button>`;
+      $("#s-key-copy").onclick = () => navigator.clipboard.writeText(`${s.name} の営業時間の管理ページ\n${url}\n合言葉：${j.key}`).then(() => status("コピーしました。", "ok", 3000));
+      $("#s-key").textContent = "合言葉を発行し直す";
+    } catch (e) { status("発行できませんでした：" + e.message, "err", 8000); }
+    finally { $("#s-key").disabled = false; }
+  };
   $("#s-save").onclick = async () => {
     const err = (m) => ($("#s-msg").innerHTML = `<p class="note err">${esc(m)}</p>`);
     $("#s-msg").innerHTML = "";
@@ -737,6 +780,14 @@ views["shops:edit"] = async (el, id) => {
     if ($("#s-bw").checked && !$$(".bw", el).every((x) => x.checked)) return err("初心者歓迎マークは、4項目をすべて確認してから付けてください。");
     const slug = slugify(v("s-slug") || name);
     if (shops.some((x) => x.id !== s.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のお店で使われています。`);
+    if (slug === "today") return err("「today」はURLスラッグに使えません（本日営業のお店のページと重なるため）。");
+    let lat = null, lng = null;
+    const ll = v("s-latlng");
+    if (ll) {
+      const m = /^\s*(-?\d+(?:\.\d+)?)\s*[,、 ]\s*(-?\d+(?:\.\d+)?)\s*$/.exec(ll);
+      if (!m || Math.abs(+m[1]) > 90 || Math.abs(+m[2]) > 180) return err("地図の位置は「39.7195, 140.1155」のように、緯度と経度をカンマで区切って入れてください。");
+      lat = +m[1]; lng = +m[2];
+    }
     let sources;
     try {
       sources = v("s-sources").split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
@@ -752,6 +803,8 @@ views["shops:edit"] = async (el, id) => {
       sns: { instagram: v("s-ig"), x: v("s-x"), facebook: v("s-fb"), youtube: (s.sns || {}).youtube || "" },
       image_alt: v("s-img-alt"), photo_permission: $("#s-perm").checked, verified_at: verified, is_published: pub,
       sources, shop_confirmed: $("#s-confirmed").checked, updated_at: nowIso(),
+      hours: hoursEd ? hoursEd.get() : s.hours || null, specials: spEd ? spEd.get() : s.specials || [],
+      features: $$(".s-feat", el).filter((x) => x.checked).map((x) => x.value), lat, lng,
     };
     $("#s-save").disabled = true; status("保存しています…");
     try { await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("shops:edit", item.id); }

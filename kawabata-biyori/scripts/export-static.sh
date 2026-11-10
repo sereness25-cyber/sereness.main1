@@ -24,6 +24,8 @@ cp public/ogp.png "$TMP/"
 mkdir -p "$TMP/images/photos" && cp public/images/photos/* "$TMP/images/photos/"
 
 python3 scripts/export_static.py "$TMP" "$PORT"
+# 営業判定のスクリプト（上の整形で .js は消えるので、そのあとで写す）
+mkdir -p "$TMP/js" && cp public/js/*.js "$TMP/js/"
 # GitHub Pages は「_」で始まるフォルダを配らないので名前を変える
 mv "$TMP/_next" "$TMP/assets"
 grep -rl "_next/" --include=*.html --include=*.css "$TMP" | xargs -r sed -i 's#_next/#assets/#g'

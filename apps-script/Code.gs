@@ -5,6 +5,8 @@
    - POST {passcode, schedule} → 保存(外部の管理ページ用)
    - POST {action:'upload', passcode, data, mime} → 写真をドライブに保存
    - …/exec?kawabata=export → かわばた日和の公開中データ(GitHub が10分ごとに取りに来る)
+   - …/exec?kawabata=today  → かわばた日和「本日営業のお店」用の最新の営業時間(公開ページが読む)
+   - POST {action:'shop_…', slug, key, …} → お店ごとの営業時間の管理ページ用
    - POST {action:'kb_…', passcode, …} → かわばた日和の管理ページ用(下のほうにまとめてあります)
    スクリプト プロパティに PASSCODE(合言葉)を入れておくこと。
    写真はドライブの「Sereness LP 写真」フォルダに入り、リンクを知っている人が見られる設定になります。
@@ -32,6 +34,7 @@ var DEFAULT_CONTENT = {
 
 function doGet(e) {
   if (e && e.parameter && e.parameter.kawabata === 'export') return json(kbExport());
+  if (e && e.parameter && e.parameter.kawabata === 'today') return json(kbToday());
   if (e && e.parameter && e.parameter.page === 'admin') {
     return HtmlService.createHtmlOutputFromFile('admin')
       .setTitle('営業スケジュール管理 | Café & Bar Sereness')
@@ -44,6 +47,7 @@ function doPost(e) {
   try {
     var body = JSON.parse(e.postData.contents);
     if (String(body.action || '').indexOf('kb_') === 0) return json(kbHandle(body));
+    if (String(body.action || '').indexOf('shop_') === 0) return json(shopHandle(body));
     if (body.action === 'upload') return json(uploadImage(body.passcode, body.data, body.mime));
     return json(saveSchedule(body.passcode, body.schedule));
   } catch (err) {
@@ -79,6 +83,7 @@ function saveSchedule(passcode, schedule) {
     props.setProperty(KEY, JSON.stringify(clean));
     if (content) props.setProperty(CONTENT_KEY, JSON.stringify(content));
   } finally { lock.releaseLock(); }
+  try { CacheService.getScriptCache().remove('KB_TODAY'); } catch (e) {}
   clean.content = content || getSchedule().content;
   return {ok: true, schedule: clean};
 }
@@ -160,7 +165,8 @@ function kbHandle(body) {
     var bad = kbPass(body.passcode);
     if (bad) { out = {ok: false, auth: true, error: bad}; }
     else if (body.action === 'kb_login') out = {ok: true};
-    else if (body.action === 'kb_load') out = {ok: true, data: kbLoadAll()};
+    else if (body.action === 'kb_load') { out = {ok: true, data: kbLoadAll()}; out.data.shop_keys = Object.keys(kbKeys()); }
+    else if (body.action === 'kb_shop_key') out = kbShopKey(String(body.slug || ''));
     else if (body.action === 'kb_save') out = kbSave(body.file, body.item, !!body.remove);
     else if (body.action === 'kb_settings') out = kbSaveSettings(body.settings);
     else if (body.action === 'kb_upload') out = kbUpload(body.data, body.mime);
@@ -274,6 +280,13 @@ function kbLoadAll() {
 function kbSave(file, item, remove) {
   if (['articles', 'shops', 'events'].indexOf(file) < 0) return {ok: false, error: '保存先が正しくありません'};
   if (!item || typeof item !== 'object' || typeof item.id !== 'string' || !item.id || item.id.length > 100) return {ok: false, error: 'データの形が正しくありません'};
+  if (file === 'shops') {
+    if (item.slug === 'today') return {ok: false, error: '「today」はURLスラッグに使えません(本日営業のお店のページと重なるため)'};
+    item.hours = kbCleanHours(item.hours);
+    item.specials = kbCleanSpecials(item.specials);
+    item.features = (Array.isArray(item.features) ? item.features : []).map(String).filter(function(f){ return /^[a-z_]{1,20}$/.test(f); }).slice(0, 20);
+    try { CacheService.getScriptCache().remove('KB_TODAY'); } catch (e) {}
+  }
   if (JSON.stringify(item).length > 1000000) return {ok: false, error: '内容が大きすぎます'};
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
@@ -335,9 +348,166 @@ function kbExport() {
     articles: d.articles.filter(function(a){
       return a && (a.status === 'published' || a.status === 'scheduled') && a.published_at && Date.parse(a.published_at) <= now;
     }),
-    shops: d.shops.filter(function(s){ return s && s.is_published; }),
+    shops: d.shops.filter(function(s){ return s && s.is_published; }).map(kbApplySereness),
     events: d.events.filter(function(e){ return e && e.is_published; }),
     categories: d.categories,
     settings: d.settings
   };
+}
+
+/* ============================================================
+   かわばた日和「本日営業のお店」
+   - お店の営業時間: shop.hours = {"0":日曜 … "6":土曜}、各曜日 {closed, ranges:[{open,close}], closed_nth:[1,3]}
+     閉店が開店と同じか早い時刻なら翌日に閉店(19:00〜03:00)。"25:00" の書き方も可
+   - 臨時休業・臨時営業・時間変更: shop.specials = [{date, closed, ranges, note}]
+   - お店ごとの合言葉(ハッシュ)はドライブの shop_keys.json。GitHub には出さない
+   - Café & Bar Sereness は、お店の営業スケジュール(上の SCHEDULE)をそのまま使う
+   ============================================================ */
+var KB_SERENESS = 'cafe-bar-sereness';
+var KB_TIME = /^([01]?\d|[2-4]\d):[0-5]\d$/;
+
+function kbCleanRanges(rs) {
+  return (Array.isArray(rs) ? rs : []).filter(function(r){
+    return r && KB_TIME.test(String(r.open)) && KB_TIME.test(String(r.close)) && String(r.open) !== String(r.close);
+  }).slice(0, 4).map(function(r){ return {open: String(r.open), close: String(r.close)}; });
+}
+
+function kbCleanHours(h) {
+  if (!h || typeof h !== 'object') return null;
+  var out = {}, any = false;
+  for (var d = 0; d < 7; d++) {
+    var w = h[d] || h[String(d)] || {};
+    var ranges = kbCleanRanges(w.ranges);
+    var nth = (Array.isArray(w.closed_nth) ? w.closed_nth : []).map(Number).filter(function(n){ return n >= 1 && n <= 5; });
+    var closed = !!w.closed || !ranges.length;
+    out[String(d)] = {closed: closed, ranges: closed ? [] : ranges};
+    if (!closed && nth.length) out[String(d)].closed_nth = nth;
+    if (w.closed !== undefined || ranges.length) any = true;
+  }
+  return any ? out : null;
+}
+
+function kbToday0() {
+  var t = new Date(Date.now() + 9 * 3600 * 1000 - 7 * 86400 * 1000);  // 1週間より前の臨時変更は消す
+  return t.toISOString().slice(0, 10);
+}
+
+function kbCleanSpecials(list) {
+  var from = kbToday0(), seen = {};
+  return (Array.isArray(list) ? list : []).filter(function(x){
+    return x && /^\d{4}-\d{2}-\d{2}$/.test(String(x.date)) && String(x.date) >= from;
+  }).map(function(x){
+    var note = String(x.note == null ? '' : x.note).slice(0, 60);
+    if (x.closed) return {date: String(x.date), closed: true, note: note};
+    var ranges = kbCleanRanges(x.ranges);
+    return ranges.length ? {date: String(x.date), closed: false, ranges: ranges, note: note} : null;
+  }).filter(function(x){
+    if (!x || seen[x.date]) return false;
+    seen[x.date] = true;
+    return true;
+  }).sort(function(a, b){ return a.date < b.date ? -1 : 1; }).slice(0, 100);
+}
+
+/* Sereness は、お店の営業スケジュール管理ページの内容を使う */
+function kbApplySereness(shop) {
+  if (!shop || shop.slug !== KB_SERENESS) return shop;
+  var sc = getSchedule(), hours = {};
+  for (var d = 0; d < 7; d++) {
+    var w = sc.weekly && sc.weekly[String(d)];
+    hours[String(d)] = w ? {closed: false, ranges: [{open: w.open, close: w.close}]} : {closed: true, ranges: []};
+  }
+  var specials = kbCleanSpecials((sc.exceptions || []).map(function(x){
+    return x.closed ? {date: x.date, closed: true, note: x.note} : {date: x.date, closed: false, ranges: [{open: x.open, close: x.close}], note: x.note};
+  }));
+  var copy = JSON.parse(JSON.stringify(shop));
+  copy.hours = hours;
+  copy.specials = specials;
+  return copy;
+}
+
+/* 公開ページが数分ごとに読む、最新の営業時間(1分だけ覚えておく) */
+function kbToday() {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('KB_TODAY');
+  if (hit) return JSON.parse(hit);
+  var shops = (kbRead('shops').shops || []).filter(function(s){ return s && s.is_published; }).map(kbApplySereness).map(function(s){
+    return {slug: s.slug, hours: s.hours || null, specials: s.specials || []};
+  });
+  var out = {kb: 1, shops: shops, at: new Date().toISOString()};
+  try { cache.put('KB_TODAY', JSON.stringify(out), 60); } catch (e) {}
+  return out;
+}
+
+/* ---------- お店ごとの合言葉 ---------- */
+function kbKeys() {
+  var f = kbFile('shop_keys');
+  return f ? JSON.parse(f.getBlob().getDataAsString('UTF-8')) : {};
+}
+function kbHash(slug, key) {
+  var raw = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, 'kawabata:' + slug + ':' + key, Utilities.Charset.UTF_8);
+  return raw.map(function(b){ return ('0' + (b & 255).toString(16)).slice(-2); }).join('');
+}
+
+/* 編集部の管理ページから、お店用の合言葉を発行する(発行し直すと前の合言葉は使えなくなる) */
+function kbShopKey(slug) {
+  var shops = kbRead('shops').shops || [];
+  if (!shops.some(function(s){ return s && s.slug === slug; })) return {ok: false, error: '先にお店を保存してください'};
+  var key = Utilities.getUuid().replace(/-/g, '').slice(0, 12);
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var keys = kbKeys();
+    keys[slug] = kbHash(slug, key);
+    kbWrite('shop_keys', keys);
+  } finally { lock.releaseLock(); }
+  return {ok: true, key: key};
+}
+
+function shopCheck(slug, key) {
+  var cache = CacheService.getScriptCache(), ck = 'SHOP_FAIL_' + slug;
+  var fails = Number(cache.get(ck) || 0);
+  if (fails >= 10) return '合言葉を続けて間違えたため、15分間ログインできません。時間をおいてお試しください';
+  var keys = kbKeys();
+  if (!slug || !keys[slug] || keys[slug] !== kbHash(slug, String(key || ''))) {
+    cache.put(ck, String(fails + 1), 900);
+    return 'お店のページのURLか合言葉が違います';
+  }
+  return '';
+}
+
+function shopHandle(body) {
+  var out;
+  try {
+    var slug = String(body.slug || '');
+    var bad = shopCheck(slug, body.key);
+    if (bad) out = {ok: false, auth: true, error: bad};
+    else if (body.action === 'shop_load') {
+      var s = kbApplySereness((kbRead('shops').shops || []).filter(function(x){ return x && x.slug === slug; })[0]);
+      out = s ? {ok: true, shop: {name: s.name, slug: s.slug, hours: s.hours || null, specials: s.specials || [], linked: slug === KB_SERENESS}} : {ok: false, error: 'お店が見つかりません'};
+    }
+    else if (body.action === 'shop_save') out = shopSave(slug, body.hours, body.specials);
+    else out = {ok: false, error: '知らない操作です'};
+  } catch (err) {
+    out = {ok: false, error: String(err && err.message || err)};
+  }
+  out.kb = 1;
+  return out;
+}
+
+/* お店が変えられるのは、自分のお店の営業時間と臨時変更だけ */
+function shopSave(slug, hours, specials) {
+  if (slug === KB_SERENESS) return {ok: false, error: 'Serenessの営業時間は、お店の営業スケジュール管理ページで変更してください'};
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var data = kbRead('shops'), list = data.shops || [], hit = null;
+    for (var i = 0; i < list.length; i++) if (list[i] && list[i].slug === slug) { hit = list[i]; break; }
+    if (!hit) return {ok: false, error: 'お店が見つかりません'};
+    hit.hours = kbCleanHours(hours);
+    hit.specials = kbCleanSpecials(specials);
+    hit.updated_at = new Date().toISOString();
+    kbWrite('shops', data);
+    try { CacheService.getScriptCache().remove('KB_TODAY'); } catch (e) {}
+    return {ok: true, shop: {name: hit.name, slug: hit.slug, hours: hit.hours, specials: hit.specials}};
+  } finally { lock.releaseLock(); }
 }

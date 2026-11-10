@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>営業時間の管理 | かわばた日和</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5; --card: #fff; --ink: #333; --muted: #777; --line: #e6ded3; --navy: #34445c; --rose: #d9a7ad; --blush: #c9768a; --sub: #ede2d5;
+  --mincho: "Zen Old Mincho", "Hiragino Mincho ProN", serif; --sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.75 var(--sans); }
+a { color: var(--navy); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.top { padding: 12px 16px; background: var(--navy); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.brand { font-family: var(--mincho); letter-spacing: .06em; }
+.brand small { display: block; font-family: var(--sans); font-size: .62rem; letter-spacing: .3em; opacity: .75; }
+main { max-width: 760px; margin: 0 auto; padding: 18px 16px 90px; }
+h1 { font-family: var(--mincho); color: var(--navy); font-size: 1.35rem; margin: 0 0 4px; }
+h2 { font-size: 1rem; color: var(--navy); margin: 0 0 10px; }
+.lead, .hint { color: var(--muted); font-size: .85rem; }
+.hint { display: block; font-size: .76rem; }
+.panel { background: var(--card); border-radius: 14px; padding: 18px; box-shadow: 0 6px 20px -12px rgba(52,68,92,.35); margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+label.f { display: block; } label.f > span { display: block; font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+input[type=text], input[type=password], input[type=date], input[type=time], select { width: 100%; padding: 9px 11px; border: 1px solid #d9cfc2; border-radius: 10px; background: #fff; }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; } .check input { margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #d9cfc2; background: #fff; color: var(--navy); font-weight: 700; font-size: .9rem; cursor: pointer; }
+.btn.small { min-height: 34px; padding: 0 12px; font-size: .8rem; }
+.btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+.btn.rose { background: var(--blush); border-color: var(--blush); color: #fff; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.note { padding: 10px 14px; border-radius: 10px; font-size: .88rem; background: #f4f1ec; }
+.note.ok { background: #e8f3ec; color: #1f6b3a; } .note.err { background: #fbecee; color: #8a1c30; } .note.warn { background: #fdf1d8; color: #8a5a00; }
+.quick { display: grid; gap: 10px; }
+@media (min-width: 640px) { .quick { grid-template-columns: repeat(3, 1fr); } }
+.quick .btn { width: 100%; min-height: 52px; }
+.status-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--navy); color: #fff; font-size: .88rem; }
+.status-bar.err { background: #8a1c30; } .status-bar.ok { background: #1f6b3a; }
+.login { max-width: 460px; margin: 30px auto; }
+</style>
+</head>
+<body>
+<header class="top"><span class="brand">かわばた日和<small>SHOP</small></span><button class="btn small" id="logout" type="button" hidden style="background:transparent;color:#fff;border-color:rgba(255,255,255,.45)">ログアウト</button></header>
+
+<main>
+  <section id="login" class="panel login" hidden>
+    <h1>営業時間の管理</h1>
+    <p class="lead">かわばた日和の「本日営業のお店」に表示する、営業時間と臨時休業を変更できます。編集部から届いた合言葉を入れてください。</p>
+    <label class="f"><span>合言葉</span><input id="key" type="password" autocomplete="current-password"></label>
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="stay"><span>この端末では次から入力しない（共用の端末では使わないでください）</span></label>
+    <div id="login-msg" style="margin-top:8px"></div>
+    <button class="btn primary" id="login-btn" type="button" style="margin-top:8px;width:100%">ひらく</button>
+  </section>
+
+  <div id="app" hidden>
+    <h1 id="shop-name"></h1>
+    <p class="lead">保存すると、数分で「本日営業のお店」に反映されます。</p>
+    <div id="preview"></div>
+
+    <div id="linked" class="panel" hidden>
+      <p class="note">このお店の営業時間は、お店の<a href="../schedule-admin.html">営業スケジュール管理ページ</a>で変更してください。かわばた日和にも自動で反映されます。</p>
+    </div>
+
+    <div id="editors">
+      <section class="panel">
+        <h2>今日の営業（<span id="today-label"></span>）</h2>
+        <div id="today-state" class="note" style="margin-bottom:12px"></div>
+        <div class="quick">
+          <button class="btn rose" type="button" id="q-close">今日は臨時休業にする</button>
+          <button class="btn" type="button" id="q-change">今日の営業時間を変える</button>
+          <button class="btn" type="button" id="q-early">早じまいする</button>
+        </div>
+        <div id="q-form" hidden style="margin-top:12px">
+          <div class="row"><label class="f" style="flex:1"><span>開店</span><input type="time" step="300" id="q-open"></label><label class="f" style="flex:1"><span>閉店</span><input type="time" step="300" id="q-close-time"></label></div>
+          <span class="hint">閉店が開店より早い時刻なら翌日として扱います（例：19:00〜02:00）。</span>
+          <div class="row" style="margin-top:8px"><button class="btn primary" type="button" id="q-save">この時間で保存</button><button class="btn" type="button" id="q-cancel">やめる</button></div>
+        </div>
+        <button class="btn small" type="button" id="q-reset" hidden style="margin-top:12px">今日の変更を取り消して、いつもどおりに戻す</button>
+      </section>
+
+      <section class="panel">
+        <h2>これからの臨時休業・臨時営業</h2>
+        <div id="sp"></div>
+        <button class="btn primary" type="button" id="save-sp" style="margin-top:14px">保存</button>
+      </section>
+
+      <section class="panel">
+        <h2>いつもの営業時間</h2>
+        <div id="wk"></div>
+        <button class="btn primary" type="button" id="save-wk" style="margin-top:14px">保存</button>
+      </section>
+    </div>
+    <p class="hint" style="margin-top:18px">変更できるのは、このお店の営業時間と臨時休業だけです。店名や紹介文などを変えたいときは、かわばた日和の編集部にご連絡ください。</p>
+  </div>
+</main>
+<div id="status" class="status-bar" role="status" hidden></div>
+
+<script src="../kawabata/js/kawabata-hours.js"></script>
+<script src="hours-editor.js"></script>
+<script>
+"use strict";
+const API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWktpb4mGLaULf9qzeyGix7q_voD_mq0vqL2iq-URQym/exec";
+const $ = (q) => document.querySelector(q);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const SLUG = new URLSearchParams(location.search).get("s") || "";
+const STORE = "kb-shop-" + SLUG;
+const store = {
+  get() { try { return localStorage.getItem(STORE) || sessionStorage.getItem(STORE) || ""; } catch { return ""; } },
+  set(v, persist) { try { (persist ? localStorage : sessionStorage).setItem(STORE, v); } catch {} },
+  del() { try { localStorage.removeItem(STORE); sessionStorage.removeItem(STORE); } catch {} },
+};
+function status(text, kind = "", ms = 0) {
+  const el = $("#status"); el.textContent = text; el.className = "status-bar " + kind; el.hidden = false;
+  clearTimeout(status.t); if (ms) status.t = setTimeout(() => (el.hidden = true), ms);
+}
+let KEY = "", shop = null, wk = null, sp = null, redraw = () => {};
+
+async function api(action, payload = {}) {
+  let text = "";
+  try {
+    const res = await fetch(API, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action, slug: SLUG, key: KEY, ...payload }) });
+    text = await res.text();
+  } catch { throw new Error("通信できませんでした。電波の状態を確認して、もう一度お試しください。"); }
+  let j = null; try { j = JSON.parse(text); } catch {}
+  if (!j || !j.kb) throw new Error("いまは保存先につながりません。時間をおいてお試しください。");
+  if (!j.ok) { const e = new Error(j.error || "うまくいきませんでした。"); e.auth = !!j.auth; throw e; }
+  return j;
+}
+
+/* ---------- 今日の営業 ---------- */
+const today = () => KawabataHours.businessDate();
+function todaySpecial() { return (shop.specials || []).find((x) => x.date === today()); }
+function regularToday() {
+  const [y, m, d] = today().split("-").map(Number);
+  const wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return (shop.hours || {})[wd] || null;
+}
+function drawToday() {
+  const [, m, d] = today().split("-").map(Number);
+  $("#today-label").textContent = `${m}月${d}日`;
+  const sp0 = todaySpecial(), reg = regularToday();
+  let text;
+  if (sp0) text = sp0.closed ? "今日は<b>臨時休業</b>に設定されています。" : `今日は <b>${sp0.ranges.map((r) => esc(KawabataHours.rangeText(KawabataHours.span(r)))).join("、")}</b> に変更されています。`;
+  else if (!shop.hours) text = "いつもの営業時間がまだ登録されていません。下の「いつもの営業時間」から登録してください。";
+  else if (!reg || reg.closed) text = "今日はいつもの<b>定休日</b>です。臨時で営業するときは「今日の営業時間を変える」から。";
+  else text = `今日はいつもどおり <b>${reg.ranges.map((r) => esc(KawabataHours.rangeText(KawabataHours.span(r)))).join("、")}</b> の予定です。`;
+  $("#today-state").innerHTML = text;
+  $("#q-reset").hidden = !sp0;
+  redraw();
+}
+async function saveAll(hours, specials, okText) {
+  status("保存しています…");
+  const j = await api("shop_save", { hours, specials });
+  shop.hours = j.shop.hours; shop.specials = j.shop.specials;
+  build();
+  status(okText || "保存しました。数分で公開ページに反映されます。", "ok", 6000);
+}
+function setTodaySpecial(x) {
+  const rest = (shop.specials || []).filter((s) => s.date !== today());
+  return x ? [...rest, x] : rest;
+}
+let quickMode = "";
+function openQuick(mode) {
+  quickMode = mode;
+  const reg = regularToday(), sp0 = todaySpecial();
+  const base = (sp0 && !sp0.closed && sp0.ranges[0]) || (reg && !reg.closed && reg.ranges[0]) || { open: "19:00", close: "01:00" };
+  $("#q-open").value = HoursEditor.norm(base.open); $("#q-close-time").value = HoursEditor.norm(base.close);
+  $("#q-open").closest("label").hidden = mode === "early";
+  $("#q-form").hidden = false;
+  $("#q-close-time").focus();
+}
+$("#q-close").onclick = async () => {
+  if (!confirm("今日（" + $("#today-label").textContent + "）を臨時休業にします。よろしいですか？")) return;
+  try { await saveAll(shop.hours, setTodaySpecial({ date: today(), closed: true, note: "" }), "今日を臨時休業にしました。数分で公開ページに反映されます。"); } catch (e) { fail(e); }
+};
+$("#q-change").onclick = () => openQuick("change");
+$("#q-early").onclick = () => openQuick("early");
+$("#q-cancel").onclick = () => { $("#q-form").hidden = true; };
+$("#q-save").onclick = async () => {
+  const open = $("#q-open").value, close = $("#q-close-time").value;
+  if (!open || !close || open === close) return status("開店と閉店の時刻を入れてください。", "err", 5000);
+  try { await saveAll(shop.hours, setTodaySpecial({ date: today(), closed: false, ranges: [{ open, close }], note: quickMode === "early" ? "早じまい" : "" }), "今日の営業時間を変更しました。数分で公開ページに反映されます。"); $("#q-form").hidden = true; }
+  catch (e) { fail(e); }
+};
+$("#q-reset").onclick = async () => {
+  try { await saveAll(shop.hours, setTodaySpecial(null), "今日の変更を取り消しました。"); } catch (e) { fail(e); }
+};
+$("#save-sp").onclick = async () => { try { await saveAll(shop.hours, sp.get()); } catch (e) { fail(e); } };
+$("#save-wk").onclick = async () => { try { await saveAll(wk.get(), shop.specials || []); } catch (e) { fail(e); } };
+
+function fail(e) {
+  if (e.auth) { store.del(); KEY = ""; $("#app").hidden = true; $("#login").hidden = false; $("#login-msg").innerHTML = `<p class="note err">${esc(e.message)}</p>`; return; }
+  status("保存できませんでした：" + e.message, "err", 8000);
+}
+
+function build() {
+  $("#shop-name").textContent = shop.name;
+  document.title = shop.name + " 営業時間の管理 | かわばた日和";
+  redraw = HoursEditor.preview($("#preview"), () => ({ hours: shop.hours, specials: shop.specials || [] }));
+  $("#linked").hidden = !shop.linked; $("#editors").hidden = !!shop.linked;
+  if (shop.linked) return;
+  wk = HoursEditor.weekly($("#wk"), shop.hours, () => {});
+  sp = HoursEditor.specials($("#sp"), (shop.specials || []).filter((x) => x.date !== today()), () => {});
+  // 今日の分は「今日の営業」で扱うので、下の一覧からは外して、保存時に戻す
+  const get = sp.get;
+  sp.get = () => { const t = todaySpecial(); const rest = get().filter((x) => x.date !== today()); return t ? [...rest, t] : rest; };
+  drawToday();
+}
+
+async function open() {
+  try {
+    const j = await api("shop_load");
+    shop = j.shop;
+    $("#login").hidden = true; $("#app").hidden = false; $("#logout").hidden = false;
+    build();
+    return true;
+  } catch (e) {
+    $("#login").hidden = false; $("#app").hidden = true;
+    $("#login-msg").innerHTML = `<p class="note err">${esc(e.message)}</p>`;
+    return false;
+  }
+}
+$("#login-btn").onclick = async () => {
+  KEY = $("#key").value.trim();
+  if (!KEY) return ($("#login-msg").innerHTML = '<p class="note err">合言葉を入れてください。</p>');
+  $("#login-btn").disabled = true; $("#login-msg").innerHTML = '<p class="note">確認しています…</p>';
+  if (await open()) store.set(KEY, $("#stay").checked);
+  $("#login-btn").disabled = false;
+};
+$("#key").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#login-btn").click(); });
+$("#logout").onclick = () => { store.del(); location.reload(); };
+setInterval(() => { if (shop && !shop.linked) drawToday(); }, 60000);
+
+if (!SLUG) { $("#login").hidden = false; $("#login-btn").disabled = true; $("#login-msg").innerHTML = '<p class="note err">お店用のURLから開いてください（編集部から届いたURL）。</p>'; }
+else { KEY = store.get(); if (KEY) open(); else $("#login").hidden = false; }
+</script>
+</body>
+</html>

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SHOP_CATEGORIES } from "@/lib/constants";
-import { getFeaturedArticles, getIssues, getLatestArticles, getArticlesByCategory, getSeriesArticles, getUpcomingEvents } from "@/lib/data";
+import { getFeaturedArticles, getIssues, getLatestArticles, getArticlesByCategory, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
 import { PHOTOS, distinctPhotos, photoForShop, type PhotoKey } from "@/lib/photos";
 import type { Article } from "@/lib/types";
 import { ArticleCard, EventCard } from "@/components/site/Cards";
 import { Container, EmptyState, SectionTitle } from "@/components/site/Section";
 import { Thumb } from "@/components/site/Thumb";
 import { IssueCover } from "@/components/site/IssueCover";
+import { TodayShops } from "@/components/site/TodayShops";
+import { toTodayShops } from "@/lib/today";
 
 export const revalidate = 60;
 
@@ -53,14 +55,16 @@ function PickCard({ article, photo }: { article: Article; photo: PhotoKey }) {
 }
 
 export default async function HomePage() {
-  const [featured, latest, people, series, events, issues] = await Promise.all([
+  const [featured, latest, people, series, events, issues, allShops] = await Promise.all([
     getFeaturedArticles(4),
     getLatestArticles(6),
     getArticlesByCategory("people", 1),
     getSeriesArticles(2),
     getUpcomingEvents(3),
     getIssues(),
+    getAllShops(),
   ]);
+  const todayShops = toTodayShops(allShops);
   const cover = featured[0];
   const picks = featured.slice(0, 3);
   const person = people[0];
@@ -100,6 +104,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 本日営業のお店 */}
+      <TodayShops shops={todayShops} />
 
       {/* Editor's Pick */}
       <section className="pt-10 md:pt-14">

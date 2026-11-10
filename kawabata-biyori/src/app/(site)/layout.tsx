@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { DemoBanner } from "@/components/site/DemoBanner";
@@ -20,6 +21,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Header issue={issue} />
       <main id="main">{children}</main>
       <Footer />
+      <div className="kb-fab-space" aria-hidden="true" />
+      <Link href="/shops/today" className="kb-fab">🌃 本日営業のお店</Link>
       <BackToTop />
       <JsonLd data={organizationLd()} />
     </>

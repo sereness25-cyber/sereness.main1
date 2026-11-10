@@ -40,6 +40,13 @@ export type ShopCategory = "izakaya" | "bar" | "snack" | "dining" | "karaoke" | 
 
 export type ShopPhoto = { url: string; caption: string };
 
+/** 1つの営業時間帯。閉店が開店と同じか早ければ翌日に閉店（例 19:00〜03:00） */
+export type HoursRange = { open: string; close: string };
+/** 曜日ごとの営業時間。closed_nth は「第1・第3月曜は休み」のような指定 */
+export type DayHours = { closed: boolean; ranges: HoursRange[]; closed_nth?: number[] };
+/** 臨時休業・臨時営業・時間変更（date はその営業日） */
+export type SpecialHours = { date: string; closed: boolean; ranges?: HoursRange[]; note?: string };
+
 export type Shop = {
   id: string;
   name: string;
@@ -64,6 +71,12 @@ export type Shop = {
   image_alt: string;
   /** メイン以外の写真（お店のページに並べる） */
   gallery?: ShopPhoto[];
+  /** 曜日別の営業時間（"0"＝日曜〜"6"＝土曜）。未登録なら null で、営業中の自動判定はしない */
+  hours?: Record<string, DayHours> | null;
+  /** 臨時休業・臨時営業など */
+  specials?: SpecialHours[];
+  /** 設備・サービス（karaoke, darts など） */
+  features?: string[];
   photo_permission: boolean;
   verified_at: string | null;
   is_published: boolean;
