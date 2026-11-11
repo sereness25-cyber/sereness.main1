@@ -5,7 +5,7 @@
       "name": "Café & Bar Sereness",
       "slug": "cafe-bar-sereness",
       "category": "bar",
-      "description": "カラオケ・ゲーム・スポーツ観戦も楽しめるカフェ&バー。ひとりでも、みんなでも楽しめるBar。\n飲み放題が基本料金で、ソフトドリンクの飲み放題もあり、お酒を飲まない人や一人での来店も歓迎と案内されています。",
+      "description": "ボードゲームやカラオケ、お酒を楽しめる秋田のエンタメカフェ＆バーです。\nおひとり様からペア、グループでのご来店まで幅広く大歓迎。\n夜カフェとしてのご利用も◎\nコーヒー、スイーツ、ノンアルコールカクテルも豊富にご用意しております。\n気軽に立ち寄って、楽しい時間をシェアできる空間をご用意してお待ちしております。",
       "address": "秋田県秋田市大町5-2-7 SCビル2F",
       "lat": null,
       "lng": null,
@@ -30,7 +30,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T12:20:23.996Z",
+      "updated_at": "2026-11-11T00:11:36.612Z",
       "sources": [
         {
           "label": "Café & Bar Sereness 公式サイト（運営元）",
@@ -111,27 +111,32 @@
       "name": "秋田川反漁屋酒場 秋田本店",
       "slug": "kawabata-isariya-sakaba",
       "category": "izakaya",
-      "description": "新鮮な魚介類と秋田の郷土料理・地酒を楽しめる居酒屋として紹介されています。自分で炙って仕上げるきりたんぽ鍋が特徴とされています。",
+      "description": "秋田県の郷土料理やお酒を常時多数取り揃えております\n「秋田川反漁屋酒場」ここ一軒で、秋田県の郷土料理・地酒を満喫できます！\n\n■当店の看板メニュー・・男鹿半島名物「石焼き鍋」と秋田名物『比内地鶏』料理\n■10名様以上のご予約または貸し切り宴会のご予約も承っておりますので、その場合\n本ネット予約ではなく、15時以降に直接お店にお電話頂けます様お願い致します。\nす。",
       "address": "秋田県秋田市大町4-2-35",
       "lat": null,
       "lng": null,
-      "business_hours": "17:00〜24:00",
+      "business_hours": "16:45〜24:00",
       "closed_days": "無休",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
+      "price_range": "平均5,000円",
+      "budget_level": 3,
+      "payment_methods": "クレジットカード",
+      "seats": "55",
       "solo_ok": null,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
-      "website": "https://marutomisuisan.jpn.com/isariya-akita/",
-      "image": null,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": "https://t195501.gorp.jp/?_gl=1*jgpzg7*_gcl_au*OTUyODUyMDY3LjE3OTEwMjQwODY.*_ga*MTUyMDUyODk2Ni4xNzYxODcwNDY4*_ga_L9BHK8C28C*czE3OTQzNTgwNjgkbzQ2JGcwJHQxNzk0MzU4MDcwJGo1OCRsMCRoMA..",
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1fOW6SHrloOIv9R9WBuewQCYZGnaelnzP.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T03:00:00Z",
+      "updated_at": "2026-11-11T03:13:01.271Z",
       "sources": [
         {
           "label": "公式サイト（丸富水産）",
@@ -148,8 +153,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -157,8 +162,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -166,8 +171,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -175,8 +180,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -184,8 +189,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -193,8 +198,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         },
@@ -202,40 +207,49 @@
           "closed": false,
           "ranges": [
             {
-              "open": "17:00",
-              "close": "24:00"
+              "open": "16:45",
+              "close": "00:00"
             }
           ]
         }
       },
-      "specials": []
+      "specials": [],
+      "gallery": [],
+      "features": [
+        "card"
+      ]
     },
     {
       "id": "shop-akita-kiritanpoya-omachi",
       "name": "秋田きりたんぽ屋 秋田大町分店",
       "slug": "akita-kiritanpoya-omachi",
       "category": "izakaya",
-      "description": "きりたんぽ鍋を名物に、マタギ鍋やハタハタのしょっつる鍋など秋田の郷土料理を扱う居酒屋として紹介されています。営業時間は掲載先によって違うため、お出かけ前にお店へご確認ください。",
+      "description": "米と雪の国秋田。雪と寒さを逆利用した食の数々。たんぽ、だまこもち、貝焼き鍋、いぶりがっこ、しょっつるなど美食の数々を、余すことなくお召し上がりいただけます。どうぞ極上のひと時を。\n四季折々に変化する旬の食材は毎朝市民市場より届く秋田の恵み。数量限定で行われる行商商品も当店の名物です！",
       "address": "秋田県秋田市大町4-2-20",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
+      "business_hours": "16:45〜24:00",
+      "closed_days": "年中無休",
+      "price_range": "平均5,000円",
+      "budget_level": 3,
       "payment_methods": "",
       "seats": "",
       "solo_ok": null,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
       "website": null,
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1ft3fNRlxP60nACjkpjIt03qA9fN4v-wy.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
+      "updated_at": "2026-11-11T03:33:06.525Z",
       "sources": [
         {
           "label": "あきた元気ナビ",
@@ -250,7 +264,75 @@
           "url": "https://kawabatatomachi.com/2018/04/24/%E7%A7%8B%E7%94%B0%E3%81%8D%E3%82%8A%E3%81%9F%E3%82%93%E3%81%BD%E5%B1%8B%E3%80%80%E5%A4%A7%E7%94%BA%E5%88%86%E5%BA%97/"
         }
       ],
-      "shop_confirmed": false
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": []
     },
     {
       "id": "shop-bar-le-verre",
@@ -282,14 +364,14 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T23:52:17.230Z",
+      "updated_at": "2026-11-11T02:58:35.110Z",
       "sources": [
         {
           "label": "BAR ル・ヴェール 公式サイト",
           "url": "https://www.bar-leverre.com/"
         }
       ],
-      "shop_confirmed": true,
+      "shop_confirmed": false,
       "hours": {
         "0": {
           "closed": true,
@@ -365,7 +447,7 @@
       "name": "BARアラジン",
       "slug": "bar-aladdin",
       "category": "bar",
-      "description": "ダーツとカラオケを楽しめる飲み放題のバーとして紹介されています。3,300円で飲み放題のコスパがいいBar。赤れんが郷土館前バス停から徒歩約1分。",
+      "description": "秋田市大町・川反のBARアラジンは、3300円で時間無制限飲み放題！60種類以上のお酒が楽しめて、カラオケもダーツも無料。広々店内で団体利用や女子会、会社の2次会・3次会にも大人気！秋田の夜遊びはおまかせ！",
       "address": "秋田県秋田市大町3-2-22 ジャスマックビル1F",
       "lat": null,
       "lng": null,
@@ -390,7 +472,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-10T12:14:59.418Z",
+      "updated_at": "2026-11-11T00:00:04.473Z",
       "sources": [
         {
           "label": "エキテン",
@@ -476,34 +558,109 @@
       "name": "炭火やきとりと竈めし 一の酉 秋田川反店",
       "slug": "ichinotori-kawabata",
       "category": "izakaya",
-      "description": "炭火やきとりと竈（かまど）で炊くごはんの店。",
+      "description": "あなたは｢とりかわ串｣をお試しになりましたか？\n秋田市川反で店を構える｢一の酉｣ 名物の｢とりかわ串｣は職人の技で作られます。\n一本一本丁寧に串に刺した皮を【三日仕込５回炙り】の技で\n仕上ています。まさに食べるべき逸品です。\nきっと｢また食べたい｣と感じて頂けます。\nお仲間でもお一人でもお気軽にお越し頂けます。\n出張のお客様が馴染みになってくれている味ですよ。\n美味しさの秘密は手間暇と鮮度です。\n是非感じて下さい。",
       "address": "秋田県秋田市大町3-2-30 シャインズビル1F",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
+      "business_hours": "17:00〜24:00",
+      "closed_days": "無し",
+      "price_range": "通常平均:3,000円　宴会平均:4,000円",
+      "budget_level": 2,
+      "payment_methods": "クレジットカード",
+      "seats": "86",
+      "solo_ok": true,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
-      "website": null,
-      "image": null,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": "https://t082840.gorp.jp/?_gl=1*5wgabw*_gcl_au*OTUyODUyMDY3LjE3OTEwMjQwODY.*_ga*MTUyMDUyODk2Ni4xNzYxODcwNDY4*_ga_L9BHK8C28C*czE3OTQzNjU1NzckbzQ3JGcxJHQxNzk0MzY1NjIyJGoxNSRsMCRoMA..",
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1sBHAY5azQfCnPrewxeVZ93m03cJUvq-r.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
+      "updated_at": "2026-11-11T02:58:10.554Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
           "url": "https://www.navitime.co.jp/category/0308001/05201052000/"
         }
       ],
-      "shop_confirmed": false
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": [
+        "card"
+      ]
     },
     {
       "id": "shop-irori-ya-kawabata",
@@ -544,34 +701,109 @@
       "name": "薄利多賣半兵エ 秋田川反店",
       "slug": "hanbee-kawabata",
       "category": "izakaya",
-      "description": "秋田市大町・川反の居酒屋。",
+      "description": "“薄利多賣”をモットーに、昭和レトロな空間でリーズナブルなお料理とお酒が気軽に楽しめる当店。炭火で焼き上げる「ヤキトリ」は1本99円～と破格でご提供しております。ほかおつまみ系から「昭和風ナポリタン」をはじめとするガッツリお食事系まで多彩なメニューが充実。店内にはちゃぶ台席やカウンター・個室席など席種もご用意。あらゆる面で昭和初期のイメージにこだわり、あらゆる年代のお客様に楽しんでいただけます！",
       "address": "秋田県秋田市大町5-1-3 八番館ビル1F",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
+      "business_hours": "17:00〜24:00",
+      "closed_days": "無",
+      "price_range": "平均2,000円",
+      "budget_level": 1,
+      "payment_methods": "クレジットカード/QRコード",
+      "seats": "43",
       "solo_ok": null,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
-      "website": null,
-      "image": null,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": "https://www.hanbey.com/",
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1hXzmZ6BXGlxK7vchyaQvLH8922ouR-P0.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
+      "updated_at": "2026-11-11T03:22:35.928Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
           "url": "https://www.navitime.co.jp/category/0308001/05201052000/"
         }
       ],
-      "shop_confirmed": false
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "00:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": [
+        "card"
+      ]
     },
     {
       "id": "shop-kawabata-ken",
