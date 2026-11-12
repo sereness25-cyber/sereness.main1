@@ -667,34 +667,107 @@
       "name": "いろり家 秋田川反店",
       "slug": "irori-ya-kawabata",
       "category": "izakaya",
-      "description": "秋田市大町・川反の居酒屋。",
+      "description": "●秋田の郷土料理・季節の食材をいち早く取り入れ、素材の味を活かした調理法で提供致します！\n●当店はカウンター15席、こ上がりテーブル1席のお店になります。\n●飲み放題付宴会コース5.000円～ご用意しております\n（ご予算相談に応じます）\n県外の方はもちろん、地元のお客様にも“寛ぎの時間”を楽しんで頂けます。\n1名様でも大歓迎です♪\n●高清水、秀よし、刈穂、他秋田の地酒を取り揃えております。",
       "address": "秋田県秋田市大町4-2-26",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
+      "business_hours": "16:45〜24:00",
+      "closed_days": "無",
+      "price_range": "平均5,000円",
+      "budget_level": 3,
+      "payment_methods": "現金/クレジットカード/電子マネー",
+      "seats": "20",
       "solo_ok": null,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
       "website": null,
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1wf7yWYl9emfM51ps-PJBkGmgazj0HyAk.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
+      "updated_at": "2026-11-12T04:07:08.973Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
           "url": "https://www.navitime.co.jp/category/0308001/05201052000/"
         }
       ],
-      "shop_confirmed": false
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:45",
+              "close": "00:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": []
     },
     {
       "id": "shop-hanbee-kawabata",
