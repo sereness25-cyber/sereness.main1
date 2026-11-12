@@ -1,6 +1,205 @@
 {
   "shops": [
     {
+      "id": "e12d8217-f193-4332-aafa-486ddd3d9c1c",
+      "name": "STAND UP BOSS",
+      "slug": "stand-up-boss",
+      "category": "bar",
+      "description": "",
+      "address": "秋田県秋田市大町5-3-13 加納ビル 2F",
+      "lat": null,
+      "lng": null,
+      "business_hours": "20::00〜3:00",
+      "closed_days": "月曜日",
+      "price_range": "",
+      "budget_level": 2,
+      "payment_methods": "クレジットカード/電子決済",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1Ooma5rzBV6Dwd6jmT7UtfZJa6zEjyBvw.webp",
+      "image_alt": "",
+      "photo_permission": true,
+      "verified_at": "2026-11-12",
+      "is_published": true,
+      "updated_at": "2026-11-12T11:39:33.241Z",
+      "sources": [],
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": true,
+          "ranges": []
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "20:00",
+              "close": "03:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": [
+        "darts",
+        "card"
+      ]
+    },
+    {
+      "id": "c421e849-e21e-482c-a323-9a5a99f08792",
+      "name": "ザ・バー1980",
+      "slug": "1980",
+      "category": "bar",
+      "description": "オーダーを頂いてからフルーツを絞って作る、フレッシュにこだわったカクテルやスタンダード・オリジナルカクテルはもちろん、ウイスキー等も愉しめる落ち着いた雰囲気が魅力の店内で、ゆったりとした時間を・・・。",
+      "address": "秋田県秋田市大町4丁目2-5 2Ｆ",
+      "lat": null,
+      "lng": null,
+      "business_hours": "19:00〜2:00 (祝日は0:00まで)",
+      "closed_days": "日曜日",
+      "price_range": "",
+      "budget_level": 2,
+      "payment_methods": "現金/クレジットカード",
+      "seats": "15",
+      "solo_ok": true,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1JA9r0Omx7zx1_n5qwdPs77-P6xfG4qgJ.webp",
+      "image_alt": "",
+      "photo_permission": true,
+      "verified_at": "2026-11-12",
+      "is_published": true,
+      "updated_at": "2026-11-12T11:24:08.567Z",
+      "sources": [],
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "02:00"
+            }
+          ]
+        }
+      },
+      "specials": [],
+      "features": [
+        "card"
+      ]
+    },
+    {
       "id": "shop-cafe-bar-sereness",
       "name": "Café & Bar Sereness",
       "slug": "cafe-bar-sereness",
