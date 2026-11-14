@@ -1,6 +1,74 @@
 {
   "shops": [
     {
+      "id": "shop-kawabata-ken",
+      "name": "川反軒",
+      "slug": "kawabata-ken",
+      "category": "izakaya",
+      "description": "秋田市大町・川反の居酒屋。",
+      "address": "秋田県秋田市大町5丁目2-42",
+      "lat": null,
+      "lng": null,
+      "business_hours": "",
+      "closed_days": "",
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {},
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "verified_at": "2026-11-09",
+      "is_published": true,
+      "updated_at": "2026-11-09T00:00:00+09:00",
+      "sources": [
+        {
+          "label": "Yahoo!マップ",
+          "url": "https://map.yahoo.co.jp/v3/place/B6E9aZPgVW2"
+        }
+      ],
+      "shop_confirmed": false
+    },
+    {
+      "id": "shop-chawanya",
+      "name": "ちゃわん屋",
+      "slug": "chawanya",
+      "category": "izakaya",
+      "description": "秋田の郷土料理を味わえる店として紹介されています。",
+      "address": "秋田県秋田市大町4-2-7",
+      "lat": null,
+      "lng": null,
+      "business_hours": "",
+      "closed_days": "",
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {},
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "verified_at": "2026-11-09",
+      "is_published": true,
+      "updated_at": "2026-11-09T00:00:00+09:00",
+      "sources": [
+        {
+          "label": "るるぶ＆more.（秋田の郷土料理の名店案内）",
+          "url": "https://plus.rurubu.jp/article/6ah22brietv"
+        }
+      ],
+      "shop_confirmed": false
+    },
+    {
       "id": "d8b53dcf-bd65-4057-93e9-af903bc4ce09",
       "name": "さけ富",
       "slug": "post-mwe8crbn",
@@ -1180,40 +1248,6 @@
       ]
     },
     {
-      "id": "shop-kawabata-ken",
-      "name": "川反軒",
-      "slug": "kawabata-ken",
-      "category": "izakaya",
-      "description": "秋田市大町・川反の居酒屋。",
-      "address": "秋田県秋田市大町5丁目2-42",
-      "lat": null,
-      "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {},
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "verified_at": "2026-11-09",
-      "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
-      "sources": [
-        {
-          "label": "Yahoo!マップ",
-          "url": "https://map.yahoo.co.jp/v3/place/B6E9aZPgVW2"
-        }
-      ],
-      "shop_confirmed": false
-    },
-    {
       "id": "shop-kawabata-hinata",
       "name": "川反 日なた",
       "slug": "kawabata-hinata",
@@ -1324,64 +1358,98 @@
       "address": "秋田県秋田市大町4-2-25",
       "lat": null,
       "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
+      "business_hours": "月～土・祝前日・祝日  17:00～22:30 （L.O.21:30）",
+      "closed_days": "日曜日",
+      "price_range": "平均4,000円",
+      "budget_level": 3,
       "payment_methods": "",
-      "seats": "",
+      "seats": "58",
       "solo_ok": null,
       "non_alcohol": null,
       "beginner_welcome": false,
-      "sns": {},
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
       "website": null,
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1qxjFqbniMHXUxKUHDYPXYaruWWtuL2fk.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
+      "updated_at": "2026-11-14T10:27:07.702Z",
       "sources": [
         {
           "label": "るるぶ＆more.（秋田の郷土料理の名店案内）",
           "url": "https://plus.rurubu.jp/article/6ah22brietv"
         }
       ],
-      "shop_confirmed": false
-    },
-    {
-      "id": "shop-chawanya",
-      "name": "ちゃわん屋",
-      "slug": "chawanya",
-      "category": "izakaya",
-      "description": "秋田の郷土料理を味わえる店として紹介されています。",
-      "address": "秋田県秋田市大町4-2-7",
-      "lat": null,
-      "lng": null,
-      "business_hours": "",
-      "closed_days": "",
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {},
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "verified_at": "2026-11-09",
-      "is_published": true,
-      "updated_at": "2026-11-09T00:00:00+09:00",
-      "sources": [
-        {
-          "label": "るるぶ＆more.（秋田の郷土料理の名店案内）",
-          "url": "https://plus.rurubu.jp/article/6ah22brietv"
+      "shop_confirmed": false,
+      "gallery": [],
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "22:30"
+            }
+          ]
         }
-      ],
-      "shop_confirmed": false
+      },
+      "specials": [],
+      "features": []
     }
   ]
 }
