@@ -603,8 +603,8 @@
       "budget_level": 3,
       "payment_methods": "",
       "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
+      "solo_ok": true,
+      "non_alcohol": true,
       "beginner_welcome": false,
       "sns": {
         "instagram": "",
@@ -618,7 +618,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T03:33:06.525Z",
+      "updated_at": "2026-11-14T15:39:39.538Z",
       "sources": [
         {
           "label": "あきた元気ナビ",
@@ -938,7 +938,7 @@
       "payment_methods": "クレジットカード",
       "seats": "86",
       "solo_ok": true,
-      "non_alcohol": null,
+      "non_alcohol": true,
       "beginner_welcome": false,
       "sns": {
         "instagram": "",
@@ -952,7 +952,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T02:58:10.554Z",
+      "updated_at": "2026-11-14T15:40:04.267Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
@@ -1364,8 +1364,8 @@
       "budget_level": 3,
       "payment_methods": "",
       "seats": "58",
-      "solo_ok": null,
-      "non_alcohol": null,
+      "solo_ok": true,
+      "non_alcohol": true,
       "beginner_welcome": false,
       "sns": {
         "instagram": "",
@@ -1379,7 +1379,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-14T10:27:07.702Z",
+      "updated_at": "2026-11-14T15:40:53.271Z",
       "sources": [
         {
           "label": "るるぶ＆more.（秋田の郷土料理の名店案内）",
