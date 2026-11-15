@@ -345,7 +345,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "01:00"
+              "close": "25:00"
             }
           ]
         },
@@ -354,7 +354,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "01:00"
+              "close": "25:00"
             }
           ]
         },
@@ -363,7 +363,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "01:00"
+              "close": "25:00"
             }
           ]
         },
@@ -376,7 +376,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "01:00"
+              "close": "25:00"
             }
           ]
         },
@@ -385,7 +385,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "03:00"
+              "close": "27:00"
             }
           ]
         },
@@ -394,7 +394,7 @@
           "ranges": [
             {
               "open": "19:00",
-              "close": "03:00"
+              "close": "27:00"
             }
           ]
         }
@@ -404,7 +404,62 @@
         "darts",
         "card"
       ],
-      "specials": [],
+      "specials": [
+        {
+          "date": "2026-11-22",
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "27:00"
+            }
+          ],
+          "note": ""
+        },
+        {
+          "date": "2026-12-11",
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "27:00"
+            }
+          ],
+          "note": "21:15~23:15 貸切"
+        },
+        {
+          "date": "2026-12-20",
+          "closed": true,
+          "note": ""
+        },
+        {
+          "date": "2026-12-23",
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "25:00"
+            }
+          ],
+          "note": ""
+        },
+        {
+          "date": "2026-12-30",
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "25:00"
+            }
+          ],
+          "note": ""
+        },
+        {
+          "date": "2026-12-31",
+          "closed": true,
+          "note": ""
+        }
+      ],
       "gallery": []
     },
     {
