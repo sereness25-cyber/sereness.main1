@@ -223,7 +223,7 @@ function kbFetchGithub(name) {
   try {
     res = UrlFetchApp.fetch(KB_RAW + name + '.json?t=' + Date.now(), {muteHttpExceptions: true});
   } catch (e) {
-    throw new Error('GitHub からデータを写せませんでした。Apps Script のエディタで関数「kawabataSetup」を実行して、許可してください');
+    throw new Error('GitHub からデータを写せませんでした(' + (e && e.message || e) + ')。すでに管理画面の「取り込む」でお店・記事を入れていれば、この処理は不要です');
   }
   if (res.getResponseCode() !== 200) throw new Error('GitHub の ' + name + '.json を読めませんでした(' + res.getResponseCode() + ')');
   return JSON.parse(res.getContentText('UTF-8'));
