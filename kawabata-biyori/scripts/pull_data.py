@@ -21,8 +21,25 @@ def fetch(url, timeout=60):
         return res.read()
 
 
+def report_version(api):
+    """いま動いている Apps Script の版を記録に出す（管理画面の「古いまま」表示の確認用）"""
+    try:
+        req = urllib.request.Request(api, data=b'{"action":"kb_login"}', headers={"Content-Type": "text/plain;charset=utf-8", "User-Agent": "kawabata-biyori-sync"})
+        with urllib.request.urlopen(req, timeout=60) as res:
+            j = json.loads(res.read().decode("utf-8"))
+        print(f"Apps Script の版: v={j.get('v')} kb={j.get('kb')} ok={j.get('ok')} error={j.get('error')}")
+    except Exception as e:  # noqa: BLE001
+        print(f"Apps Script の版を確かめられませんでした: {e}")
+    try:
+        t = json.loads(fetch(api + "?kawabata=today").decode("utf-8"))
+        print(f"本日営業のAPI: kb={t.get('kb')} お店={len(t.get('shops') or [])}")
+    except Exception as e:  # noqa: BLE001
+        print(f"本日営業のAPI: なし（{str(e)[:80]}）")
+
+
 def main():
     api, data_dir = sys.argv[1], sys.argv[2]
+    report_version(api)
     try:
         payload = json.loads(fetch(api + "?kawabata=export").decode("utf-8"))
     except Exception as e:  # noqa: BLE001
