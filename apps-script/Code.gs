@@ -213,7 +213,13 @@ function kbFile(name) {
 function kbRead(name) {
   var f = kbFile(name);
   if (f) return JSON.parse(f.getBlob().getDataAsString('UTF-8'));
-  var data = kbFetchGithub(name);  // 最初の1回だけ GitHub から写す(写せなければ空のファイルは作らない)
+  // 最初の1回だけ GitHub から写す。写せないとき(許可がないなど)は、ファイルを作らずに空のまま返す
+  var data;
+  try { data = kbFetchGithub(name); } catch (e) {
+    data = {};
+    if (name !== 'settings') data[name] = [];
+    return data;
+  }
   kbWrite(name, data);
   return data;
 }
