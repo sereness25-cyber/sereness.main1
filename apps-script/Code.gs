@@ -271,7 +271,8 @@ function kbWrite(name, data) {
 
 function kbLoadAll() {
   var c = kbFile('categories');
-  if (c && !(JSON.parse(c.getBlob().getDataAsString('UTF-8')).categories || []).length) kawabataSetup();  // 以前の失敗で空になっていたら埋め直す
+  // 以前の失敗で空になっていたら埋め直す(GitHub を読む許可がまだなくても、管理画面は開けるようにする)
+  if (c && !(JSON.parse(c.getBlob().getDataAsString('UTF-8')).categories || []).length) { try { kawabataSetup(); } catch (e) {} }
   var out = {};
   KB_LISTS.forEach(function(k){ out[k] = kbRead(k)[k] || []; });
   out.settings = kbRead('settings');
