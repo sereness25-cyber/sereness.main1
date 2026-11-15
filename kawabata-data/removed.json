@@ -1,0 +1,12 @@
+{
+  "_説明": "削除したお店・記事・イベントの id。公開ページへの取り込みで除外し、管理画面を開いたときに保存先（ドライブ）からも消す",
+  "shops": [
+    "shop-kawabata-ken",
+    "shop-chawanya",
+    "shop-kawabata-hinata",
+    "shop-beniga-raya",
+    "shop-ichirakudo"
+  ],
+  "articles": [],
+  "events": []
+}

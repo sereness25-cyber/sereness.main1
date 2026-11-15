@@ -157,6 +157,7 @@ function json(obj) {
    - 写真はドライブの「かわばた日和 写真」フォルダ(リンクを知っている人が見られる)
    ============================================================ */
 var KB_RAW = 'https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/kawabata-data/';
+var KB_VERSION = 4;  // 管理ページが「Apps Script が新しいか」を確かめるための番号
 var KB_LISTS = ['articles', 'shops', 'events', 'categories'];
 
 function kbHandle(body) {
@@ -175,6 +176,7 @@ function kbHandle(body) {
     out = {ok: false, error: String(err && err.message || err)};
   }
   out.kb = 1;
+  out.v = KB_VERSION;
   return out;
 }
 

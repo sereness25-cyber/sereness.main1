@@ -59,6 +59,16 @@ def main():
         print("::warning::公開中のお店が0件の返事でした。念のため取り込みません。")
         return
 
+    # 削除したもの（kawabata-data/removed.json）は取り込まない
+    try:
+        with open(os.path.join(data_dir, "removed.json"), encoding="utf-8") as f:
+            removed = json.load(f)
+    except Exception:  # noqa: BLE001
+        removed = {}
+    for k in ("articles", "shops", "events"):
+        gone = set(removed.get(k) or [])
+        payload[k] = [x for x in payload[k] if not (isinstance(x, dict) and x.get("id") in gone)]
+
     text = json.dumps(payload, ensure_ascii=False)
     img_dir = os.path.join(data_dir, "images", "drive")
     for file_id in sorted(set(DRIVE_URL.findall(text))):

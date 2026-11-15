@@ -260,7 +260,10 @@ async function uploadImage(file) {
 const cache = { articles: null, shops: null, events: null, categories: null, settings: null };
 async function loadAll() {
   if (!cache.articles) {
-    Object.assign(cache, (await api("kb_load")).data);
+    const j = await api("kb_load");
+    Object.assign(cache, j.data);
+    cache.apiVersion = j.v || 0;
+    await cleanRemoved();
     // 保存先（ドライブ）が空のとき：公開中のデータ（GitHub）と比べて、足りないものを取り込めるようにする
     try {
       const gh = await githubData();
@@ -272,6 +275,52 @@ async function loadAll() {
   }
   return cache;
 }
+
+/* 削除したお店・記事（kawabata-data/removed.json）が保存先に残っていたら消す */
+async function cleanRemoved() {
+  let removed = {};
+  try { const r = await fetch(RAW + "removed.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) removed = await r.json(); } catch { return; }
+  const todo = [];
+  for (const k of ["shops", "articles", "events"]) {
+    const gone = new Set(removed[k] || []);
+    (cache[k] || []).forEach((x) => { if (gone.has(x.id)) todo.push([k, x]); });
+  }
+  let n = 0;
+  for (const [k, item] of todo) {
+    status(`削除したお店などを片付けています…（${++n}/${todo.length}）`);
+    try { await saveItem(k + ".json", k, item, "", { remove: true }); } catch { /* 次に開いたときにもう一度 */ }
+  }
+  if (todo.length) status(`${todo.length}件を削除しました。`, "ok", 4000);
+}
+
+/* Apps Script（保存先）が古いままだと、写真の差し替えなどが保存されない */
+const API_VERSION = 4;
+const CODE_URL = "https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/apps-script/Code.gs";
+function updateBanner() {
+  if ((cache.apiVersion || 0) >= API_VERSION) return "";
+  return `<div class="note err" style="margin-bottom:16px"><b>Google 側のプログラム（Apps Script）が古いままです。</b><br>
+    このままだと <b>写真の差し替えが保存されません</b>。お店用ページ、臨時休業のすぐ反映も使えません。次の手順で新しくしてください。
+    <ol class="steps" style="margin-top:6px">
+      <li>下の「新しいコードをコピー」を押す</li>
+      <li><a href="https://script.google.com/home" target="_blank" rel="noopener">Apps Script</a> で、お店の営業スケジュールのプロジェクトを開く</li>
+      <li>「コード.gs（Code.gs）」の中身をすべて消して、貼り付ける → 💾保存</li>
+      <li>右上の「デプロイ」→「デプロイを管理」→ ✏️（鉛筆）→ バージョン「<b>新バージョン</b>」→「デプロイ」<br><span class="hint">「新しいデプロイ」ではなく「デプロイを管理」から。URLを変えないためです</span></li>
+      <li>上の関数の選択欄で「kawabataSetup」を選んで ▶実行 → 許可を求められたら許可</li>
+      <li>この管理画面を開き直す（この赤い表示が消えれば完了）</li>
+    </ol>
+    <button class="btn primary small" type="button" data-copy-code>新しいコードをコピー</button></div>`;
+}
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-copy-code]");
+  if (!b) return;
+  try {
+    const r = await fetch(CODE_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) throw new Error();
+    await navigator.clipboard.writeText(await r.text());
+    status("コードをコピーしました。Apps Script に貼り付けてください。", "ok", 6000);
+  } catch { window.open(CODE_URL, "_blank", "noopener"); status("コピーできなかったので、コードのページを開きました。全部選んでコピーしてください。", "err", 8000); }
+});
+const notices = () => updateBanner() + restoreBanner();
 
 /* いま公開ページに出ているデータ（GitHub の kawabata-data） */
 const RAW = "https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/kawabata-data/";
@@ -362,7 +411,7 @@ views.home = async (el) => {
   const live = articles.filter((a) => (a.status === "published" || a.status === "scheduled") && a.published_at && new Date(a.published_at) <= now);
   const sched = articles.filter((a) => a.status === "scheduled" && a.published_at && new Date(a.published_at) > now);
   el.innerHTML = `
-    ${restoreBanner()}
+    ${notices()}
     <h1>ダッシュボード</h1>
     <p class="lead">保存すると、10〜15分ほどで <a href="${SITE}/" target="_blank" rel="noopener">公開ページ</a> に反映されます（下書き・非公開は公開されません）。</p>
     <div class="stats">
@@ -397,7 +446,7 @@ views.articles = async (el) => {
   const cats = await loadCategories();
   const catName = Object.fromEntries(cats.map((c) => [c.slug, c.name]));
   el.innerHTML = `
-    ${restoreBanner()}
+    ${notices()}
     <div class="row between"><div><h1>記事</h1><p class="lead">下書きはサイトに表示されません。「公開」または予約時刻を過ぎた「予約公開」だけが表示されます。</p></div>
     <button class="btn primary" data-new="article" type="button">新しい記事を書く</button></div>
     <div class="row" style="margin-bottom:12px">
@@ -658,7 +707,7 @@ views.shops = async (el) => {
   const shops = await loadShops();
   const cat = Object.fromEntries(SHOP_CATS);
   el.innerHTML = `
-    ${restoreBanner()}
+    ${notices()}
     <div class="row between"><div><h1>お店</h1><p class="lead">お店に確認できた内容だけを載せましょう。確認前の情報は「公開情報をもとに掲載」と表示されます。</p></div>
     <button class="btn primary" type="button" data-new="shop">お店を追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>店名</th><th>業種</th><th>公開</th><th>お店に確認</th><th>確認日</th></tr></thead><tbody>
@@ -875,7 +924,7 @@ views.events = async (el) => {
   const events = await loadEvents();
   const now = Date.now();
   el.innerHTML = `
-    ${restoreBanner()}
+    ${notices()}
     <div class="row between"><div><h1>イベント</h1><p class="lead">終了日時（なければ開始日時）を過ぎると、自動で「過去のイベント」になります。</p></div>
     <button class="btn primary" type="button" data-new="event">イベントを追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>イベント</th><th>開始</th><th>状態</th><th>公開</th></tr></thead><tbody>
@@ -1000,6 +1049,7 @@ views.photos = async (el) => {
       </li>`;
   const draw = () => {
     el.innerHTML = `
+      ${updateBanner()}
       <h1>写真</h1>
       <p class="lead">トップページの写真と、記事やお店に写真が登録されていないときに代わりに出す写真を変えられます。<br>
       記事ごと・お店ごとの写真は、それぞれの編集画面の「アイキャッチ画像」「写真」から変えられます（そちらが優先されます）。</p>
@@ -1029,7 +1079,9 @@ views.photos = async (el) => {
       $("#ph-save").disabled = true;
       try {
         status("保存しています…");
-        cache.settings = (await api("kb_settings", { settings: { photos } })).settings;
+        const saved = (await api("kb_settings", { settings: { photos } })).settings || {};
+        if (!saved.photos) throw new Error("Google 側のプログラム（Apps Script）が古いため、写真が保存されませんでした。画面上の赤い表示の手順で新しくしてください。");
+        cache.settings = saved;
         dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("photos");
       } catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#ph-save").disabled = false; }
     };
