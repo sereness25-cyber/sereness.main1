@@ -394,7 +394,15 @@ function go(name, arg) {
   const view = $("#view");
   view.innerHTML = '<p class="lead">読み込んでいます…</p>';
   views[name](view, arg).catch((e) => {
-    if (e.auth) { store.del("kb-pass"); PASS = ""; $("#app").hidden = true; $("#unlock").hidden = false; $("#unlock-msg").innerHTML = `<p class="note err">${esc(e.message)}</p>`; return; }
+    if (e.auth) {
+      // まだパスワードを入れていないときは、エラーではなく案内を出す
+      const first = !PASS;
+      store.del("kb-pass"); PASS = ""; $("#app").hidden = true; $("#unlock").hidden = false;
+      $("#unlock-msg").innerHTML = first && /パスワードが違います/.test(e.message)
+        ? '<p class="note">Apps Script のスクリプト プロパティ「KAWABATA_PASSWORD」に入れたパスワードを入力してください。<br><span class="hint">パスワードなしで使いたいときは、スクリプト プロパティから KAWABATA_PASSWORD を削除してください。</span></p>'
+        : `<p class="note err">${esc(e.message)}</p>`;
+      return;
+    }
     view.innerHTML = `<p class="note err">読み込めませんでした：${esc(e.message)}</p>`;
   });
   window.scrollTo(0, 0);
