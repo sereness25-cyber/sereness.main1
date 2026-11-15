@@ -742,7 +742,8 @@ views["shops:edit"] = async (el, id) => {
         <section class="panel stack"><h2>基本情報</h2>
           <div class="grid2">${t("s-name", "店名（必須）", s.name)}
             <label class="f"><span>業種</span><select id="s-cat">${SHOP_CATS.map(([v, l]) => `<option value="${v}" ${s.category === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
-            ${t("s-slug", "URLスラッグ", s.slug, "半角英小文字・数字・ハイフン")}${t("s-address", "住所", s.address)}</div>
+            ${t("s-slug", "URLスラッグ", s.slug, "半角英小文字・数字・ハイフン")}${t("s-address", "住所", s.address)}
+            <label class="f"><span>電話番号</span><input type="tel" id="s-phone" value="${esc(s.phone || "")}" placeholder="例：018-000-0000" inputmode="tel"><span class="hint">お店のページに「電話をかける」ボタンが出ます。空欄なら出ません</span></label></div>
           <label class="f"><span>紹介文</span><textarea id="s-desc" rows="5">${esc(s.description)}</textarea></label>
         </section>
         <section class="panel stack"><h2>写真</h2>
@@ -887,6 +888,8 @@ views["shops:edit"] = async (el, id) => {
     if ($("#s-bw").checked && !$$(".bw", el).every((x) => x.checked)) return err("初心者歓迎マークは、4項目をすべて確認してから付けてください。");
     const slug = slugify(v("s-slug") || name);
     if (shops.some((x) => x.id !== s.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のお店で使われています。`);
+    const phone = v("s-phone").replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0)).replace(/[ー－―]/g, "-");
+    if (phone && !/^\+?[\d\-() ]{6,20}$/.test(phone)) return err("電話番号は「018-000-0000」のように、数字とハイフンで入れてください。");
     if (slug === "today") return err("「today」はURLスラッグに使えません（本日営業のお店のページと重なるため）。");
     let lat = null, lng = null;
     const ll = v("s-latlng");
@@ -904,7 +907,7 @@ views["shops:edit"] = async (el, id) => {
     } catch { return err("出典のURLの形式を確認してください（https:// から始まるURL）。"); }
     const item = {
       ...s, name, slug, category: $("#s-cat").value, description: v("s-desc"), address: v("s-address"),
-      business_hours: v("s-hours"), closed_days: v("s-closed"), price_range: v("s-price"), budget_level: v("s-budget") ? Number(v("s-budget")) : null,
+      phone, business_hours: v("s-hours"), closed_days: v("s-closed"), price_range: v("s-price"), budget_level: v("s-budget") ? Number(v("s-budget")) : null,
       payment_methods: v("s-pay"), seats: v("s-seats"), solo_ok: fromTri($("#s-solo").value), non_alcohol: fromTri($("#s-nonalc").value),
       beginner_welcome: $("#s-bw").checked, website: v("s-web") || null,
       sns: { instagram: v("s-ig"), x: v("s-x"), facebook: v("s-fb"), youtube: (s.sns || {}).youtube || "" },

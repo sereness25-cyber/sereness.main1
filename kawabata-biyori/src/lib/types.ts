@@ -75,6 +75,8 @@ export type Shop = {
   hours?: Record<string, DayHours> | null;
   /** 臨時休業・臨時営業など */
   specials?: SpecialHours[];
+  /** 電話番号（例 018-000-0000）。お店のページで押すと電話をかけられる */
+  phone?: string;
   /** 設備・サービス（karaoke, darts など） */
   features?: string[];
   photo_permission: boolean;

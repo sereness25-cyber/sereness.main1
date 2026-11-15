@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const yesNo = (v: boolean | null, yes: string, no: string) => (v === null ? "未確認" : v ? yes : no);
+/** 電話をかけるリンク用（数字と + だけにする） */
+const telHref = (p: string) => `tel:${p.replace(/[^\d+]/g, "")}`;
 
 export default async function ShopPage({ params }: Props) {
   const shop = await getShopBySlug((await params).slug);
@@ -37,6 +39,16 @@ export default async function ShopPage({ params }: Props) {
   const rows: [string, React.ReactNode][] = [
     ["業種", shopCategoryLabel(shop.category)],
     ["住所", shop.address || "—"],
+    [
+      "電話番号",
+      shop.phone ? (
+        <a href={telHref(shop.phone)} className="font-bold text-navy underline underline-offset-4">
+          {shop.phone}
+        </a>
+      ) : (
+        "—"
+      ),
+    ],
     ["営業時間", shop.business_hours || "—"],
     ["定休日", shop.closed_days || "—"],
     ["料金", shop.price_range || (shop.budget_level ? BUDGET_LABELS[shop.budget_level] : "—")],
@@ -60,6 +72,11 @@ export default async function ShopPage({ params }: Props) {
           <p className="mt-3 rounded-xl bg-navy/5 px-4 py-3 text-sm">これは画面確認用の<strong>架空の店舗</strong>です。実在するお店ではありません。</p>
         )}
         <Thumb src={shop.image} alt={shop.image_alt || shop.name} label={shopCategoryLabel(shop.category)} seed={shop.slug} priority className="mt-6 rounded-3xl" sizes="(min-width: 960px) 960px, 100vw" />
+        {shop.phone && (
+          <a href={telHref(shop.phone)} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-blush px-6 font-mincho font-bold tracking-[0.12em] text-white transition hover:brightness-110">
+            <span aria-hidden="true">📞</span> 電話をかける<span className="sr-only">（{shop.phone}）</span>
+          </a>
+        )}
         <p className="mt-8 whitespace-pre-line text-[1.02rem] leading-9">{shop.description}</p>
 
         {shop.gallery && shop.gallery.length > 0 && (

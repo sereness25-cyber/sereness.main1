@@ -55,6 +55,7 @@ export function shopLd(s: Shop) {
     image: s.image ?? undefined,
     url: s.website ?? `${siteUrl()}/shops/${s.slug}`,
     priceRange: s.price_range || undefined,
+    telephone: s.phone || undefined,
   };
 }
 
