@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getArticlesForShop, getShopBySlug } from "@/lib/data";
 import { BUDGET_LABELS, shopCategoryLabel } from "@/lib/constants";
-import { formatDate } from "@/lib/format";
 import { shopLd } from "@/lib/jsonld";
 import { Thumb } from "@/components/site/Thumb";
 import { BeginnerMark, CategoryBadge, SampleBadge } from "@/components/site/Badges";
@@ -27,7 +26,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const yesNo = (v: boolean | null, yes: string, no: string) => (v === null ? "未確認" : v ? yes : no);
 /** 電話をかけるリンク用（数字と + だけにする） */
 const telHref = (p: string) => `tel:${p.replace(/[^\d+]/g, "")}`;
 
@@ -54,8 +52,6 @@ export default async function ShopPage({ params }: Props) {
     ["料金", shop.price_range || (shop.budget_level ? BUDGET_LABELS[shop.budget_level] : "—")],
     ["支払方法", shop.payment_methods || "—"],
     ["席数", shop.seats || "—"],
-    ["一人での利用", yesNo(shop.solo_ok, "OK", "グループ向け")],
-    ["ノンアル対応", yesNo(shop.non_alcohol, "あり", "なし")],
   ];
 
   return (
@@ -116,11 +112,6 @@ export default async function ShopPage({ params }: Props) {
               </div>
             )}
           </dl>
-          {!shop.shop_confirmed && !shop.is_sample && (
-            <p className="mt-4 border-l-2 border-blush bg-[#fbf3f3] px-4 py-3 text-sm leading-7">
-              この情報は、公開されている情報をもとに編集部が調べたものです。<strong>お店にはまだ確認していません。</strong>閉店・移転・営業時間の変更があるかもしれません。
-            </p>
-          )}
           {shop.sources.length > 0 && (
             <div className="mt-4 text-xs text-muted">
               <p className="font-bold">出典</p>
@@ -131,10 +122,6 @@ export default async function ShopPage({ params }: Props) {
               </ul>
             </div>
           )}
-          <p className="mt-4 text-xs text-muted">
-            {shop.verified_at ? `${shop.shop_confirmed ? "情報の最終確認日" : "公開情報を調べた日"}：${formatDate(shop.verified_at)}。` : "情報の確認日：未確認。"}
-            営業時間や料金は変わることがあります。お出かけ前にお店へご確認ください。
-          </p>
         </section>
 
         {(shop.lat === null || shop.lng === null) && shop.address && !shop.is_sample && (
