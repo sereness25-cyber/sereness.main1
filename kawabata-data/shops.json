@@ -331,7 +331,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T00:11:36.612Z",
+      "updated_at": "2026-11-16T02:26:28.041Z",
       "sources": [
         {
           "label": "Café & Bar Sereness 公式サイト（運営元）",
@@ -460,7 +460,8 @@
           "note": ""
         }
       ],
-      "gallery": []
+      "gallery": [],
+      "phone": "07011479049"
     },
     {
       "id": "shop-kawabata-isariya-sakaba",
