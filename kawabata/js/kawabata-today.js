@@ -30,6 +30,17 @@
     try { return JSON.parse(el.getAttribute("data-shops") || "[]"); } catch (e) { return []; }
   }
   var order = {}; // ページを開いたときに決める、お店ごとのランダムな順番
+  /* 運営元の Sereness は、今日営業する日（営業中・営業予定）なら 1〜3番目のどこかに出す（位置はページを開いたときに決める） */
+  var FEATURED = "cafe-bar-sereness";
+  var featuredPos = Math.floor(Math.random() * 3);
+  function feature(list) {
+    var i = -1;
+    for (var k = 0; k < list.length; k++) if (list[k].shop.slug === FEATURED) { i = k; break; }
+    if (i < 0 || (list[i].st.state !== "open" && list[i].st.state !== "soon")) return list;
+    var x = list.splice(i, 1)[0];
+    list.splice(Math.min(featuredPos, list.length), 0, x);
+    return list;
+  }
   function rnd(slug) { if (!(slug in order)) order[slug] = Math.random(); return order[slug]; }
   function evaluate(shops) {
     var now = new Date();
@@ -78,7 +89,7 @@
     var signature = "", busyUntil = 0, pending = false;
 
     function render(force) {
-      var list = evaluate(shops).filter(function (x) { return x.st.state === "open" || x.st.state === "soon"; });
+      var list = feature(evaluate(shops).filter(function (x) { return x.st.state === "open" || x.st.state === "soon"; }));
       var sig = list.map(function (x) { return x.shop.slug + ":" + x.st.state + ":" + x.st.hoursText; }).join("|");
       if (!force && sig === signature) return;
       // スライド中は並びを変えない（操作が落ち着いてから）
@@ -152,7 +163,7 @@
     function chosen(name) { return Array.prototype.map.call(root.querySelectorAll('[data-' + name + '][aria-pressed="true"]'), function (b) { return b.getAttribute("data-" + name); }); }
     function filtered() {
       var st = chosen("status"), genres = chosen("genre"), feats = chosen("feature");
-      return evaluate(shops).filter(function (x) {
+      return feature(evaluate(shops).filter(function (x) {
         var s = x.shop;
         if (st.length && st.indexOf(x.st.state) < 0) return false;
         if (genres.length && genres.indexOf(s.category) < 0) return false;
@@ -164,7 +175,7 @@
           if (f !== "late" && f !== "solo" && f !== "nonalc" && (s.features || []).indexOf(f) < 0) return false;
         }
         return true;
-      });
+      }));
     }
     function render(force) {
       var list = filtered();
