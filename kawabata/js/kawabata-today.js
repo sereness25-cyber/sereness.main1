@@ -197,7 +197,8 @@
     }
 
     // 地図：Googleマップ（APIキー不要の埋め込み）。下の一覧でお店を選ぶと、そのお店にピンが立つ
-    function mapQ(shop) { return (typeof shop.lat === "number" && typeof shop.lng === "number") ? shop.lat + "," + shop.lng : (shop.address || ""); }
+    // 「店名 + 住所」で探して、Googleマップのお店のページを出す（住所がなければ緯度・経度）
+    function mapQ(shop) { return shop.address ? shop.name + " " + shop.address : ((typeof shop.lat === "number" && typeof shop.lng === "number") ? shop.lat + "," + shop.lng : ""); }
     function embed(q, z) { return "https://www.google.com/maps?q=" + encodeURIComponent(q) + "&z=" + (z || 17) + "&output=embed"; }
     function drawMap(list) {
       var placed = list.filter(function (x) { return mapQ(x.shop); });
