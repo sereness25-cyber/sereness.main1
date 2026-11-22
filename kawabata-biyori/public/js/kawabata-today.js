@@ -196,30 +196,21 @@
       else drawMap(list);
     }
 
+    // 地図：Googleマップ（APIキー不要の埋め込み）。下の一覧でお店を選ぶと、そのお店にピンが立つ
+    function mapQ(shop) { return (typeof shop.lat === "number" && typeof shop.lng === "number") ? shop.lat + "," + shop.lng : (shop.address || ""); }
+    function embed(q, z) { return "https://www.google.com/maps?q=" + encodeURIComponent(q) + "&z=" + (z || 17) + "&output=embed"; }
     function drawMap(list) {
-      var withPos = list.filter(function (x) { return typeof x.shop.lat === "number" && typeof x.shop.lng === "number"; });
-      var without = list.filter(function (x) { return withPos.indexOf(x) < 0; });
-      noPos.innerHTML = without.length ? '<p class="kb-nopos-title">地図の位置がまだ登録されていないお店</p><ul class="kb-list">' + without.map(function (x) {
-        var q = encodeURIComponent(x.shop.name + " " + (x.shop.address || "秋田市大町"));
-        return '<li><a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener noreferrer"><span class="kb-list-main"><span class="kb-list-name">' + esc(x.shop.name) + '</span><span class="kb-list-cat">Googleマップで見る ↗</span></span><span class="kb-list-side">' + badge(x.st) + "</span></a></li>";
-      }).join("") + "</ul>" : "";
-      loadLeaflet(function () {
-        var L = window.L;
-        if (!map) {
-          map = L.map(mapBox, { scrollWheelZoom: false }).setView([39.7178, 140.1195], 16);
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
-        }
-        if (layer) layer.remove();
-        layer = L.layerGroup().addTo(map);
-        withPos.forEach(function (x) {
-          L.marker([x.shop.lat, x.shop.lng]).addTo(layer).bindPopup('<b>' + esc(x.shop.name) + "</b><br>" + x.st.icon + " " + esc(x.st.label) + " " + esc(x.st.hoursText) + '<br><a href="' + link(x.shop.slug) + '">お店のページへ</a>');
-        });
-        if (withPos.length) map.fitBounds(L.latLngBounds(withPos.map(function (x) { return [x.shop.lat, x.shop.lng]; })).pad(0.3), { maxZoom: 17 });
-        setTimeout(function () { map.invalidateSize(); }, 50);
-      });
+      var placed = list.filter(function (x) { return mapQ(x.shop); });
+      if (!mapBox.querySelector("iframe")) {
+        mapBox.innerHTML = '<iframe name="kb-today-map" title="本日営業のお店の地図" src="' + embed(placed.length ? mapQ(placed[0].shop) : "秋田県秋田市大町4丁目", placed.length ? 17 : 16) + '" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>';
+      }
+      noPos.innerHTML = placed.length ? '<p class="kb-nopos-title">お店をタップすると地図に表示されます</p><ul class="kb-list">' + placed.map(function (x) {
+        return '<li><a href="' + embed(mapQ(x.shop)) + '" target="kb-today-map" data-pin><span class="kb-list-main"><span class="kb-list-name">📍 ' + esc(x.shop.name) + '</span><span class="kb-list-cat">' + esc(x.st.hoursText || "") + '</span></span><span class="kb-list-side">' + badge(x.st) + "</span></a></li>";
+      }).join("") + "</ul>" + '<p class="kb-nopos-title" style="font-weight:400">お店の詳しい情報は「カード」「リスト」表示からどうぞ。</p>' : "";
     }
 
     root.addEventListener("click", function (e) {
+      if (e.target.closest("[data-pin]")) { mapBox.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
       var b = e.target.closest("[data-status],[data-genre],[data-feature]");
       if (b) { b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); render(true); return; }
       var v = e.target.closest("[data-view]");
@@ -230,20 +221,6 @@
     setInterval(function () { render(false); }, 60 * 1000);
     document.addEventListener("visibilitychange", function () { if (!document.hidden) render(false); });
     refresher(root.getAttribute("data-api"), shops, function () { render(false); });
-  }
-
-  var leafletWaiting = null;
-  function loadLeaflet(cb) {
-    if (window.L) return cb();
-    if (leafletWaiting) return leafletWaiting.push(cb);
-    leafletWaiting = [cb];
-    var css = document.createElement("link");
-    css.rel = "stylesheet"; css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    document.head.appendChild(css);
-    var js = document.createElement("script");
-    js.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-    js.onload = function () { var w = leafletWaiting; leafletWaiting = null; w.forEach(function (f) { f(); }); };
-    document.head.appendChild(js);
   }
 
   document.querySelectorAll('[data-kb-today="carousel"]').forEach(carousel);
