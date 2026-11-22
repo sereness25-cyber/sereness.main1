@@ -30,7 +30,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-13",
       "is_published": true,
-      "updated_at": "2026-11-13T06:01:15.385Z",
+      "updated_at": "2026-11-22T10:46:10.544Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -100,7 +100,8 @@
         }
       },
       "specials": [],
-      "features": []
+      "features": [],
+      "phone": "018-866-8888"
     },
     {
       "id": "e12d8217-f193-4332-aafa-486ddd3d9c1c",
@@ -132,7 +133,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-12",
       "is_published": true,
-      "updated_at": "2026-11-13T00:14:47.228Z",
+      "updated_at": "2026-11-22T10:46:57.742Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -200,7 +201,8 @@
       "features": [
         "darts",
         "card"
-      ]
+      ],
+      "phone": "018-863-8055"
     },
     {
       "id": "c421e849-e21e-482c-a323-9a5a99f08792",
@@ -232,7 +234,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-12",
       "is_published": true,
-      "updated_at": "2026-11-12T11:24:08.567Z",
+      "updated_at": "2026-11-22T10:47:33.521Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -299,7 +301,8 @@
       "specials": [],
       "features": [
         "card"
-      ]
+      ],
+      "phone": "018-896-5359"
     },
     {
       "id": "shop-cafe-bar-sereness",
@@ -493,7 +496,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T03:13:01.271Z",
+      "updated_at": "2026-11-22T10:48:53.347Z",
       "sources": [
         {
           "label": "公式サイト（丸富水産）",
@@ -574,7 +577,8 @@
       "gallery": [],
       "features": [
         "card"
-      ]
+      ],
+      "phone": "018-865-8888"
     },
     {
       "id": "shop-akita-kiritanpoya-omachi",
@@ -721,7 +725,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T02:58:35.110Z",
+      "updated_at": "2026-11-22T10:49:36.726Z",
       "sources": [
         {
           "label": "BAR ル・ヴェール 公式サイト",
@@ -797,7 +801,8 @@
       "gallery": [],
       "features": [
         "card"
-      ]
+      ],
+      "phone": "018-874-7888"
     },
     {
       "id": "shop-bar-aladdin",
@@ -829,7 +834,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T00:00:04.473Z",
+      "updated_at": "2026-11-22T10:50:08.385Z",
       "sources": [
         {
           "label": "エキテン",
@@ -908,7 +913,8 @@
           ]
         }
       },
-      "specials": []
+      "specials": [],
+      "phone": "080-8208-4523"
     },
     {
       "id": "shop-ichinotori-kawabata",
@@ -940,7 +946,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-14T15:40:04.267Z",
+      "updated_at": "2026-11-22T10:51:37.823Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
@@ -1017,7 +1023,8 @@
       "specials": [],
       "features": [
         "card"
-      ]
+      ],
+      "phone": "018-823-1146"
     },
     {
       "id": "shop-irori-ya-kawabata",
@@ -1049,7 +1056,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-12T04:07:08.973Z",
+      "updated_at": "2026-11-22T10:52:17.145Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
@@ -1124,7 +1131,8 @@
         }
       },
       "specials": [],
-      "features": []
+      "features": [],
+      "phone": "018-864-3999"
     },
     {
       "id": "shop-hanbee-kawabata",
@@ -1156,7 +1164,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-11T03:22:35.928Z",
+      "updated_at": "2026-11-22T10:53:14.277Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
@@ -1233,14 +1241,15 @@
       "specials": [],
       "features": [
         "card"
-      ]
+      ],
+      "phone": "018-823-1717"
     },
     {
       "id": "shop-otafuku",
       "name": "お多福",
       "slug": "otafuku",
       "category": "izakaya",
-      "description": "秋田の郷土料理を味わえる店として紹介されています。",
+      "description": "川反通りの中心に位置する郷土料理店。店内にはカウンター、小上り、2階には個室もある。自慢のきりたんぽ鍋は、比内地鶏のスープにセリ、ネギ、舞茸、比内地鶏など具だくさん。主役のきりたんぽはあきたこまちを使い、1本1本手作りでもちもちの食感を楽しめる。予約がベター。お多福名物あねっこ漬けも好評。",
       "address": "秋田県秋田市大町4-2-25",
       "lat": null,
       "lng": null,
@@ -1265,7 +1274,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-14T15:40:53.271Z",
+      "updated_at": "2026-11-22T10:54:49.435Z",
       "sources": [
         {
           "label": "るるぶ＆more.（秋田の郷土料理の名店案内）",
@@ -1335,7 +1344,8 @@
         }
       },
       "specials": [],
-      "features": []
+      "features": [],
+      "phone": "018-862-0802"
     }
   ]
 }
