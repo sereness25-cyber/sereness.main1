@@ -1007,10 +1007,18 @@ views.events = async (el) => {
     <div class="row between"><div><h1>イベント</h1><p class="lead">終了日時（なければ開始日時）を過ぎると、自動で「過去のイベント」になります。</p></div>
     <button class="btn primary" type="button" data-new="event">イベントを追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>イベント</th><th>開始</th><th>状態</th><th>公開</th></tr></thead><tbody>
-    ${[...events].sort((a, b) => b.starts_at.localeCompare(a.starts_at)).map((e) => `<tr><td><button class="linkbtn" data-ev="${esc(e.id)}">${esc(e.title)}</button></td><td class="sub">${fmt(e.starts_at)}${e.dates && e.dates.length > 1 ? `<br>全${e.dates.length}回` : ""}</td><td>${new Date(e.ends_at || e.starts_at) < now ? '<span class="pill draft">終了</span>' : '<span class="pill published">開催予定</span>'}</td><td>${e.is_published ? "公開" : "非公開"}</td></tr>`).join("") || '<tr><td colspan="4" class="sub">まだイベントがありません。</td></tr>'}
+    ${[...events].sort((a, b) => b.starts_at.localeCompare(a.starts_at)).map((e) => `<tr><td style="min-width:9em"><button class="linkbtn" data-ev="${esc(e.id)}">${esc(e.title)}</button>
+      <div class="row" style="margin-top:6px;gap:6px"><button class="btn small" type="button" data-ev="${esc(e.id)}">編集</button><button class="btn small danger" type="button" data-ev-del="${esc(e.id)}">削除</button></div></td><td class="sub">${fmt(e.starts_at)}${e.dates && e.dates.length > 1 ? `<br>全${e.dates.length}回` : ""}</td><td>${new Date(e.ends_at || e.starts_at) < now ? '<span class="pill draft">終了</span>' : '<span class="pill published">開催予定</span>'}</td><td>${e.is_published ? "公開" : "非公開"}</td></tr>`).join("") || '<tr><td colspan="4" class="sub">まだイベントがありません。</td></tr>'}
     </tbody></table></div>`;
   bindCommon(el);
   $$("[data-ev]", el).forEach((b) => b.addEventListener("click", () => go("events:edit", b.dataset.ev)));
+  $$("[data-ev-del]", el).forEach((b) => b.addEventListener("click", async () => {
+    const ev = events.find((x) => x.id === b.dataset.evDel);
+    if (!ev || !confirm(`「${ev.title}」を削除します。よろしいですか？（元に戻せません）`)) return;
+    b.disabled = true;
+    try { status("削除しています…"); await saveItem("events.json", "events", ev, `イベントを削除: ${ev.title}`, { remove: true }); status("削除しました。10〜15分ほどで公開ページからも消えます。", "ok", 5000); go("events"); }
+    catch (err) { status("削除できませんでした：" + err.message, "err", 8000); b.disabled = false; }
+  }));
 };
 
 views["events:edit"] = async (el, id) => {
