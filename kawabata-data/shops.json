@@ -461,6 +461,21 @@
           "date": "2026-12-31",
           "closed": true,
           "note": ""
+        },
+        {
+          "date": "2027-01-01",
+          "closed": true,
+          "note": ""
+        },
+        {
+          "date": "2027-01-02",
+          "closed": true,
+          "note": ""
+        },
+        {
+          "date": "2027-01-03",
+          "closed": true,
+          "note": ""
         }
       ],
       "gallery": [],
