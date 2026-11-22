@@ -5,10 +5,8 @@ import type { ShopCategory } from "@/lib/types";
 import { Container, EmptyState, PageHeader } from "@/components/site/Section";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
-/** Googleマップの埋め込みURL（APIキー不要）。緯度・経度があればその位置、なければ住所にピンを立てる */
-const mapQuery = (s: { lat: number | null; lng: number | null; address: string }) =>
-  s.lat !== null && s.lng !== null ? `${s.lat},${s.lng}` : s.address;
-const embedUrl = (q: string, zoom = 17) => `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=${zoom}&output=embed`;
+import { mapsEmbedUrl as embedUrl, mapsQuery as mapQuery } from "@/lib/maps";
+
 const AREA = "秋田県秋田市大町4丁目";
 
 /** 川反マップの本体。業種ごとのページ（/map/izakaya など）でも使う。

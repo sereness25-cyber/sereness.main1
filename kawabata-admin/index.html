@@ -788,7 +788,9 @@ views["shops:edit"] = async (el, id) => {
               <a class="btn small" id="s-map-open" href="#" target="_blank" rel="noopener">Googleマップで開く ↗</a>
             </div>
             <div id="s-map-box" style="margin-top:10px"></div>
-            <span class="hint">上の「住所」の場所にピンが立ちます。公開ページのお店の詳細にも、この地図が表示されます。ピンの場所が違うときは、住所（番地まで）を見直してください。</span>
+            <span class="hint">「店名＋住所」でGoogleマップを探して表示します。Googleマップにお店が登録されていれば、そのお店のページ（名前・口コミなど）が出ます。公開ページのお店の詳細・川反マップにも、この地図が表示されます。</span>
+            <label class="f" style="margin-top:10px"><span>お店のGoogleマップのURL（任意）</span><input type="url" id="s-gmap" value="${esc(s.google_maps_url || "")}" placeholder="https://maps.app.goo.gl/…">
+              <span class="hint">「Googleマップで開く」で別のお店や場所が出てしまうときだけ入れます。Googleマップでお店を開き、「共有」→「リンクをコピー」で貼り付けてください。入れると、公開ページの「Googleマップで開く」がこのページになります。</span></label>
             <details style="margin-top:8px"><summary class="hint" style="cursor:pointer">川反マップ用の位置（任意・くわしい人向け）</summary>
               <label class="f" style="margin-top:6px"><span>緯度, 経度</span><input type="text" id="s-latlng" value="${s.lat != null && s.lng != null ? esc(s.lat + ", " + s.lng) : ""}" placeholder="例：39.7195, 140.1155">
                 <span class="hint">「川反マップ」ページの地図にピンを出したいときだけ入れます。Googleマップでお店の場所を長押し（パソコンは右クリック）すると出る数字を貼り付けます。入れた場合は、お店の詳細の地図もこの位置になります。</span></label>
@@ -827,11 +829,17 @@ views["shops:edit"] = async (el, id) => {
   $$("input, textarea, select", el).forEach((x) => x.addEventListener("input", () => (dirty = true)));
   $("#back").onclick = () => go("shops");
   /* 地図：住所から Googleマップ を表示 */
+  // 公開ページと同じく「店名 + 住所」で探す（住所がないときだけ緯度・経度）
   const mapQuery = () => {
+    const addr = $("#s-address").value.trim();
+    if (addr) return ($("#s-name").value.trim() + " " + addr).trim();
     const ll = /^\s*(-?\d+(?:\.\d+)?)\s*[,、 ]\s*(-?\d+(?:\.\d+)?)\s*$/.exec($("#s-latlng").value);
-    return ll ? `${ll[1]},${ll[2]}` : $("#s-address").value.trim();
+    return ll ? `${ll[1]},${ll[2]}` : "";
   };
-  const updateMapLink = () => { const q = mapQuery(); $("#s-map-open").href = q ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q) : "https://www.google.com/maps"; };
+  const updateMapLink = () => {
+    const url = $("#s-gmap").value.trim(), q = mapQuery();
+    $("#s-map-open").href = /^https:\/\//.test(url) ? url : q ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q) : "https://www.google.com/maps";
+  };
   const showMap = () => {
     const q = mapQuery();
     if (!q) { $("#s-map-box").innerHTML = '<p class="hint">先に「住所」を入れてください。</p>'; return; }
@@ -840,6 +848,8 @@ views["shops:edit"] = async (el, id) => {
   $("#s-map-btn").onclick = showMap;
   $("#s-address").addEventListener("input", updateMapLink);
   $("#s-latlng").addEventListener("input", updateMapLink);
+  $("#s-gmap").addEventListener("input", updateMapLink);
+  $("#s-name").addEventListener("input", updateMapLink);
   updateMapLink();
   if (mapQuery()) showMap();
   $("#s-img-btn").onclick = () => $("#s-file").click();
@@ -917,6 +927,7 @@ views["shops:edit"] = async (el, id) => {
     const phone = v("s-phone").replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0)).replace(/[ー－―]/g, "-");
     if (phone && !/^\+?[\d\-() ]{6,20}$/.test(phone)) return err("電話番号は「018-000-0000」のように、数字とハイフンで入れてください。");
     if (slug === "today") return err("「today」はURLスラッグに使えません（本日営業のお店のページと重なるため）。");
+    if (v("s-gmap") && !/^https:\/\/\S+$/.test(v("s-gmap"))) return err("お店のGoogleマップのURLは「https://」で始まるリンクを貼り付けてください。");
     let lat = null, lng = null;
     const ll = v("s-latlng");
     if (ll) {
@@ -935,7 +946,7 @@ views["shops:edit"] = async (el, id) => {
       ...s, name, slug, category: $("#s-cat").value, description: v("s-desc"), address: v("s-address"),
       phone, business_hours: v("s-hours"), closed_days: v("s-closed"), price_range: v("s-price"), budget_level: v("s-budget") ? Number(v("s-budget")) : null,
       payment_methods: v("s-pay"), seats: v("s-seats"), solo_ok: fromTri($("#s-solo").value), non_alcohol: fromTri($("#s-nonalc").value),
-      beginner_welcome: $("#s-bw").checked, website: v("s-web") || null,
+      beginner_welcome: $("#s-bw").checked, website: v("s-web") || null, google_maps_url: v("s-gmap") || null,
       sns: { instagram: v("s-ig"), x: v("s-x"), facebook: v("s-fb"), youtube: (s.sns || {}).youtube || "" },
       image_alt: v("s-img-alt"), photo_permission: $("#s-perm").checked, verified_at: verified, is_published: pub,
       sources, shop_confirmed: $("#s-confirmed").checked, updated_at: nowIso(),

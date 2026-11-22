@@ -67,6 +67,8 @@ export type Shop = {
   beginner_welcome: boolean;
   sns: { instagram?: string; x?: string; facebook?: string; youtube?: string };
   website: string | null;
+  /** お店のGoogleマップのURL（任意）。「Googleマップで開く」をこのページにする */
+  google_maps_url?: string | null;
   image: string | null;
   image_alt: string;
   /** メイン以外の写真（お店のページに並べる） */

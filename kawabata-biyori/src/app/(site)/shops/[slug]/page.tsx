@@ -10,6 +10,7 @@ import { ArticleCard } from "@/components/site/Cards";
 import { Container } from "@/components/site/Section";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { JsonLd } from "@/components/site/JsonLd";
+import { mapsDirectionsUrl, mapsEmbedUrl, mapsOpenUrl, mapsQuery } from "@/lib/maps";
 
 export const revalidate = 60;
 type Props = { params: Promise<{ slug: string }> };
@@ -33,11 +34,10 @@ export default async function ShopPage({ params }: Props) {
   if (!shop) notFound();
   const articles = await getArticlesForShop(shop.id, 3);
   const sns = Object.entries(shop.sns).filter(([, v]) => v) as [string, string][];
-  // 地図は Googleマップ（APIキー不要の埋め込み）。緯度・経度があればその位置、なければ住所にピンを立てる
-  const hasLatLng = shop.lat !== null && shop.lng !== null;
-  const mapQuery = hasLatLng ? `${shop.lat},${shop.lng}` : shop.address;
+  // 地図は Googleマップ（APIキー不要の埋め込み）。「店名 + 住所」で探して、そのお店のページを出す
+  const mapQuery = mapsQuery(shop);
   const showMap = Boolean(mapQuery) && !shop.is_sample;
-  const mapsSearch = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const mapsSearch = mapsOpenUrl(shop);
   const rows: [string, React.ReactNode][] = [
     ["業種", shopCategoryLabel(shop.category)],
     [
@@ -146,7 +146,7 @@ export default async function ShopPage({ params }: Props) {
             <h2 className="mb-4 text-xl text-navy">地図</h2>
             <iframe
               title={`${shop.name}の地図`}
-              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=17&output=embed`}
+              src={mapsEmbedUrl(mapQuery)}
               className="h-[340px] w-full overflow-hidden rounded-3xl border-0 bg-beige shadow-soft"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -156,7 +156,7 @@ export default async function ShopPage({ params }: Props) {
               <a href={mapsSearch} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center border border-navy px-5 text-sm font-bold text-navy">
                 Googleマップで開く
               </a>
-              <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
+              <a href={mapsDirectionsUrl(shop)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
                 Googleマップで経路を見る
               </a>
             </div>
