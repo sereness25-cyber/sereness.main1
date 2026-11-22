@@ -10,7 +10,6 @@ import { ArticleCard } from "@/components/site/Cards";
 import { Container } from "@/components/site/Section";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { JsonLd } from "@/components/site/JsonLd";
-import { MapClient } from "@/components/site/MapClient";
 
 export const revalidate = 60;
 type Props = { params: Promise<{ slug: string }> };
@@ -34,9 +33,27 @@ export default async function ShopPage({ params }: Props) {
   if (!shop) notFound();
   const articles = await getArticlesForShop(shop.id, 3);
   const sns = Object.entries(shop.sns).filter(([, v]) => v) as [string, string][];
+  // 地図は Googleマップ（APIキー不要の埋め込み）。緯度・経度があればその位置、なければ住所にピンを立てる
+  const hasLatLng = shop.lat !== null && shop.lng !== null;
+  const mapQuery = hasLatLng ? `${shop.lat},${shop.lng}` : shop.address;
+  const showMap = Boolean(mapQuery) && !shop.is_sample;
+  const mapsSearch = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
   const rows: [string, React.ReactNode][] = [
     ["業種", shopCategoryLabel(shop.category)],
-    ["住所", shop.address || "—"],
+    [
+      "住所",
+      shop.address ? (
+        showMap ? (
+          <a href={mapsSearch} target="_blank" rel="noopener noreferrer" className="text-navy underline underline-offset-4">
+            {shop.address}
+          </a>
+        ) : (
+          shop.address
+        )
+      ) : (
+        "—"
+      ),
+    ],
     [
       "電話番号",
       shop.phone ? (
@@ -124,20 +141,25 @@ export default async function ShopPage({ params }: Props) {
           )}
         </section>
 
-        {(shop.lat === null || shop.lng === null) && shop.address && !shop.is_sample && (
-          <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${shop.address}`)}`} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
-            Googleマップで場所を見る
-          </a>
-        )}
-        {shop.lat !== null && shop.lng !== null && (
+        {showMap && (
           <section className="mt-10">
             <h2 className="mb-4 text-xl text-navy">地図</h2>
-            <MapClient shops={[{ slug: shop.slug, name: shop.name, category: shop.category, categoryLabel: shopCategoryLabel(shop.category), lat: shop.lat, lng: shop.lng, isSample: shop.is_sample }]} height={340} />
-            {!shop.is_sample && (
-              <a href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
+            <iframe
+              title={`${shop.name}の地図`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=17&output=embed`}
+              className="h-[340px] w-full overflow-hidden rounded-3xl border-0 bg-beige shadow-soft"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a href={mapsSearch} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center border border-navy px-5 text-sm font-bold text-navy">
+                Googleマップで開く
+              </a>
+              <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center bg-navy px-5 text-sm font-bold text-white">
                 Googleマップで経路を見る
               </a>
-            )}
+            </div>
           </section>
         )}
       </Container>
