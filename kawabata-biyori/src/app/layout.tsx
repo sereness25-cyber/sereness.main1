@@ -10,6 +10,8 @@ const cormorant = Cormorant_Garamond({ weight: ["500", "600"], style: ["normal",
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
+  // Google Search Console の所有権の確認
+  verification: { google: "XemkE47o9zFmx12ZkFstjFNP9YGnYV3Ii7PSMDfGVV8" },
   title: { default: `${SITE.name}｜${SITE.catch}`, template: `%s｜${SITE.name}` },
   description: SITE.description,
   alternates: { canonical: "/" },
