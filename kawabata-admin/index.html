@@ -264,6 +264,7 @@ async function loadAll() {
     Object.assign(cache, j.data);
     cache.apiVersion = j.v || 0;
     await cleanRemoved();
+    await applyPending();
     // 保存先（ドライブ）が空のとき：公開中のデータ（GitHub）と比べて、足りないものを取り込めるようにする
     try {
       const gh = await githubData();
@@ -291,6 +292,30 @@ async function cleanRemoved() {
     try { await saveItem(k + ".json", k, item, "", { remove: true }); } catch { /* 次に開いたときにもう一度 */ }
   }
   if (todo.length) status(`${todo.length}件を削除しました。`, "ok", 4000);
+}
+
+/* 編集部（GitHub側）で追加・更新した記事など（kawabata-data/pending.json）を、保存先に入れる。保存先のほうが新しければそのまま */
+async function applyPending() {
+  let pending = {}, removed = {};
+  try {
+    const [p, r] = await Promise.all(["pending", "removed"].map((n) => fetch(RAW + n + ".json?t=" + Date.now(), { cache: "no-store" }).then((x) => (x.ok ? x.json() : {}))));
+    pending = p; removed = r;
+  } catch { return; }
+  const todo = [];
+  for (const k of ["articles", "shops", "events"]) {
+    const gone = new Set(removed[k] || []);
+    for (const item of pending[k] || []) {
+      if (!item || !item.id || gone.has(item.id)) continue;
+      const cur = (cache[k] || []).find((x) => x.id === item.id);
+      if (!cur || String(item.updated_at || "") > String(cur.updated_at || "")) todo.push([k, item]);
+    }
+  }
+  let n = 0;
+  for (const [k, item] of todo.reverse()) {
+    status(`新しい記事などを入れています…（${++n}/${todo.length}）`);
+    try { await saveItem(k + ".json", k, item, ""); } catch { /* 次に開いたときにもう一度 */ }
+  }
+  if (todo.length) status(`${todo.length}件の新しい記事などを入れました。`, "ok", 4000);
 }
 
 /* Apps Script（保存先）が古いままだと、写真の差し替えなどが保存されない */
@@ -540,7 +565,8 @@ views["articles:edit"] = async (el, id) => {
           <fieldset style="border:0;padding:0;margin:0"><legend class="flabel">カテゴリー（複数可）</legend>
             ${cats.map((c) => `<label class="check"><input type="checkbox" name="cat" value="${esc(c.slug)}" ${a.category_slugs.includes(c.slug) ? "checked" : ""}><span>${esc(c.name)}</span></label>`).join("")}
           </fieldset>
-          <label class="f"><span>タグ</span><input type="text" id="a-tags" value="${esc(a.tags.map((t) => t.name).join("、"))}" placeholder="初心者、一人飲み"><span class="hint">「、」で区切って入力。「連載」を付けると連載ページに並びます。</span></label>
+          <label class="f"><span>タグ</span><input type="text" id="a-tags" value="${esc(a.tags.map((t) => t.name).join("、"))}" placeholder="初心者、一人飲み"><span class="hint">「、」で区切って入力。</span></label>
+          <label class="check"><input type="checkbox" id="a-sanpo" ${a.tags.some((t) => t.slug === "sanpo") ? "checked" : ""}><span><b>連載「川反さんぽ」の回にする</b>（連載ページとトップページの連載の枠に出ます）</span></label>
           <fieldset style="border:0;padding:0;margin:0"><legend class="flabel">この記事で紹介するお店</legend>
             <div style="max-height:160px;overflow:auto">${shops.map((s) => `<label class="check"><input type="checkbox" name="shop" value="${esc(s.slug)}" ${a.shop_slugs.includes(s.slug) ? "checked" : ""}><span>${esc(s.name)}</span></label>`).join("")}</div>
           </fieldset>
@@ -681,6 +707,12 @@ views["articles:edit"] = async (el, id) => {
     if (st === "published" && !pub) pub = nowIso();
     if (articles.some((x) => x.id !== a.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別の記事で使われています。`);
     const names = [...new Set($("#a-tags").value.split(/[、,，\s]+/).map((t) => t.trim()).filter(Boolean))];
+    // 連載「川反さんぽ」の回なら、「連載」と「川反さんぽ」のタグを付ける
+    if ($("#a-sanpo").checked) { for (const t of ["連載", "川反さんぽ"]) if (!names.includes(t)) names.push(t); }
+    else { const i = names.indexOf("川反さんぽ"); if (i >= 0) names.splice(i, 1); }
+    // すでにあるタグは同じもの（同じURL）を使う
+    const known = new Map([["連載", { id: "tag-rensai", slug: "rensai", name: "連載" }], ["川反さんぽ", { id: "tag-sanpo", slug: "sanpo", name: "川反さんぽ" }]]);
+    articles.forEach((x) => (x.tags || []).forEach((t) => { if (!known.has(t.name)) known.set(t.name, t); }));
     const item = {
       ...a, title, slug, content: html(), excerpt: $("#a-excerpt").value.trim(), status: st, published_at: pub,
       thumbnail_alt: $("#a-thumb-alt").value.trim(), thumbnail_is_ai: $("#a-thumb-ai").checked,
@@ -688,7 +720,7 @@ views["articles:edit"] = async (el, id) => {
       is_featured: $("#a-featured").checked, is_sponsored: $("#a-sponsored").checked,
       category_slugs: $$('input[name="cat"]:checked', el).map((x) => x.value),
       shop_slugs: $$('input[name="shop"]:checked', el).map((x) => x.value),
-      tags: names.map((n) => { const s = tagSlug(n); return { id: "tag-" + s, slug: s, name: n }; }),
+      tags: names.map((n) => known.get(n) || (() => { const s = tagSlug(n); return { id: "tag-" + s, slug: s, name: n }; })()),
       updated_at: nowIso(),
     };
     $("#a-save").disabled = true; status("保存しています…");
@@ -1072,12 +1104,12 @@ views.settings = async (el) => {
    ============================================================ */
 const STOCK = [
   ["hero", "トップページ：メイン写真", "トップページの一番上の大きな写真", "street"],
-  ["people", "トップページ：「川反の人々」の写真", "トップページの「川反の人々」コーナー", "portrait"],
+  ["people", "トップページ：連載の写真", "トップページの連載「川反さんぽ」の枠", "portrait"],
   ["street", "夜の飲み屋街", "「はじめての川反」「川反の未来」の記事"],
   ["cocktail", "カクテル", "「川反の楽しみ方」の記事"],
   ["beef", "料理", "「川反グルメ」の記事／ダイニングのお店"],
   ["river", "川沿いの夜景", "「川反の歴史」「川反ニュース」の記事"],
-  ["izakaya", "居酒屋のカウンター", "「川反の人々」の記事／居酒屋のお店"],
+  ["izakaya", "居酒屋のカウンター", "居酒屋のお店"],
   ["bar", "BAR", "BARのお店"],
   ["snack", "スナック", "スナック・カラオケのお店"],
   ["whisky", "ウイスキー", "その他のお店"],

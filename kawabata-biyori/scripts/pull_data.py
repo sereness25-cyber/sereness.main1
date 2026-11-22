@@ -86,6 +86,25 @@ def main():
         gone = set(removed.get(k) or [])
         payload[k] = [x for x in payload[k] if not (isinstance(x, dict) and x.get("id") in gone)]
 
+    # GitHub 側で追加・更新したもの（kawabata-data/pending.json）は、ドライブより新しければこちらを使う
+    try:
+        with open(os.path.join(data_dir, "pending.json"), encoding="utf-8") as f:
+            pending = json.load(f)
+    except Exception:  # noqa: BLE001
+        pending = {}
+    for k in ("articles", "shops", "events"):
+        gone = set(removed.get(k) or [])
+        for item in pending.get(k) or []:
+            if not isinstance(item, dict) or item.get("id") in gone:
+                continue
+            if k == "articles" and item.get("status") not in ("published", "scheduled"):
+                continue
+            idx = next((i for i, x in enumerate(payload[k]) if isinstance(x, dict) and x.get("id") == item["id"]), -1)
+            if idx < 0:
+                payload[k].insert(0, item)
+            elif str(item.get("updated_at") or "") > str(payload[k][idx].get("updated_at") or ""):
+                payload[k][idx] = item
+
     text = json.dumps(payload, ensure_ascii=False)
     img_dir = os.path.join(data_dir, "images", "drive")
     for file_id in sorted(set(DRIVE_URL.findall(text))):

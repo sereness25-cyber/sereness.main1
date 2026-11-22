@@ -1,0 +1,78 @@
+{
+  "_説明": "編集部（GitHub側）で追加・更新したもの。公開ページへの取り込みで、保存先（ドライブ）より新しければこちらを使い、管理画面を開いたときにドライブへ入れる",
+  "articles": [
+    {
+      "id": "kawabata-sanpo-intro",
+      "title": "川反さんぽ ― 連載をはじめます",
+      "slug": "kawabata-sanpo",
+      "content": "<p>川反の通りを歩いて、目にとまったものを写真と短い文章で紹介する連載「川反さんぽ」をはじめます。</p>\n<h2>どんな連載？</h2>\n<p>看板、路地、川沿いの灯り、季節の飾り。お店に入る前の「街そのもの」を、歩いて見つけたままにお届けします。かしこまった取材ではなく、気ままな散歩の記録です。</p>\n<p>「この通りにこんな看板があったんだ」「次はこの路地を歩いてみよう」。そんなふうに、川反を歩くきっかけになればうれしいです。</p>\n<h2>まずは、この3つの通りから</h2>\n<ul>\n<li><strong>川反通り</strong>：旭川に沿って続く、川反の中心の通り。</li>\n<li><strong>横町通り</strong>：五丁目橋を渡った先にある通り。</li>\n<li><strong>赤れんが館通り</strong>：酒蔵「新政」のアーチ看板が目印です。</li>\n</ul>\n<p>3つの通りは近いので、ぐるりと歩いても時間はかかりません。</p>\n<h2>季節ごとに、ちがう顔</h2>\n<p>夏は竿燈まつりでにぎわう8月、冬は雪の積もる静かな夜。同じ通りでも、季節や時間帯で見え方が変わります。昼と夜、晴れの日と雪の日。いろいろな川反を歩いて記録していきます。</p>\n<h2>さんぽのお供に</h2>\n<ul>\n<li>駅からの道のりは「<a href=\"/articles/station-to-kawabata\">秋田駅から川反へ</a>」</li>\n<li>街のあらましは「<a href=\"/articles/what-is-kawabata\">川反ってどんな街？</a>」</li>\n<li>歩いたあとの一杯は「<a href=\"/shops/today\">本日営業のお店</a>」から</li>\n</ul>\n<p>次回からは、実際に歩いた日の写真とともにお届けします。</p>\n",
+      "excerpt": "通りを歩いて見つけた看板、路地、川沿いの灯り。川反の街そのものを、写真と短い文章で届ける連載「川反さんぽ」をはじめます。",
+      "thumbnail": null,
+      "thumbnail_alt": "",
+      "thumbnail_is_ai": false,
+      "status": "published",
+      "published_at": "2026-11-22T03:00:00Z",
+      "updated_at": "2026-11-22T03:00:00Z",
+      "created_at": "2026-11-22T03:00:00Z",
+      "seo_title": "",
+      "seo_description": "通りを歩いて見つけた看板、路地、川沿いの灯り。川反の街そのものを、写真と短い文章で届ける連載「川反さんぽ」をはじめます。",
+      "focus_keyword": "川反 散歩",
+      "is_featured": false,
+      "is_sponsored": false,
+      "tags": [
+        {
+          "id": "tag-rensai",
+          "slug": "rensai",
+          "name": "連載"
+        },
+        {
+          "id": "tag-sanpo",
+          "slug": "sanpo",
+          "name": "川反さんぽ"
+        },
+        {
+          "id": "tag-editorial",
+          "slug": "editorial",
+          "name": "編集部より"
+        }
+      ],
+      "category_slugs": [
+        "enjoy"
+      ],
+      "shop_slugs": []
+    },
+    {
+      "id": "draft-why-we-started",
+      "title": "かわばた日和を始めた理由",
+      "slug": "why-we-started",
+      "content": "<p>はじめまして。「かわばた日和」は、秋田市の繁華街・川反の魅力を発信する地域Webマガジンです。</p>\n<h2>なぜ始めたのか</h2>\n<p>川反には、魅力的なお店や人、明治から続く長い歴史があります。それなのに、「行ったことがない」「どんな街かわからない」という人も少なくありません。</p>\n<p>川反を知るきっかけをつくり、はじめての人にも、いつも川反を楽しんでいる人にも、新しい発見を届けたい。そして、街全体のにぎわいにつなげたい。そんな思いから、このメディアを始めました。</p>\n<h2>どんな記事を届けるのか</h2>\n<ul>\n<li><strong>はじめての川反</strong>：お店の種類や料金のしくみなど、知っておくと安心なこと</li>\n<li><strong>川反の楽しみ方</strong>：一人飲み、二次会、お酒を飲まない夜</li>\n<li><strong>川反の歴史</strong>：花街として栄えた時代から、いまに続く文化</li>\n<li><strong>連載「<a href=\"/articles/kawabata-sanpo\">川反さんぽ</a>」</strong>：川反を歩いて見つけた景色や、季節の移ろい</li>\n</ul>\n<h2>大切にしていること</h2>\n<ol>\n<li><strong>確かな情報を載せる</strong>：お店の情報は、確かめた日付と出典をあわせて載せます。お店に確認できていない情報は、そのことがわかるように表示します。</li>\n<li><strong>川反全体を紹介する</strong>：特定のお店に偏らず、街全体の魅力を伝えます。</li>\n<li><strong>広告は広告とわかるように</strong>：タイアップ記事には「PR」と表示します。</li>\n<li><strong>写真の扱いを明らかに</strong>：実際の写真ではないイメージ写真には「イメージ」と表示します。お店の写真は、お店の了承を得たものだけを使います。</li>\n</ol>\n<h2>運営について</h2>\n<p>かわばた日和は、Café &amp; Bar Sereness が運営しています。運営者のお店だけでなく、川反全体を紹介するメディアとして運営していきます。</p>\n<p>掲載のご相談や情報提供、取材のご協力は、<a href=\"/contact\">お問い合わせ</a>からお寄せください。これから、どうぞよろしくお願いします。</p>",
+      "excerpt": "川反を、もっと身近に、もっと楽しく。地域Webマガジン「かわばた日和」を始めた理由と、大切にしていることをお伝えします。",
+      "thumbnail": null,
+      "thumbnail_alt": "",
+      "thumbnail_is_ai": false,
+      "status": "published",
+      "published_at": "2026-11-08T23:29:03Z",
+      "updated_at": "2026-11-22T03:00:00Z",
+      "created_at": "2026-11-11T00:00:00.000Z",
+      "seo_title": "",
+      "seo_description": "川反を、もっと身近に、もっと楽しく。地域Webマガジン「かわばた日和」を始めた理由と、大切にしていることをお伝えします。",
+      "focus_keyword": "かわばた日和",
+      "is_featured": false,
+      "is_sponsored": false,
+      "tags": [
+        {
+          "id": "tag-editorial",
+          "slug": "editorial",
+          "name": "編集部より"
+        }
+      ],
+      "category_slugs": [
+        "news",
+        "future"
+      ],
+      "shop_slugs": []
+    }
+  ],
+  "shops": [],
+  "events": []
+}

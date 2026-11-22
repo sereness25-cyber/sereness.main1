@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SHOP_CATEGORIES } from "@/lib/constants";
-import { getFeaturedArticles, getIssues, getLatestArticles, getArticlesByCategory, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
+import { getFeaturedArticles, getIssues, getLatestArticles, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
 import { PHOTOS, distinctPhotos, photoForShop, type PhotoKey } from "@/lib/photos";
 import type { Article } from "@/lib/types";
 import { ArticleCard, EventCard } from "@/components/site/Cards";
@@ -55,10 +55,9 @@ function PickCard({ article, photo }: { article: Article; photo: PhotoKey }) {
 }
 
 export default async function HomePage() {
-  const [featured, latest, people, series, events, issues, allShops] = await Promise.all([
+  const [featured, latest, series, events, issues, allShops] = await Promise.all([
     getFeaturedArticles(4),
     getLatestArticles(6),
-    getArticlesByCategory("people", 1),
     getSeriesArticles(2),
     getUpcomingEvents(3),
     getIssues(),
@@ -67,7 +66,8 @@ export default async function HomePage() {
   const todayShops = toTodayShops(allShops);
   const cover = featured[0];
   const picks = featured.slice(0, 3);
-  const person = people[0];
+  // 連載の最新回（いまは「川反さんぽ」）
+  const person = series[0];
   const pickPhotos = distinctPhotos(picks.map((a) => a.categories[0]?.slug));
   const latestPhotos = distinctPhotos(latest.map((a) => a.categories[0]?.slug));
 
@@ -123,15 +123,15 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* 特集インタビュー */}
+      {/* 連載（川反さんぽ）の最新回 */}
       {person && (
         <section className="pt-10 md:pt-14">
           <Container>
             <Link href={`/articles/${person.slug}`} className="group relative grid grid-cols-[1.3fr_1fr] overflow-hidden bg-cocoa text-white md:grid-cols-[1.15fr_1fr]">
               <div className="relative z-10 min-w-0 px-4 py-6 md:px-10 md:py-12">
                 <p className="flex flex-wrap items-center gap-3">
-                  <span className="bg-blush/90 px-2 py-0.5 font-mincho text-[0.7rem] font-bold tracking-wider md:px-3 md:py-1 md:text-sm">特集インタビュー</span>
-                  <span className="font-mincho text-sm tracking-[0.15em] md:text-lg">川反の人々</span>
+                  <span className="bg-blush/90 px-2 py-0.5 font-mincho text-[0.7rem] font-bold tracking-wider md:px-3 md:py-1 md:text-sm">連載</span>
+                  <span className="font-mincho text-sm tracking-[0.15em] md:text-lg">川反さんぽ</span>
                 </p>
                 <h2 className="mt-3 font-mincho text-[1.1rem] font-medium leading-[1.6] tracking-[0.06em] md:mt-5 md:text-[2rem]">{person.title}</h2>
                 <p className="mt-2 line-clamp-3 max-w-md font-mincho text-[0.7rem] leading-6 text-white/85 md:mt-3 md:line-clamp-none md:text-sm md:leading-7">{person.excerpt}</p>
