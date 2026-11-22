@@ -321,3 +321,7 @@ body {
 }
 @media (min-width: 768px) { .kb-fab, .kb-fab-space { display: none; } }
 .kb-fab-space { height: 76px; }
+
+/* スマホで縦にスクロールしたとき、ページが横にずれないようにする（はみ出したものは切る。sticky は効いたまま） */
+html, body { overflow-x: clip; }
+@supports not (overflow-x: clip) { body { overflow-x: hidden; } }

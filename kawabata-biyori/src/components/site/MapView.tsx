@@ -33,7 +33,7 @@ export async function MapView({ active }: { active?: ShopCategory }) {
         {shops.length === 0 ? (
           <EmptyState title={active ? `${activeLabel}のお店はまだ地図にありません` : "地図に表示できるお店がまだありません"}>住所を登録したお店から順に表示されます。</EmptyState>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
             {/* 地図：スマホでは上に固定して、下の一覧をスクロールしながら選べるようにする */}
             <div className="sticky top-[52px] z-10 bg-ivory pb-2 lg:top-[64px] lg:pb-0">
               <iframe
@@ -46,7 +46,7 @@ export async function MapView({ active }: { active?: ShopCategory }) {
                 allowFullScreen
               />
             </div>
-            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <ul className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)]">
               {shops.map((s) => (
                 <li key={s.id} className="flex items-stretch border border-navy/15 bg-white text-sm">
                   <a href={embedUrl(mapQuery(s))} target="kb-map" className="flex min-w-0 flex-1 items-center gap-2 px-4 py-3">
