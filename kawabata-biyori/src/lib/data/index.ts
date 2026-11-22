@@ -3,6 +3,7 @@ import { cache } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/public";
 import { ARTICLES_PER_PAGE, SERIES_TAG } from "@/lib/constants";
+import { withNextDate } from "@/lib/events";
 import type { Article, Category, EventItem, Shop, ShopCategory, SiteSettings, Tag } from "@/lib/types";
 import { DEMO_CATEGORIES } from "@/lib/demo/categories";
 import { DEMO_ARTICLES } from "@/lib/demo/articles";
@@ -88,12 +89,18 @@ const loadShops = cache(async (): Promise<Shop[]> => {
 });
 
 const loadEvents = cache(async (): Promise<EventItem[]> => {
+  const raw = await loadEventsRaw();
+  // 複数日程のイベントは、次に開かれる回で並べる
+  return raw.map((e) => withNextDate(e)).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+});
+
+async function loadEventsRaw(): Promise<EventItem[]> {
   if (isJson()) return jsonEvents();
   if (isDemo()) return DEMO_EVENTS;
   const { data, error } = await publicClient().from("events").select("*").order("starts_at");
   if (error) throw new Error(`イベントの取得に失敗しました: ${error.message}`);
   return data as EventItem[];
-});
+}
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const empty: SiteSettings = { instagram: "", x: "", facebook: "", youtube: "" };

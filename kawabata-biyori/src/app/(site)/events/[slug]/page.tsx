@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getEventBySlug, isEventPast } from "@/lib/data";
 import { formatEventDate } from "@/lib/format";
+import { eventDates, isDatePast } from "@/lib/events";
 import { sanitizeArticleHtml } from "@/lib/html";
 import { eventLd } from "@/lib/jsonld";
 import { Thumb } from "@/components/site/Thumb";
@@ -23,8 +24,23 @@ export default async function EventPage({ params }: Props) {
   const e = await getEventBySlug((await params).slug);
   if (!e) notFound();
   const past = isEventPast(e);
-  const rows: [string, string][] = [
-    ["日時", formatEventDate(e.starts_at, e.ends_at)],
+  const dates = eventDates(e);
+  const rows: [string, React.ReactNode][] = [
+    [
+      "日時",
+      dates.length > 1 ? (
+        <ul className="space-y-1">
+          {dates.map((d) => (
+            <li key={d.starts_at} className={isDatePast(d) ? "text-muted" : ""}>
+              {formatEventDate(d.starts_at, d.ends_at)}
+              {isDatePast(d) && <span className="ml-1">（終了）</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        formatEventDate(e.starts_at, e.ends_at)
+      ),
+    ],
     ["会場", e.venue || "—"],
     ["参加料金", e.fee || "—"],
     ["主催", e.organizer || "—"],

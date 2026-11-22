@@ -1007,7 +1007,7 @@ views.events = async (el) => {
     <div class="row between"><div><h1>イベント</h1><p class="lead">終了日時（なければ開始日時）を過ぎると、自動で「過去のイベント」になります。</p></div>
     <button class="btn primary" type="button" data-new="event">イベントを追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>イベント</th><th>開始</th><th>状態</th><th>公開</th></tr></thead><tbody>
-    ${[...events].sort((a, b) => b.starts_at.localeCompare(a.starts_at)).map((e) => `<tr><td><button class="linkbtn" data-ev="${esc(e.id)}">${esc(e.title)}</button></td><td class="sub">${fmt(e.starts_at)}</td><td>${new Date(e.ends_at || e.starts_at) < now ? '<span class="pill draft">終了</span>' : '<span class="pill published">開催予定</span>'}</td><td>${e.is_published ? "公開" : "非公開"}</td></tr>`).join("") || '<tr><td colspan="4" class="sub">まだイベントがありません。</td></tr>'}
+    ${[...events].sort((a, b) => b.starts_at.localeCompare(a.starts_at)).map((e) => `<tr><td><button class="linkbtn" data-ev="${esc(e.id)}">${esc(e.title)}</button></td><td class="sub">${fmt(e.starts_at)}${e.dates && e.dates.length > 1 ? `<br>全${e.dates.length}回` : ""}</td><td>${new Date(e.ends_at || e.starts_at) < now ? '<span class="pill draft">終了</span>' : '<span class="pill published">開催予定</span>'}</td><td>${e.is_published ? "公開" : "非公開"}</td></tr>`).join("") || '<tr><td colspan="4" class="sub">まだイベントがありません。</td></tr>'}
     </tbody></table></div>`;
   bindCommon(el);
   $$("[data-ev]", el).forEach((b) => b.addEventListener("click", () => go("events:edit", b.dataset.ev)));
@@ -1024,9 +1024,11 @@ views["events:edit"] = async (el, id) => {
     <div class="layout" style="margin-top:12px">
       <section class="panel stack" style="min-width:0">
         ${t("e-title", "イベント名（必須）", e.title)}
+        <div><span class="flabel">開催日時（必須）</span>
+          <div id="e-dates" class="stack" style="gap:8px"></div>
+          <button class="btn small" type="button" id="e-add-date" style="margin-top:8px">＋ 日時を追加</button>
+          <span class="hint">同じイベントを何回か開くときは「日時を追加」で増やせます。終了日時は空欄でもかまいません。</span></div>
         <div class="grid2">
-          <label class="f"><span>開始日時（必須）</span><input type="datetime-local" id="e-start" value="${toLocal(e.starts_at)}"></label>
-          <label class="f"><span>終了日時</span><input type="datetime-local" id="e-end" value="${toLocal(e.ends_at)}"></label>
           ${t("e-venue", "開催場所", e.venue)}${t("e-fee", "参加料金", e.fee)}${t("e-org", "主催者", e.organizer)}${t("e-apply", "申込方法", e.how_to_apply)}${t("e-slug", "URLスラッグ", e.slug)}
         </div>
         <label class="f"><span>内容</span><textarea id="e-content" rows="8">${esc(plain)}</textarea><span class="hint">空行で段落が分かれます</span></label>
@@ -1054,16 +1056,48 @@ views["events:edit"] = async (el, id) => {
     try { status("画像をアップロードしています…"); const up = await uploadImage(f); e.image = up.url; $("#e-img").src = up.preview; $("#e-img").hidden = false; dirty = true; status("画像を設定しました。保存すると反映されます。", "ok", 4000); }
     catch (err) { status("画像を追加できませんでした：" + err.message, "err", 6000); }
   });
+  /* 開催日時（複数） */
+  const dateRow = (d) => `<div class="row e-date" style="flex-wrap:nowrap;gap:6px">
+      <input type="datetime-local" class="e-ds" value="${toLocal(d.starts_at)}" aria-label="開始日時" style="min-width:0">
+      <span>〜</span>
+      <input type="datetime-local" class="e-de" value="${toLocal(d.ends_at)}" aria-label="終了日時" style="min-width:0">
+      <button class="btn small" type="button" data-rm-date aria-label="この日時を消す">×</button></div>`;
+  const initial = e.dates && e.dates.length ? e.dates : e.starts_at ? [{ starts_at: e.starts_at, ends_at: e.ends_at }] : [{ starts_at: "", ends_at: null }];
+  $("#e-dates").innerHTML = initial.map(dateRow).join("");
+  $("#e-add-date").onclick = () => {
+    const rows = $$(".e-date", el), last = rows[rows.length - 1];
+    $("#e-dates").insertAdjacentHTML("beforeend", dateRow({ starts_at: "", ends_at: null }));
+    // 前の回と同じ時刻で、日付だけ変えればよいように
+    if (last) { const n = $$(".e-date", el).pop(); n.querySelector(".e-ds").value = last.querySelector(".e-ds").value; n.querySelector(".e-de").value = last.querySelector(".e-de").value; }
+    dirty = true;
+  };
+  $("#e-dates").addEventListener("click", (ev) => {
+    if (!ev.target.matches("[data-rm-date]")) return;
+    if ($$(".e-date", el).length > 1) ev.target.closest(".e-date").remove(); else { ev.target.closest(".e-date").querySelectorAll("input").forEach((x) => (x.value = "")); }
+    dirty = true;
+  });
   $("#e-save").onclick = async () => {
     const err = (m) => ($("#e-msg").innerHTML = `<p class="note err">${esc(m)}</p>`);
-    const title = $("#e-title").value.trim(), starts = fromLocal($("#e-start").value), ends = fromLocal($("#e-end").value);
+    const title = $("#e-title").value.trim();
     if (!title) return err("イベント名を入力してください。");
-    if (!starts) return err("開始日時を入力してください。");
-    if (ends && new Date(ends) < new Date(starts)) return err("終了日時は開始日時より後にしてください。");
+    const dates = [];
+    for (const r of $$(".e-date", el)) {
+      const s0 = fromLocal(r.querySelector(".e-ds").value), e0 = fromLocal(r.querySelector(".e-de").value);
+      if (!s0 && !e0) continue;
+      if (!s0) return err("終了日時だけの行があります。開始日時も入れてください。");
+      if (e0 && new Date(e0) < new Date(s0)) return err("終了日時は開始日時より後にしてください。");
+      dates.push({ starts_at: s0, ends_at: e0 });
+    }
+    if (!dates.length) return err("開始日時を入力してください。");
+    dates.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    if (dates.some((d, i) => i && d.starts_at === dates[i - 1].starts_at)) return err("同じ開始日時が2回入っています。");
+    const last = dates[dates.length - 1];
+    // starts_at は最初の回、ends_at は最後の回の終わり（複数日程のときの目安）
+    const starts = dates[0].starts_at, ends = dates.length > 1 ? last.ends_at || last.starts_at : dates[0].ends_at;
     const slug = slugify($("#e-slug").value || title);
     if (events.some((x) => x.id !== e.id && x.slug === slug)) return err(`URLスラッグ「${slug}」は別のイベントで使われています。`);
     const content = $("#e-content").value.trim().split(/\n{2,}/).filter(Boolean).map((p) => `<p>${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
-    const item = { ...e, title, slug, starts_at: starts, ends_at: ends, venue: $("#e-venue").value.trim(), fee: $("#e-fee").value.trim(), organizer: $("#e-org").value.trim(), how_to_apply: $("#e-apply").value.trim(), content, image_alt: $("#e-img-alt").value.trim(), is_published: $("#e-pub").checked, updated_at: nowIso() };
+    const item = { ...e, title, slug, starts_at: starts, ends_at: ends, dates: dates.length > 1 ? dates : [], venue: $("#e-venue").value.trim(), fee: $("#e-fee").value.trim(), organizer: $("#e-org").value.trim(), how_to_apply: $("#e-apply").value.trim(), content, image_alt: $("#e-img-alt").value.trim(), is_published: $("#e-pub").checked, updated_at: nowIso() };
     $("#e-save").disabled = true; status("保存しています…");
     try { await saveItem("events.json", "events", item, `イベントを保存: ${title}`); dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("events:edit", item.id); }
     catch (x) { status("保存できませんでした：" + x.message, "err", 8000); $("#e-save").disabled = false; }

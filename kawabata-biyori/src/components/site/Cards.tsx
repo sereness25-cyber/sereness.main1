@@ -103,7 +103,10 @@ export function EventCard({ event }: { event: EventItem }) {
       <div className="min-w-0 pt-1">
         {event.is_sample && <SampleBadge />}
         <h3 className="headline mt-1 text-[1.05rem] text-navy group-hover:underline">{event.title}</h3>
-        <p className="mt-1 text-xs text-muted">{formatEventDate(event.starts_at, event.ends_at)}</p>
+        <p className="mt-1 text-xs text-muted">
+          {formatEventDate(event.starts_at, event.ends_at)}
+          {(event.dates?.length ?? 0) > 1 && <span className="ml-1">（全{event.dates!.length}回）</span>}
+        </p>
         {event.venue && <p className="text-xs text-muted">会場：{event.venue}</p>}
       </div>
     </Link>

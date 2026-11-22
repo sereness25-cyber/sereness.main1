@@ -93,12 +93,18 @@ export type Shop = {
   is_sample?: boolean;
 };
 
+/** イベントの1回分の日時 */
+export type EventDate = { starts_at: string; ends_at: string | null };
+
 export type EventItem = {
   id: string;
   title: string;
   slug: string;
+  /** 次に開かれる回（複数日程なら、読み込むときに次の回に合わせる） */
   starts_at: string;
   ends_at: string | null;
+  /** 複数の日程があるときの、すべての回 */
+  dates?: EventDate[];
   venue: string;
   fee: string;
   content: string;
