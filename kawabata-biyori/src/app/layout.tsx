@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   // Google Search Console の所有権の確認
   verification: { google: "XemkE47o9zFmx12ZkFstjFNP9YGnYV3Ii7PSMDfGVV8" },
-  title: { default: `${SITE.name}｜${SITE.catch}`, template: `%s｜${SITE.name}` },
+  title: { default: `${SITE.name}｜${SITE.seoTitle}`, template: `%s｜${SITE.name}` },
   description: SITE.description,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "ja_JP",
     siteName: SITE.name,
-    title: `${SITE.name}｜${SITE.catch}`,
+    title: `${SITE.name}｜${SITE.seoTitle}`,
     description: SITE.description,
     images: [{ url: "/ogp.png", width: 1200, height: 630, alt: SITE.name }],
   },

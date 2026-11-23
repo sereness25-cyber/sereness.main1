@@ -27,7 +27,8 @@ htmls = [os.path.join(d,f)[2:] for d,_,fs in os.walk('.') for f in fs if f.endsw
 existing = set(htmls)
 for rel in htmls:
     s = open(rel,encoding='utf-8').read()
-    s = re.sub(r'<script\b[^>]*>.*?</script>', '', s, flags=re.S)
+    # JavaScript は外す。ただし検索エンジン向けの構造化データ（JSON-LD）は残す
+    s = re.sub(r'<script\b(?![^>]*application/ld\+json)[^>]*>.*?</script>', '', s, flags=re.S)
     s = re.sub(r'<link[^>]+rel="(preload|modulepreload)"[^>]*>', '', s)
     s = s.replace('地図を読み込んでいます…', '')
     s = re.sub(r'<div class="grid h-80 w-full place-items-center rounded-3xl bg-beige text-sm text-muted">\s*</div>', MAPNOTE, s)

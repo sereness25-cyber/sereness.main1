@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = await getShopBySlug((await params).slug);
   if (!s) return {};
   return {
-    title: `${s.name}（${shopCategoryLabel(s.category)}）`,
-    description: s.description.slice(0, 120),
+    title: `${s.name}｜秋田・川反の${shopCategoryLabel(s.category)}`,
+    description: (s.description || `秋田市・川反（かわばた）の${shopCategoryLabel(s.category)}「${s.name}」。場所・営業時間・料金を紹介します。`).slice(0, 120),
     alternates: { canonical: `/shops/${s.slug}` },
     robots: s.is_sample ? { index: false } : undefined,
   };

@@ -1,6 +1,41 @@
 {
   "articles": [
     {
+      "id": "akita-nomi-kawabata",
+      "title": "秋田で飲むなら川反へ ― 秋田市の飲み屋街・川反の楽しみ方ガイド",
+      "slug": "akita-nomi-kawabata",
+      "content": "<p>「秋田で飲むなら、どこがいい？」。そう聞かれたら、まずおすすめしたいのが、秋田市大町の飲み屋街「川反（かわばた）」です。秋田いちばんの繁華街として知られ、居酒屋、BAR、スナックが歩ける範囲に集まっています。</p>\n<h2>川反ってどこ？</h2>\n<p>川反は、秋田市大町の旭川沿いに広がる飲み屋街です。JR秋田駅の西口から歩いて20分ほど。駅前に泊まって、夜は川反へ歩いて飲みに行く、という楽しみ方もできます。</p>\n<p>道のりや帰りの足は「<a href=\"/articles/station-to-kawabata\">秋田駅から川反へ</a>」にまとめています。</p>\n<h2>どんなお店がある？</h2>\n<ul>\n<li><strong>居酒屋</strong>：きりたんぽやハタハタなどの郷土料理と、秋田の地酒を楽しめるお店。</li>\n<li><strong>BAR</strong>：カクテルやウイスキーを、静かに一杯。</li>\n<li><strong>スナック</strong>：ママやマスターとの会話を楽しむ、川反らしいお店。</li>\n<li><strong>カラオケ・ダーツのお店</strong>：仲間と盛り上がりたい夜に。</li>\n</ul>\n<p>お店の種類のちがいは「<a href=\"/articles/bar-and-snack\">BARとスナックの違いとは？</a>」で紹介しています。</p>\n<h2>秋田で飲むなら、地酒を一杯</h2>\n<p>秋田は日本酒どころ。川反には、酒蔵「新政」のアーチ看板が立つ通りもあります。居酒屋やBARで、秋田の地酒を飲み比べてみるのもおすすめです。</p>\n<h2>はじめての人も、一人でも</h2>\n<ul>\n<li>お店選びに迷ったら「<a href=\"/articles/choosing-a-shop\">初めての川反！お店選びのポイント</a>」</li>\n<li>一人で飲みたい夜は「<a href=\"/articles/solo-drinking\">川反で一人飲みを楽しむ方法</a>」</li>\n<li>お酒が苦手でも「<a href=\"/articles/without-alcohol\">お酒が飲めなくても川反は楽しめる？</a>」</li>\n<li>二軒目を探すなら「<a href=\"/articles/nijikai\">川反の二次会を楽しもう</a>」</li>\n</ul>\n<h2>今夜、開いているお店を探す</h2>\n<p>「<a href=\"/shops/today\">本日営業のお店</a>」では、いま営業中のお店と、これから開くお店を確認できます。お店の一覧は「<a href=\"/shops\">川反の飲み屋を探す</a>」からどうぞ。</p>\n<p>秋田で飲むなら、ぜひ川反へ。いつもの一杯も、はじめての一軒も、きっと見つかります。</p>\n",
+      "excerpt": "秋田で飲むなら、秋田市大町の飲み屋街「川反（かわばた）」へ。場所、お店の種類、地酒、はじめての人や一人飲みの楽しみ方、今夜開いているお店の探し方をまとめました。",
+      "thumbnail": null,
+      "thumbnail_alt": "",
+      "thumbnail_is_ai": false,
+      "status": "published",
+      "published_at": "2026-11-23T03:00:00Z",
+      "updated_at": "2026-11-23T03:00:00Z",
+      "created_at": "2026-11-23T03:00:00Z",
+      "seo_title": "秋田で飲むなら川反へ｜秋田市の飲み屋街ガイド",
+      "seo_description": "秋田で飲むなら、秋田市大町の飲み屋街「川反（かわばた）」へ。場所、お店の種類、地酒、はじめての人や一人飲みの楽しみ方、今夜開いているお店の探し方をまとめました。",
+      "focus_keyword": "秋田 飲み 川反",
+      "is_featured": false,
+      "is_sponsored": false,
+      "tags": [
+        {
+          "id": "tag-beginner",
+          "slug": "beginner",
+          "name": "初心者"
+        },
+        {
+          "id": "tag-access",
+          "slug": "access",
+          "name": "アクセス"
+        }
+      ],
+      "category_slugs": [
+        "beginner"
+      ],
+      "shop_slugs": []
+    },
+    {
       "id": "kawabata-sanpo-intro",
       "title": "川反さんぽ ― 連載をはじめます",
       "slug": "kawabata-sanpo",

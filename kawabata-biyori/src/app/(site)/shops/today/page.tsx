@@ -7,8 +7,8 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "本日営業のお店",
-  description: "川反で今日営業しているお店。営業中・これから営業のお店を、カード・リスト・地図で探せます。",
+  title: "今日営業している川反のお店｜秋田の飲み屋",
+  description: "秋田市・川反で今日飲めるお店。営業中・これから営業する居酒屋やBARを、カード・リスト・地図で探せます。",
   alternates: { canonical: "/shops/today" },
 };
 
