@@ -96,6 +96,6 @@ jobs:
         if: always()
         run: |
           B=https://sereness25-cyber.github.io/sereness.main1/kawabata
-          for u in "$B/sitemap.xml" "$B/" "$B/shops" "$B/shops.html" "$B/articles/akita-nomi-kawabata"; do
+          for u in "https://sereness25-cyber.github.io/sereness.main1/sitemap.xml" "https://sereness25-cyber.github.io/sereness.main1/sitemap-lp.xml" "$B/sitemap.xml" "$B/" "$B/shops" "$B/shops.html" "$B/articles/akita-nomi-kawabata"; do
             echo "$(curl -s -o /dev/null -w '%{http_code} %{content_type}' -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' "$u") $u"
           done
