@@ -1482,7 +1482,7 @@ window.SCHEDULE_API = 'https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_
     <div class="rs-head">
       <span class="rs-script" aria-hidden="true">Reservation</span>
       <h2 class="rs-title"><b>ご予約</b></h2>
-      <p class="rs-lead">ご希望の日時と人数を入力すると、予約メッセージが完成します。<br>そのまま、LINEで送ってください。</p>
+      <p class="rs-lead">ご希望の日時と人数を入力すると、予約メッセージが完成します。<br>そのまま、LINEで送ってください。<br><small>（入力した内容は、お店にも届きます）</small></p>
     </div>
 
     <form class="rs-form" id="rsvForm" novalidate>
@@ -1711,6 +1711,19 @@ window.SCHEDULE_API = 'https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_
 /* 予約フォーム(LINEで送る) */
 (function(){
   var LINE_OA_ID = '@629tmrha';   // お店のLINE公式アカウントのID
+  // 予約の控え：メインサイト（Cafe-Bar-Sereness）と同じ Apps Script に送る。
+  // スプレッドシートの「Reservation」シートに記録され、お店にメールが届く（LINEを送り忘れても予約が残る）
+  var RESERVE_API = 'https://script.google.com/macros/s/AKfycbzQRAhDa8-BhxaB6IqsQ-hTmkAYLlu_x-5VK44U20hibIarUrgLSGz7wmZDgPgFsQKD6g/exec';
+  var lastSent = '';
+  function sendRecord(p){
+    var body = JSON.stringify(p);
+    if (body === lastSent) return;   // 同じ内容を続けて送らない
+    lastSent = body;
+    try {
+      fetch(RESERVE_API, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain' }, body: body })
+        .catch(function(){ lastSent = ''; });
+    } catch (x) { lastSent = ''; }
+  }
   var form = document.getElementById('rsvForm');
   if (!form) return;
   var counts = {m:1, f:1};
@@ -1796,6 +1809,16 @@ window.SCHEDULE_API = 'https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_
     if (note) lines.push('ご要望:' + note);
     lines.push('', 'よろしくお願いいたします。');
     msgEl.value = lines.join('\n');
+    sendRecord({
+      type: 'reservation',
+      date: dateEl.value,
+      time: timeEl.value,
+      name: name,
+      phone: tel,
+      male: counts.m,
+      female: counts.f,
+      note: '【LP（sereness.main1）のLINE予約フォームから】' + (note ? '\n' + note : '')
+    });
     resultEl.hidden = false;
     hintEl.textContent = 'LINEが開いたら、送信を押して完了です。';
     resultEl.scrollIntoView({behavior:'smooth', block:'start'});
