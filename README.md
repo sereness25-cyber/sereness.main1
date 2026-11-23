@@ -4,7 +4,7 @@
 
 | ファイル | 内容 |
 |---|---|
-| `index.html` | LP本体(写真はファイル内に埋め込み) |
+| `index.html` | LP本体(写真は `images/` に置いている) |
 | `schedule-admin.html` | 管理ページ(単体で開く版) |
 | `apps-script/Code.gs` | Google Apps Script(営業データの保存・写真のドライブ保存) |
 | `apps-script/admin.html` | Apps Script に入れる管理ページ(`…/exec?page=admin` で開く) |
