@@ -7,7 +7,8 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl();
   const fixed = ["", "/features", "/series", "/issues", "/articles", "/shops", "/guide", "/events", "/map", "/about", "/contact", "/company", "/privacy"].map((p) => ({
-    url: `${base}${p}`,
+    // トップは「/」付き（Search Console に登録したアドレス「…/kawabata/」の中に入るように）
+    url: p === "" ? `${base}/` : `${base}${p}`,
     changeFrequency: "weekly" as const,
     priority: p === "" ? 1 : 0.7,
   }));

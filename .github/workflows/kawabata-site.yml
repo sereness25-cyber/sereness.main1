@@ -91,3 +91,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "Pages の更新依頼に失敗しました（push による自動更新を待ちます）"
+
+      - name: 公開ページが取れるか確かめる（Search Console 用）
+        if: always()
+        run: |
+          B=https://sereness25-cyber.github.io/sereness.main1/kawabata
+          for u in "$B/sitemap.xml" "$B/" "$B/shops" "$B/shops.html" "$B/articles/akita-nomi-kawabata"; do
+            echo "$(curl -s -o /dev/null -w '%{http_code} %{content_type}' -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' "$u") $u"
+          done
