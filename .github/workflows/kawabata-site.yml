@@ -56,6 +56,11 @@ jobs:
         working-directory: kawabata-biyori
         run: npm ci
 
+      - name: 写真を小さくする（新しく取り込んだものだけ）
+        if: steps.pull.outputs.build == 'true'
+        working-directory: kawabata-biyori
+        run: node scripts/shrink-images.mjs ../kawabata-data/images
+
       - name: 営業判定のテスト
         if: steps.pull.outputs.build == 'true'
         working-directory: kawabata-biyori

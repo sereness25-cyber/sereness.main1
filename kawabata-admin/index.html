@@ -239,17 +239,17 @@ async function saveItem(file, key, item, _message, { remove = false } = {}) {
   cache[key] = j.list;
 }
 
-/* 画像を最大2000pxのWebPにしてアップロードし、公開URLを返す */
+/* 画像を最大1400pxのWebPにしてアップロードし、公開URLを返す（表示を軽くするため） */
 async function uploadImage(file) {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("JPEG・PNG・WebP の画像を選んでください。");
   const bmp = await createImageBitmap(file);
-  const scale = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
+  const scale = Math.min(1, 1400 / Math.max(bmp.width, bmp.height));
   const c = document.createElement("canvas");
   c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
   c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
-  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.85));
+  const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.75));
   const mime = blob && blob.type === "image/webp" ? "image/webp" : "image/jpeg";
-  const out = mime === "image/webp" ? blob : await new Promise((r) => c.toBlob(r, "image/jpeg", 0.85));
+  const out = mime === "image/webp" ? blob : await new Promise((r) => c.toBlob(r, "image/jpeg", 0.8));
   const data = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(",")[1]); fr.readAsDataURL(out); });
   const j = await api("kb_upload", { data, mime });
   return { url: j.url, preview: URL.createObjectURL(out) };
