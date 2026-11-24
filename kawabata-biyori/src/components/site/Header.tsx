@@ -59,7 +59,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
             Webマガジン
           </p>
 
-          <Link href="/" className="relative text-center" aria-label="かわばた日和 ホーム">
+          <Link href="/" className="relative col-start-2 text-center" aria-label="かわばた日和 ホーム">
             <span className="block font-mincho text-[1.75rem] font-medium leading-none tracking-[0.06em] text-ink sm:text-[2.2rem] md:text-[3rem]">かわばた日和</span>
             <span className="mt-2 block font-en text-[0.55rem] tracking-[0.42em] text-ink md:text-[0.8rem]">KAWABATA BIYORI</span>
             <svg viewBox="0 0 120 12" className="absolute -bottom-2 right-0 h-2.5 w-16 md:w-24" aria-hidden="true">
@@ -67,7 +67,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
             </svg>
           </Link>
 
-          <div className="relative flex items-start justify-end gap-1">
+          <div className="relative col-start-3 flex items-start justify-end gap-1">
             <Sakura className="pointer-events-none absolute -top-3 right-14 hidden w-16 sm:block md:right-20 md:w-24" />
             {issue && (
               <Link href="/issues" className="relative mt-1 text-right leading-tight text-navy">
@@ -94,7 +94,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
           </div>
         </div>
         {/* スマホ：説明文はロゴの下に、読める大きさで */}
-        <p className="px-4 pb-3 text-center font-mincho text-[0.75rem] tracking-[0.06em] text-ink/80 sm:hidden">秋田・川反のまちの人・お店・お酒・物語をつづるWebマガジン</p>
+        <p className="px-3 pb-3 text-center font-mincho text-[0.7rem] tracking-[0.01em] text-ink/80 sm:hidden">秋田・川反のまちの人・お店・お酒・物語をつづるWebマガジン</p>
       </header>
 
       <nav aria-label="メインメニュー" className="sticky top-0 z-40 border-y border-navy/10 bg-ivory/95 backdrop-blur">
