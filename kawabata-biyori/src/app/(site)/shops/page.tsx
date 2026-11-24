@@ -5,7 +5,6 @@ import type { ShopCategory } from "@/lib/types";
 import { ShopCard } from "@/components/site/Cards";
 import { Container, EmptyState, PageHeader } from "@/components/site/Section";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { BeginnerMark } from "@/components/site/Badges";
 import { IS_STATIC, shopText } from "@/lib/static-site";
 
 export const metadata: Metadata = {
@@ -65,10 +64,6 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
           <div className="flex items-end"><button type="submit" className="h-11 w-full bg-navy text-sm font-bold text-white">この条件で探す</button></div>
         </form>
 
-        <details className="mt-5 rounded-2xl bg-[#fdf6ea] p-4 text-sm">
-          <summary className="flex cursor-pointer flex-wrap items-center gap-2 font-bold text-navy"><BeginnerMark /> マークについて</summary>
-          <p className="mt-2 leading-7">編集部が次の4点を確認できたお店に表示しています。①料金が明確 ②初めてのお客さまを歓迎 ③料金の説明に対応 ④不明瞭な追加料金がない。</p>
-        </details>
 
         <p className="mt-6 text-xs leading-6 text-muted">お店情報は随時追加していきます。</p>
         <p className="mt-3 text-sm text-muted" data-kb-count="{n}件のお店">{shops.length}件のお店</p>
