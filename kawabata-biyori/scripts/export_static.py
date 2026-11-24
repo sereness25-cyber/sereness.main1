@@ -10,9 +10,10 @@ import os, re, sys, posixpath
 root = sys.argv[1]
 PORT = sys.argv[2] if len(sys.argv) > 2 else "3100"
 os.chdir(root)
-# 表示を軽くするため、丸ゴシックと使っていない太さは読み込まない（丸ゴシックの所は Noto Sans JP で表示）
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">'
-OVR = '<style>html[class]{--font-zen-maru:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--font-noto-sans:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--font-cormorant:"Cormorant Garamond","Times New Roman",serif;--font-old-mincho:"Zen Old Mincho","Hiragino Mincho ProN",serif}</style>'
+# 表示を軽くするため、本文のゴシック（Noto Sans JP）と丸ゴシックは読み込まず、スマホ・パソコンに入っている日本語フォントで表示する。
+# 見出しの明朝（Zen Old Mincho）と英字（Cormorant Garamond）だけを読み込む
+FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">'
+OVR = '<style>html[class]{--font-zen-maru:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic","Meiryo","Noto Sans JP",sans-serif;--font-noto-sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic","Meiryo","Noto Sans JP",sans-serif;--font-cormorant:"Cormorant Garamond","Times New Roman",serif;--font-old-mincho:"Zen Old Mincho","Hiragino Mincho ProN",serif}</style>'
 MENU = '<script>document.addEventListener("click",function(e){var b=e.target.closest("[aria-controls=mobile-menu]");if(!b)return;var m=document.getElementById("mobile-menu");var o=m.hidden;m.hidden=!o;b.setAttribute("aria-expanded",String(o));});</script>'
 MAPNOTE = '<div class="grid w-full place-items-center rounded-3xl bg-beige px-6 text-center text-sm text-muted" style="height:320px">このページでは地図は表示されません。<br>実際のサイトでは OpenStreetMap の地図にお店の位置が表示されます。</div>'
 for d,_,fs in os.walk('.'):
