@@ -53,7 +53,7 @@ export const NAV = [
   { href: "/series", label: "連載" },
   { href: "/shops", label: "お店ガイド" },
   { href: "/events", label: "イベント" },
-  { href: "/issues", label: "バックナンバー" },
+  { href: "/shops/today", label: "本日営業" },
 ] as const;
 
 /** メニュー（ハンバーガー）にだけ出す項目 */

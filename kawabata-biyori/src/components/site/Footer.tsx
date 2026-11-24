@@ -36,7 +36,6 @@ export async function Footer() {
             {[
               ["/features", "特集"],
               ["/series", "連載"],
-              ["/issues", "バックナンバー"],
               ["/articles", "記事を読む"],
               ["/shops", "お店を探す"],
               ["/guide", "はじめての川反"],

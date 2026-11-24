@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SHOP_CATEGORIES } from "@/lib/constants";
-import { getFeaturedArticles, getIssues, getLatestArticles, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
+import { getFeaturedArticles, getLatestArticles, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
 import { PHOTOS, distinctPhotos, photoForShop, type PhotoKey } from "@/lib/photos";
 import type { Article } from "@/lib/types";
 import { ArticleCard, EventCard } from "@/components/site/Cards";
 import { Container, EmptyState, SectionTitle } from "@/components/site/Section";
 import { Thumb } from "@/components/site/Thumb";
-import { IssueCover } from "@/components/site/IssueCover";
 import { TodayShops } from "@/components/site/TodayShops";
 import { toTodayShops } from "@/lib/today";
 
@@ -44,10 +43,10 @@ function PickCard({ article, photo }: { article: Article; photo: PhotoKey }) {
     <Link href={`/articles/${article.slug}`} className="group flex flex-col">
       <div className="relative">
         <Thumb src={article.thumbnail} alt={article.thumbnail_alt} seed={article.slug} isAi={article.thumbnail_is_ai} photo={photo} className="aspect-[4/3] md:aspect-[16/9]" sizes="(min-width:768px) 380px, 33vw" />
-        {cat && <span className="absolute bottom-0 left-2 bg-ivory px-2 pt-0.5 font-mincho text-[0.68rem] font-bold tracking-wider text-blush md:left-3 md:px-3 md:text-sm">{cat.name}</span>}
+        {cat && <span className="absolute bottom-0 left-2 bg-ivory px-2 pt-0.5 font-mincho text-[0.75rem] font-bold tracking-wider text-blush md:left-3 md:px-3 md:text-sm">{cat.name}</span>}
       </div>
-      <div className="flex flex-1 items-end gap-1 border-r border-navy/10 px-1.5 pb-1 pt-2 md:px-3 md:pt-3">
-        <h3 className="headline flex-1 text-[0.78rem] leading-[1.6] text-ink group-hover:text-blush md:text-[1.05rem]">{article.title}</h3>
+      <div className="flex flex-1 items-end gap-1 border-r border-navy/10 px-2 pb-1 pt-2 md:px-3 md:pt-3">
+        <h3 className="headline flex-1 text-[0.98rem] leading-[1.6] text-ink group-hover:text-blush md:text-[1.05rem]">{article.title}</h3>
         <Arrow className="mb-1.5 text-blush transition group-hover:translate-x-1" />
       </div>
     </Link>
@@ -55,12 +54,11 @@ function PickCard({ article, photo }: { article: Article; photo: PhotoKey }) {
 }
 
 export default async function HomePage() {
-  const [featured, latest, series, events, issues, allShops] = await Promise.all([
+  const [featured, latest, series, events, allShops] = await Promise.all([
     getFeaturedArticles(4),
     getLatestArticles(6),
     getSeriesArticles(2),
     getUpcomingEvents(3),
-    getIssues(),
     getAllShops(),
   ]);
   const todayShops = toTodayShops(allShops);
@@ -116,7 +114,13 @@ export default async function HomePage() {
             <span className="font-mincho text-sm tracking-[0.2em] text-ink">編集部のおすすめ</span>
           </div>
           {picks.length ? (
-            <div className="grid grid-cols-3 gap-2 md:gap-6">{picks.map((a, i) => <PickCard key={a.id} article={a} photo={pickPhotos[i]} />)}</div>
+            <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
+              {picks.map((a, i) => (
+                <div key={a.id} className="w-[72%] shrink-0 snap-start md:w-auto">
+                  <PickCard article={a} photo={pickPhotos[i]} />
+                </div>
+              ))}
+            </div>
           ) : (
             <EmptyState title="記事を準備しています" />
           )}
@@ -185,27 +189,6 @@ export default async function HomePage() {
               <p className="text-sm text-muted">連載を準備しています。</p>
             )}
           </div>
-        </Container>
-      </section>
-
-      {/* バックナンバー */}
-      <section className="pt-10 md:pt-14">
-        <Container>
-          <HeadingScript ja="バックナンバー" en="Back Number" />
-          <ul className="grid grid-cols-3 gap-3 md:gap-8">
-            {issues.slice(0, 3).map((is) => (
-              <li key={is.key} className="min-w-0">
-                <Link href={`/issues/${is.vol}`} className="group grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,110px)_1fr] sm:items-center">
-                  <IssueCover issue={is} />
-                  <span className="min-w-0">
-                    <span className="block font-en text-[1rem] italic text-ink">VOL.<span className="text-[1.3em]">{String(is.vol).padStart(2, "0")}</span></span>
-                    <span className="headline mt-0.5 block text-[0.8rem] text-ink group-hover:text-blush md:text-[0.95rem]">{is.cover.title}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link href="/issues" className="mt-5 inline-flex items-center gap-3 font-mincho text-sm text-ink hover:text-blush">バックナンバーをすべて見る <Arrow className="text-blush" /></Link>
         </Container>
       </section>
 

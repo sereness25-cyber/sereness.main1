@@ -49,7 +49,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
     <>
       <header className="bg-ivory">
         <div className="mx-auto grid max-w-[1200px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 pb-3 pt-4 md:px-6 md:pt-6">
-          <p className="whitespace-nowrap font-mincho text-[0.5rem] leading-[1.75] tracking-wide text-ink sm:text-[0.62rem] md:text-[0.78rem]">
+          <p className="hidden whitespace-nowrap font-mincho leading-[1.75] tracking-wide text-ink sm:block sm:text-[0.62rem] md:text-[0.78rem]">
             秋田・川反のまちの
             <br />
             人・お店・お酒・
@@ -93,6 +93,8 @@ export function Header({ issue }: { issue: IssueLabel }) {
             </button>
           </div>
         </div>
+        {/* スマホ：説明文はロゴの下に、読める大きさで */}
+        <p className="px-4 pb-3 text-center font-mincho text-[0.75rem] tracking-[0.06em] text-ink/80 sm:hidden">秋田・川反のまちの人・お店・お酒・物語をつづるWebマガジン</p>
       </header>
 
       <nav aria-label="メインメニュー" className="sticky top-0 z-40 border-y border-navy/10 bg-ivory/95 backdrop-blur">
