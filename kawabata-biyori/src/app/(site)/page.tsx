@@ -64,8 +64,18 @@ export default async function HomePage() {
     getAllShops(),
   ]);
   const todayShops = toTodayShops(allShops);
-  const cover = featured[0];
-  const picks = featured.slice(0, 3);
+  // いちばん新しい号（記事を公開した月）の記事を優先する。号が変わると自動で入れ替わる
+  const current = issues[0];
+  const newest = (a: Article, b: Article) => (b.published_at ?? b.updated_at).localeCompare(a.published_at ?? a.updated_at);
+  const inIssue = current ? [...current.articles].sort(newest) : [];
+  // 巻頭特集：その号で「編集部のおすすめ」の記事。なければその号でいちばん新しい記事
+  const cover = inIssue.find((a) => a.is_featured) ?? inIssue[0] ?? featured[0];
+  // Editor's Pick：その号のおすすめ → その号の新しい記事 → これまでのおすすめ（巻頭特集の記事は除く）
+  const picks: Article[] = [];
+  for (const a of [...inIssue.filter((x) => x.is_featured), ...inIssue.filter((x) => !x.is_featured), ...featured, ...latest]) {
+    if (picks.length >= 3) break;
+    if (a.id !== cover?.id && !picks.some((x) => x.id === a.id)) picks.push(a);
+  }
   // 連載の最新回（いまは「川反さんぽ」）
   const person = series[0];
   const pickPhotos = distinctPhotos(picks.map((a) => a.categories[0]?.slug));
@@ -81,7 +91,9 @@ export default async function HomePage() {
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-[#2a1a19]/90 via-[#2a1a19]/55 to-transparent md:from-cocoa md:from-40% md:via-cocoa/70 md:via-55%" />
           <div className="relative flex min-h-[440px] flex-col justify-center px-6 py-10 text-white md:min-h-[540px] md:px-14">
-            <p className="w-fit border border-white/80 px-3 py-1 font-mincho text-sm tracking-[0.2em]">巻頭特集</p>
+            <p className="w-fit border border-white/80 px-3 py-1 font-mincho text-sm tracking-[0.2em]">
+              {current && <span className="mr-2 font-en italic tracking-[0.08em]">VOL.{String(current.vol).padStart(2, "0")}</span>}巻頭特集
+            </p>
             <h1 className="mt-5 font-mincho text-[2.6rem] font-medium leading-[1.2] tracking-[0.04em] drop-shadow md:text-[4rem]">
               今夜、
               <br />
@@ -89,13 +101,17 @@ export default async function HomePage() {
               <br />
               行きたくなる。
             </h1>
-            <p className="mt-4 font-mincho text-[0.95rem] leading-[1.9] tracking-[0.12em] text-white/95 md:text-[1.05rem]">
-              お酒、食、そして人。
-              <br />
-              この街が愛される理由を、
-              <br />
-              編集部がたどります。
-            </p>
+            {cover ? (
+              <p className="mt-4 max-w-md font-mincho text-[1rem] font-bold leading-[1.8] tracking-[0.08em] text-white/95 md:text-[1.15rem]">{cover.title}</p>
+            ) : (
+              <p className="mt-4 font-mincho text-[0.95rem] leading-[1.9] tracking-[0.12em] text-white/95 md:text-[1.05rem]">
+                お酒、食、そして人。
+                <br />
+                この街が愛される理由を、
+                <br />
+                編集部がたどります。
+              </p>
+            )}
             {cover && (
               <Link href={`/articles/${cover.slug}`} className="mt-6 inline-flex min-h-12 w-fit items-center gap-6 bg-blush px-8 font-mincho font-bold tracking-[0.2em] text-white transition hover:brightness-110">
                 特集を読む <Arrow />
