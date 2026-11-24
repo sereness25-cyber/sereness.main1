@@ -154,6 +154,7 @@ table.list tr:hover td { background: #fbf9f6; }
     <button role="tab" data-view="articles">記事</button>
     <button role="tab" data-view="shops">お店</button>
     <button role="tab" data-view="events">イベント</button>
+    <button role="tab" data-view="contacts">お問い合わせ</button>
     <button role="tab" data-view="photos">写真</button>
     <button role="tab" data-view="settings">設定</button>
   </nav>
@@ -319,12 +320,12 @@ async function applyPending() {
 }
 
 /* Apps Script（保存先）が古いままだと、写真の差し替えなどが保存されない */
-const API_VERSION = 4;
+const API_VERSION = 5;
 const CODE_URL = "https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/apps-script/Code.gs";
 function updateBanner() {
   if ((cache.apiVersion || 0) >= API_VERSION) return "";
   return `<div class="note err" style="margin-bottom:16px"><b>Google 側のプログラム（Apps Script）が古いままです。</b><br>
-    このままだと <b>写真の差し替えが保存されません</b>。お店用ページ、臨時休業のすぐ反映も使えません。次の手順で新しくしてください。
+    このままだと <b>公開ページのお問い合わせフォームから送られた内容を受け取れません</b>（最新の機能が使えません）。次の手順で新しくしてください。
     <ol class="steps" style="margin-top:6px">
       <li>下の「新しいコードをコピー」を押す</li>
       <li><a href="https://script.google.com/home" target="_blank" rel="noopener">Apps Script</a> で、お店の営業スケジュールのプロジェクトを開く</li>
@@ -1139,6 +1140,36 @@ views.settings = async (el) => {
     try { status("保存しています…"); cache.settings = (await api("kb_settings", { settings: { ...next, photos: data.photos || {} } })).settings; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("settings"); }
     catch (e) { status("保存できませんでした：" + e.message, "err", 8000); }
   };
+};
+
+/* ============================================================
+   お問い合わせ（公開ページのフォームから届いたもの）
+   ============================================================ */
+views.contacts = async (el) => {
+  await loadAll();
+  if ((cache.apiVersion || 0) < API_VERSION) { el.innerHTML = notices() + "<h1>お問い合わせ</h1>"; return; }
+  const list = (await api("kb_contacts")).contacts || [];
+  const draw = () => {
+    const open = list.filter((x) => !x.done).length;
+    el.innerHTML = `
+      <h1>お問い合わせ</h1>
+      <p class="lead">公開ページの「お問い合わせ」から届いた内容です。未対応 ${open}件／全${list.length}件</p>
+      <div class="stack">${list.map((x) => `
+        <section class="panel stack" style="${x.done ? "opacity:.6" : ""}">
+          <div class="row between"><b>${esc(x.subject || "（件名なし）")}</b><span class="pill ${x.done ? "draft" : "scheduled"}">${x.done ? "対応済み" : "未対応"}</span></div>
+          <p class="sub" style="margin:0">${fmt(x.at)}　${esc(x.name)}　<a href="mailto:${esc(x.email)}?subject=${encodeURIComponent("Re: " + (x.subject || "お問い合わせ"))}">${esc(x.email)}</a></p>
+          <p style="margin:0;white-space:pre-wrap">${esc(x.body)}</p>
+          <div class="row"><a class="btn small" href="mailto:${esc(x.email)}?subject=${encodeURIComponent("Re: " + (x.subject || "お問い合わせ"))}">メールで返信</a>
+            <button class="btn small" type="button" data-done="${esc(x.id)}">${x.done ? "未対応に戻す" : "対応済みにする"}</button></div>
+        </section>`).join("") || '<p class="hint">まだお問い合わせはありません。</p>'}</div>`;
+    $$("[data-done]", el).forEach((b) => (b.onclick = async () => {
+      const x = list.find((y) => y.id === b.dataset.done);
+      b.disabled = true;
+      try { await api("kb_contact_done", { id: x.id, done: !x.done }); x.done = !x.done; draw(); }
+      catch (e) { status("変更できませんでした：" + e.message, "err", 6000); b.disabled = false; }
+    }));
+  };
+  draw();
 };
 
 /* ============================================================

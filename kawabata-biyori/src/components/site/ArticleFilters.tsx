@@ -14,7 +14,7 @@ export function ArticleFilters({
 }) {
   const field = "h-11 w-full rounded-xl border border-beige bg-white px-3 text-sm";
   return (
-    <form action={action} method="get" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-6">
+    <form action={action} method="get" data-kb-filter="articles" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-6">
       <label className="md:col-span-2">
         <span className="mb-1 block text-xs font-bold text-navy">キーワード</span>
         <input type="search" name="q" defaultValue={values.q} placeholder="例：一人飲み" className={field} />

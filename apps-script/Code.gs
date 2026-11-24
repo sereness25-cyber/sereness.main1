@@ -7,6 +7,7 @@
    - …/exec?kawabata=export → かわばた日和の公開中データ(GitHub が10分ごとに取りに来る)
    - …/exec?kawabata=today  → かわばた日和「本日営業のお店」用の最新の営業時間(公開ページが読む)
    - POST {action:'shop_…', slug, key, …} → お店ごとの営業時間の管理ページ用
+   - POST {action:'contact', name, email, subject, body} → かわばた日和のお問い合わせ(ドライブに保存して、管理画面で見る)
    - POST {action:'kb_…', passcode, …} → かわばた日和の管理ページ用(下のほうにまとめてあります)
    スクリプト プロパティに PASSCODE(合言葉)を入れておくこと。
    写真はドライブの「Sereness LP 写真」フォルダに入り、リンクを知っている人が見られる設定になります。
@@ -46,6 +47,7 @@ function doGet(e) {
 function doPost(e) {
   try {
     var body = JSON.parse(e.postData.contents);
+    if (body.action === 'contact') return json(kbContact(body));
     if (String(body.action || '').indexOf('kb_') === 0) return json(kbHandle(body));
     if (String(body.action || '').indexOf('shop_') === 0) return json(shopHandle(body));
     if (body.action === 'upload') return json(uploadImage(body.passcode, body.data, body.mime));
@@ -157,7 +159,7 @@ function json(obj) {
    - 写真はドライブの「かわばた日和 写真」フォルダ(リンクを知っている人が見られる)
    ============================================================ */
 var KB_RAW = 'https://raw.githubusercontent.com/sereness25-cyber/sereness.main1/main/kawabata-data/';
-var KB_VERSION = 4;  // 管理ページが「Apps Script が新しいか」を確かめるための番号
+var KB_VERSION = 5;  // 管理ページが「Apps Script が新しいか」を確かめるための番号
 var KB_LISTS = ['articles', 'shops', 'events', 'categories'];
 
 function kbHandle(body) {
@@ -171,6 +173,8 @@ function kbHandle(body) {
     else if (body.action === 'kb_save') out = kbSave(body.file, body.item, !!body.remove);
     else if (body.action === 'kb_settings') out = kbSaveSettings(body.settings);
     else if (body.action === 'kb_upload') out = kbUpload(body.data, body.mime);
+    else if (body.action === 'kb_contacts') out = {ok: true, contacts: kbContacts()};
+    else if (body.action === 'kb_contact_done') out = kbContactDone(String(body.id || ''), !!body.done);
     else out = {ok: false, error: '知らない操作です'};
   } catch (err) {
     out = {ok: false, error: String(err && err.message || err)};
@@ -518,5 +522,59 @@ function shopSave(slug, hours, specials) {
     kbWrite('shops', data);
     try { CacheService.getScriptCache().remove('KB_TODAY'); } catch (e) {}
     return {ok: true, shop: {name: hit.name, slug: hit.slug, hours: hit.hours, specials: hit.specials}};
+  } finally { lock.releaseLock(); }
+}
+
+/* ============================================================
+   かわばた日和のお問い合わせ
+   - ドライブの contacts.json に保存し、管理画面の「お問い合わせ」で見る
+   - メールの送信が許可されていれば、スクリプト プロパティ CONTACT_EMAIL(なければこのスクリプトの持ち主)にも知らせる
+   ============================================================ */
+function kbContacts() {
+  var f = kbFile('contacts');
+  return f ? (JSON.parse(f.getBlob().getDataAsString('UTF-8')).contacts || []) : [];
+}
+
+function kbContact(b) {
+  b = b || {};
+  if (b.website) return {ok: true, kb: 1};  // ロボット対策の隠し欄に入力があれば、受け付けたふりをして保存しない
+  var text = function(v, max){ return String(v == null ? '' : v).trim().slice(0, max); };
+  var item = {
+    id: Utilities.getUuid(), at: new Date().toISOString(),
+    name: text(b.name, 50), email: text(b.email, 120), subject: text(b.subject, 80), body: text(b.body, 2000),
+    page: text(b.page, 200), done: false
+  };
+  if (!item.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email) || !item.body) return {ok: false, kb: 1, error: '入力内容を確かめてください'};
+  var cache = CacheService.getScriptCache();
+  var n = Number(cache.get('KB_CONTACT_N') || 0);
+  if (n >= 30) return {ok: false, kb: 1, error: 'ただいま混み合っています'};  // 1時間に30件まで(いたずら対策)
+  cache.put('KB_CONTACT_N', String(n + 1), 3600);
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var list = kbContacts();
+    list.unshift(item);
+    kbWrite('contacts', {contacts: list.slice(0, 500)});
+  } finally { lock.releaseLock(); }
+  try {
+    var to = PropertiesService.getScriptProperties().getProperty('CONTACT_EMAIL') || Session.getEffectiveUser().getEmail();
+    if (to) MailApp.sendEmail({
+      to: to, replyTo: item.email,
+      subject: '【かわばた日和】お問い合わせ：' + (item.subject || item.name),
+      body: 'お名前：' + item.name + '\nメール：' + item.email + '\n件名：' + item.subject + '\n\n' + item.body + '\n\n(管理画面の「お問い合わせ」でも見られます)'
+    });
+  } catch (e) {}  // メールの許可がなくても、保存はできているので受け付けとする
+  return {ok: true, kb: 1};
+}
+
+function kbContactDone(id, done) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var list = kbContacts(), hit = false;
+    list.forEach(function(x){ if (x.id === id) { x.done = done; hit = true; } });
+    if (!hit) return {ok: false, error: '見つかりません'};
+    kbWrite('contacts', {contacts: list});
+    return {ok: true, contacts: list};
   } finally { lock.releaseLock(); }
 }

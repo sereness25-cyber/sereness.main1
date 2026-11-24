@@ -6,6 +6,7 @@ import { ShopCard } from "@/components/site/Cards";
 import { Container, EmptyState, PageHeader } from "@/components/site/Section";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { BeginnerMark } from "@/components/site/Badges";
+import { IS_STATIC, shopText } from "@/lib/static-site";
 
 export const metadata: Metadata = {
   title: "川反の飲み屋を探す｜秋田市の居酒屋・BAR・スナック",
@@ -18,7 +19,8 @@ type SP = Promise<Record<string, string | undefined>>;
 export default async function ShopsPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const category = SHOP_CATEGORIES.some((c) => c.value === sp.category) ? (sp.category as ShopCategory) : undefined;
-  const shops = await queryShops({
+  // 静的書き出しでは全部のお店を出して、ブラウザで絞り込む
+  const shops = IS_STATIC ? await queryShops({}) : await queryShops({
     q: sp.q || undefined,
     category,
     budget: Number(sp.budget) || undefined,
@@ -35,7 +37,7 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
         <Breadcrumbs items={[{ name: "お店を探す", href: "/shops" }]} />
       </PageHeader>
       <Container className="py-10">
-        <form method="get" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-4">
+        <form method="get" data-kb-filter="shops" className="grid gap-3 border border-navy/15 bg-white p-5 md:grid-cols-4">
           <label className="md:col-span-2">
             <span className="mb-1 block text-xs font-bold text-navy">店名・キーワード</span>
             <input type="search" name="q" defaultValue={sp.q} className={field} placeholder="例：カウンター" />
@@ -69,12 +71,24 @@ export default async function ShopsPage({ searchParams }: { searchParams: SP }) 
         </details>
 
         <p className="mt-6 text-xs leading-6 text-muted">お店情報は随時追加していきます。</p>
-        <p className="mt-3 text-sm text-muted">{shops.length}件のお店</p>
-        {shops.length ? (
-          <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{shops.map((s) => <ShopCard key={s.id} shop={s} />)}</div>
-        ) : (
-          <div className="mt-4"><EmptyState title="条件に合うお店が見つかりませんでした">掲載店舗は確認が取れたお店から順次追加しています。</EmptyState></div>
-        )}
+        <p className="mt-3 text-sm text-muted" data-kb-count="{n}件のお店">{shops.length}件のお店</p>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-kb-list hidden={!shops.length}>
+          {shops.map((s) => (
+            <div
+              key={s.id}
+              data-kb-item
+              data-category={s.category}
+              data-budget={s.budget_level ?? ""}
+              data-beginner={s.beginner_welcome ? "1" : ""}
+              data-solo={s.solo_ok === true ? "1" : ""}
+              data-nonalc={s.non_alcohol === true ? "1" : ""}
+              data-text={shopText(s)}
+            >
+              <ShopCard shop={s} />
+            </div>
+          ))}
+        </div>
+        <div className="mt-4" data-kb-empty hidden={shops.length > 0}><EmptyState title="条件に合うお店が見つかりませんでした">掲載店舗は確認が取れたお店から順次追加しています。</EmptyState></div>
       </Container>
     </>
   );

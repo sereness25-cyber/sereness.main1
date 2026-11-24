@@ -38,15 +38,20 @@ for rel in htmls:
     s = re.sub(r'src="(?:https?://localhost:' + PORT + r')?/_next/image\?url=([^&"]+)[^"]*"', lambda m: 'src="' + posixpath.relpath(unquote(m.group(1)).lstrip('/'), base or '.') + '"', s)
     def fix(m):
         attr, url = m.group(1), m.group(2)
-        path = re.sub(r'^https?://localhost:' + PORT, '', url).split('#')[0].split('?')[0].strip('/')
+        rest = re.sub(r'^https?://localhost:' + PORT, '', url).split('#')[0]
+        path, _, query = rest.partition('?')
+        path = path.strip('/')
         target = (path + '.html') if path else 'index.html'
         if target not in existing: return f'{attr}="#"'
-        return f'{attr}="{posixpath.relpath(target, base or ".")}"'
+        # ?category=bar などの条件は残す（ページのスクリプトが読んで絞り込む）
+        return f'{attr}="{posixpath.relpath(target, base or ".")}' + (('?' + query) if query else '') + '"'
     s = re.sub(r'(href|action)="(https?://localhost:' + PORT + r'[^"]*)"', fix, s)
     extra = ''
+    js = posixpath.relpath('js', base or '.')
     if 'data-kb-today=' in s:
-        js = posixpath.relpath('js', base or '.')
         extra = f'<script src="{js}/kawabata-hours.js"></script><script src="{js}/kawabata-today.js"></script>'
+    if 'data-kb-filter=' in s or 'data-kb-contact' in s:
+        extra += f'<script src="{js}/kawabata-site.js"></script>'
     s = s.replace('</head>', FONTS + OVR + '</head>', 1).replace('</body>', MENU + extra + '</body>', 1)
     open(rel,'w',encoding='utf-8').write(s)
 print(len(htmls), 'pages')
