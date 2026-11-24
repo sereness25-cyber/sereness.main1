@@ -8,7 +8,8 @@ import { organizationLd } from "@/lib/jsonld";
 import { getIssues } from "@/lib/data";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const latest = (await getIssues())[0];
+  const issues = await getIssues();
+  const latest = issues[0];
   const issue = latest
     ? { vol: latest.vol, en: `${latest.year} ${new Date(Date.UTC(latest.year, latest.month - 1, 15)).toLocaleString("en-US", { month: "short", timeZone: "UTC" })}.` }
     : null;
@@ -18,7 +19,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         本文へ移動
       </a>
       <DemoBanner />
-      <Header issue={issue} />
+      <Header issue={issue} backNumber={issues.length >= 2} />
       <main id="main">{children}</main>
       <Footer />
       <div className="kb-fab-space" aria-hidden="true" />

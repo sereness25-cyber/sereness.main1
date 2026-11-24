@@ -31,7 +31,9 @@ function Sakura({ className = "" }: { className?: string }) {
   );
 }
 
-export function Header({ issue }: { issue: IssueLabel }) {
+export function Header({ issue, backNumber = false }: { issue: IssueLabel; backNumber?: boolean }) {
+  // バックナンバーは2号目が出てからメニューに出す
+  const nav = backNumber ? [...NAV, { href: "/issues", label: "バックナンバー" }] : [...NAV];
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -99,7 +101,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
 
       <nav aria-label="メインメニュー" className="sticky top-0 z-40 border-y border-navy/10 bg-ivory/95 backdrop-blur">
         <ul className="mx-auto flex max-w-[900px] justify-between overflow-x-auto px-3 md:px-6">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <li key={n.href} className="shrink-0">
               <Link
                 href={n.href}
@@ -119,7 +121,7 @@ export function Header({ issue }: { issue: IssueLabel }) {
           <button type="button" onClick={() => setOpen(false)} className="grid size-11 place-items-center text-2xl" aria-label="メニューを閉じる">×</button>
         </div>
         <ul className="mt-6 border-t border-navy/15">
-          {[...NAV, ...MENU_EXTRA].map((n) => (
+          {[...nav, ...MENU_EXTRA].map((n) => (
             <li key={n.href}>
               <Link href={n.href} className="flex items-center justify-between border-b border-navy/15 py-4 font-mincho text-lg font-bold text-ink">
                 {n.label}

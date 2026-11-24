@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SHOP_CATEGORIES } from "@/lib/constants";
-import { getFeaturedArticles, getLatestArticles, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
+import { getFeaturedArticles, getIssues, getLatestArticles, getSeriesArticles, getUpcomingEvents, getAllShops } from "@/lib/data";
 import { PHOTOS, distinctPhotos, photoForShop, type PhotoKey } from "@/lib/photos";
 import type { Article } from "@/lib/types";
 import { ArticleCard, EventCard } from "@/components/site/Cards";
 import { Container, EmptyState, SectionTitle } from "@/components/site/Section";
 import { Thumb } from "@/components/site/Thumb";
 import { TodayShops } from "@/components/site/TodayShops";
+import { IssueCover } from "@/components/site/IssueCover";
 import { toTodayShops } from "@/lib/today";
 
 export const revalidate = 60;
@@ -54,11 +55,12 @@ function PickCard({ article, photo }: { article: Article; photo: PhotoKey }) {
 }
 
 export default async function HomePage() {
-  const [featured, latest, series, events, allShops] = await Promise.all([
+  const [featured, latest, series, events, issues, allShops] = await Promise.all([
     getFeaturedArticles(4),
     getLatestArticles(6),
     getSeriesArticles(2),
     getUpcomingEvents(3),
+    getIssues(),
     getAllShops(),
   ]);
   const todayShops = toTodayShops(allShops);
@@ -191,6 +193,29 @@ export default async function HomePage() {
           </div>
         </Container>
       </section>
+
+      {/* バックナンバー（2号目が出てから表示する） */}
+      {issues.length >= 2 && (
+      <section className="pt-10 md:pt-14">
+        <Container>
+          <HeadingScript ja="バックナンバー" en="Back Number" />
+          <ul className="grid grid-cols-3 gap-3 md:gap-8">
+            {issues.slice(0, 3).map((is) => (
+              <li key={is.key} className="min-w-0">
+                <Link href={`/issues/${is.vol}`} className="group grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,110px)_1fr] sm:items-center">
+                  <IssueCover issue={is} />
+                  <span className="min-w-0">
+                    <span className="block font-en text-[1rem] italic text-ink">VOL.<span className="text-[1.3em]">{String(is.vol).padStart(2, "0")}</span></span>
+                    <span className="headline mt-0.5 block text-[0.8rem] text-ink group-hover:text-blush md:text-[0.95rem]">{is.cover.title}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/issues" className="mt-5 inline-flex items-center gap-3 font-mincho text-sm text-ink hover:text-blush">バックナンバーをすべて見る <Arrow className="text-blush" /></Link>
+        </Container>
+      </section>
+      )}
 
       {/* はじめての川反 */}
       <section className="mt-14 bg-navy py-14 text-white md:mt-20 md:py-20">

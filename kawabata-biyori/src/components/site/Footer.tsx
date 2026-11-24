@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { getSiteSettings } from "@/lib/data";
+import { getIssues, getSiteSettings } from "@/lib/data";
 import { SITE } from "@/lib/constants";
 import { Logo } from "./Logo";
 
 export async function Footer() {
   const s = await getSiteSettings();
+  // バックナンバーは2号目が出てから
+  const backNumber = (await getIssues()).length >= 2;
   const sns = [
     { key: "instagram", label: "Instagram", url: s.instagram },
     { key: "x", label: "X", url: s.x },
@@ -36,6 +38,7 @@ export async function Footer() {
             {[
               ["/features", "特集"],
               ["/series", "連載"],
+              ...(backNumber ? [["/issues", "バックナンバー"]] : []),
               ["/articles", "記事を読む"],
               ["/shops", "お店を探す"],
               ["/guide", "はじめての川反"],
