@@ -296,6 +296,8 @@ async function cleanRemoved() {
 }
 
 /* 編集部（GitHub側）で追加・更新した記事など（kawabata-data/pending.json）を、保存先に入れる。保存先のほうが新しければそのまま */
+let appliedPending = [];
+try { appliedPending = JSON.parse(localStorage.getItem("kb-pending-applied") || "[]"); } catch {}
 async function applyPending() {
   let pending = {}, removed = {};
   try {
@@ -308,14 +310,19 @@ async function applyPending() {
     for (const item of pending[k] || []) {
       if (!item || !item.id || gone.has(item.id)) continue;
       const cur = (cache[k] || []).find((x) => x.id === item.id);
-      if (!cur || String(item.updated_at || "") > String(cur.updated_at || "")) todo.push([k, item]);
+      // 一度入れたもの（このブラウザで）は、あとで削除・編集しても入れ直さない
+      const mark = item.id + "@" + (item.updated_at || "");
+      if (appliedPending.includes(mark)) continue;
+      if (!cur || String(item.updated_at || "") > String(cur.updated_at || "")) todo.push([k, item, mark]);
+      else appliedPending.push(mark);
     }
   }
   let n = 0;
-  for (const [k, item] of todo.reverse()) {
+  for (const [k, item, mark] of todo.reverse()) {
     status(`新しい記事などを入れています…（${++n}/${todo.length}）`);
-    try { await saveItem(k + ".json", k, item, ""); } catch { /* 次に開いたときにもう一度 */ }
+    try { await saveItem(k + ".json", k, item, ""); appliedPending.push(mark); } catch { /* 次に開いたときにもう一度 */ }
   }
+  try { localStorage.setItem("kb-pending-applied", JSON.stringify(appliedPending.slice(-200))); } catch {}
   if (todo.length) status(`${todo.length}件の新しい記事などを入れました。`, "ok", 4000);
 }
 
