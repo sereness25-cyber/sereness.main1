@@ -104,3 +104,10 @@ jobs:
           for u in "https://sereness25-cyber.github.io/sereness.main1/sitemap.xml" "https://sereness25-cyber.github.io/sereness.main1/sitemap-lp.xml" "$B/sitemap.xml" "$B/" "$B/shops" "$B/shops.html" "$B/articles/akita-nomi-kawabata"; do
             echo "$(curl -s -o /dev/null -w '%{http_code} %{content_type}' -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' "$u") $u"
           done
+          echo "--- robots.txt（ドメインのいちばん上） ---"
+          curl -s -o /dev/null -w '%{http_code} %{content_type}\n' -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' https://sereness25-cyber.github.io/robots.txt
+          curl -s -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' https://sereness25-cyber.github.io/robots.txt | head -20
+          echo "--- サイトマップのヘッダー ---"
+          curl -sI -A 'Mozilla/5.0 (compatible; Googlebot/2.1)' https://sereness25-cyber.github.io/sereness.main1/sitemap.xml | grep -iE '^(HTTP|content-type|content-length|x-robots|location|cache-control)'
+          echo "--- サイトマップの中身 ---"
+          curl -s https://sereness25-cyber.github.io/sereness.main1/sitemap.xml
