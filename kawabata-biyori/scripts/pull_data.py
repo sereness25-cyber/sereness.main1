@@ -9,9 +9,14 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.parse
 import urllib.request
 
 PAGES_MEDIA = "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive"
+GSI = "https://msearch.gsi.go.jp/address-search/AddressSearch?q="
+# 川反のあたり（これより外になった検索結果は、まちがいとして使わない）
+AREA = {"lat": (39.70, 39.74), "lng": (140.10, 140.14)}
 DRIVE_URL = re.compile(r"https://lh3\.googleusercontent\.com/d/([A-Za-z0-9_-]{10,200})")
 
 
@@ -129,10 +134,57 @@ def main():
         return f"{PAGES_MEDIA}/{fid}.webp" if os.path.exists(os.path.join(img_dir, fid + ".webp")) else m.group(0)
 
     payload = json.loads(DRIVE_URL.sub(local, text))
+    geocode(payload["shops"], data_dir)
     for k in keys:
         write(os.path.join(data_dir, k + ".json"), {k: payload[k]})
     write(os.path.join(data_dir, "settings.json"), payload["settings"])
     print(f"取り込みました: 記事 {len(payload['articles'])} / お店 {len(payload['shops'])} / イベント {len(payload['events'])}")
+
+
+def street_address(address):
+    """建物名や階を外して「秋田県秋田市大町5-2-7」の形にする（全角の数字やハイフンも直す）"""
+    a = str(address or "").translate(str.maketrans("０１２３４５６７８９－ー―‐　", "0123456789---- ")).strip()
+    # 番地のあとの空白から先（建物名・階）は使わない
+    m = re.match(r"^(\S+?\d+(?:丁目)?-?\d+(?:-\d+)?)(?!\d)", a)
+    return m.group(1) if m else ""
+
+
+def geocode(shops, data_dir):
+    """地図の位置（緯度・経度）が入っていないお店に、住所から位置を入れる（国土地理院の住所検索。結果は覚えておく）"""
+    path = os.path.join(data_dir, "geocode-cache.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            cache = json.load(f)
+    except Exception:  # noqa: BLE001
+        cache = {}
+    changed = False
+    for s in shops:
+        if not isinstance(s, dict) or (s.get("lat") is not None and s.get("lng") is not None):
+            continue
+        key = street_address(s.get("address"))
+        if not key:
+            continue
+        if key not in cache:
+            hit = None
+            try:
+                res = json.loads(fetch(GSI + urllib.parse.quote(key), timeout=20).decode("utf-8"))
+                for r in res or []:
+                    lng, lat = r["geometry"]["coordinates"][:2]
+                    if AREA["lat"][0] <= lat <= AREA["lat"][1] and AREA["lng"][0] <= lng <= AREA["lng"][1]:
+                        hit = [round(lat, 6), round(lng, 6)]
+                        break
+            except Exception as e:  # noqa: BLE001
+                print(f"::warning::住所から位置を調べられませんでした（{key}）: {e}")
+                continue
+            cache[key] = hit
+            changed = True
+            time.sleep(0.3)
+            print(f"地図の位置: {s.get('name')} → {hit or '見つからず'}")
+        if cache.get(key):
+            s["lat"], s["lng"] = cache[key]
+    if changed:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
 
 
 def write(path, obj):
