@@ -14,7 +14,17 @@ export function formatDateTime(iso: string | null | undefined): string {
   }).format(new Date(iso));
 }
 
+const hm = (iso: string) => new Intl.DateTimeFormat("ja-JP", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
+const dateOnly = (iso: string) =>
+  new Intl.DateTimeFormat("ja-JP", { timeZone: TZ, year: "numeric", month: "long", day: "numeric", weekday: "short" }).format(new Date(iso));
+
 export function formatEventDate(starts: string, ends: string | null): string {
+  // 時刻が決まっていないイベント（0:00に始まり、終わりが 23:59 か未定）は、日付だけを出す
+  if (hm(starts) === "00:00" && (!ends || hm(ends) === "23:59")) {
+    if (!ends) return dateOnly(starts);
+    const same = dateOnly(starts) === dateOnly(ends);
+    return same ? dateOnly(starts) : `${dateOnly(starts)}〜${dateOnly(ends)}`;
+  }
   const s = formatDateTime(starts);
   if (!ends) return `${s}〜`;
   const sameDay = new Date(starts).toLocaleDateString("ja-JP", { timeZone: TZ }) === new Date(ends).toLocaleDateString("ja-JP", { timeZone: TZ });
