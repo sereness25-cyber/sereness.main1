@@ -1,435 +1,6 @@
 {
   "shops": [
     {
-      "id": "9c716e8c-30ef-43ff-b4ca-d7acfa976e32",
-      "lat": 39.715591,
-      "lng": 140.116257,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-24",
-      "is_published": true,
-      "updated_at": "2026-11-24T14:00:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "すし 暁",
-      "slug": "sushi-akatsuki",
-      "category": "dining",
-      "description": "深夜2時半まで開いているお寿司屋さん。飲んだあとの締めの一貫にも。",
-      "address": "秋田県秋田市大町4-2-26",
-      "phone": "018-862-1239",
-      "business_hours": "18:30〜翌2:30",
-      "closed_days": "日曜日・祝日",
-      "hours": {
-        "0": {
-          "closed": true,
-          "ranges": []
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:30",
-              "close": "02:30"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "NAVITIME",
-          "url": "https://www.navitime.co.jp/category/0305001002/05201052000/"
-        }
-      ]
-    },
-    {
-      "id": "9d116ace-7c10-42f4-92ba-0770e6da567a",
-      "lat": 39.716991,
-      "lng": 140.116745,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-24",
-      "is_published": true,
-      "updated_at": "2026-11-24T14:00:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "秋田 すし匠",
-      "slug": "sushi-takumi",
-      "category": "dining",
-      "description": "大町3丁目のお寿司屋さん。夜18時から営業しています（最終入店20:30）。",
-      "address": "秋田県秋田市大町3-2-36",
-      "phone": "018-866-0014",
-      "business_hours": "18:00〜22:00（最終入店20:30）",
-      "closed_days": "日曜日、祝日の月曜日",
-      "hours": {
-        "0": {
-          "closed": true,
-          "ranges": []
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "18:00",
-              "close": "22:00"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "NAVITIME",
-          "url": "https://www.navitime.co.jp/category/0305001002/05201052000/"
-        }
-      ]
-    },
-    {
-      "id": "8b417a8c-6e58-4c66-aa49-c365c42f4720",
-      "lat": 39.714325,
-      "lng": 140.115799,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-24",
-      "is_published": true,
-      "updated_at": "2026-11-24T14:00:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "や台ずし 秋田川反町",
-      "slug": "yataizushi-kawabata",
-      "category": "izakaya",
-      "description": "名古屋発の寿司居酒屋「や台ずし」の秋田のお店。2025年6月にオープンしました。お寿司と居酒屋メニューを、手ごろな価格で楽しめます。",
-      "address": "秋田県秋田市大町5-2-32",
-      "phone": "018-866-0528",
-      "business_hours": "16:00〜翌1:00",
-      "closed_days": "年中無休（年末年始はお店にお問い合わせください）",
-      "hours": {
-        "0": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "16:00",
-              "close": "01:00"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "や台ずし 公式",
-          "url": "https://yossix-shop.com/detail/20036/"
-        },
-        {
-          "label": "ぐるなび",
-          "url": "https://r.gnavi.co.jp/3tgxbrrs0000/"
-        },
-        {
-          "label": "あきたタウン情報",
-          "url": "https://web.akita-townjoho.jp/post-category/post-open/20250724-yataizushi/"
-        }
-      ]
-    },
-    {
-      "id": "2f3cfed1-c0e5-4264-94fa-12d74f130ff4",
-      "lat": 39.714325,
-      "lng": 140.115799,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-24",
-      "is_published": true,
-      "updated_at": "2026-11-24T14:00:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "美酒王国秋田 Sake-Navi",
-      "slug": "sake-navi",
-      "category": "izakaya",
-      "description": "秋田県内35蔵から仕入れた地酒と、おばんざい料理を楽しめるお店。2023年2月にリニューアルしました。赤れんが館通り沿いにあり、秋田の日本酒の飲み比べにも。",
-      "address": "秋田県秋田市大町5-2-1",
-      "phone": "018-853-5530",
-      "business_hours": "17:00〜24:00（料理L.O.23:00、ドリンクL.O.23:30）",
-      "closed_days": "日曜日",
-      "hours": {
-        "0": {
-          "closed": true,
-          "ranges": []
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "17:00",
-              "close": "24:00"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "JR東日本「歓楽街・川反の歴史と地酒が楽しめる人気店」",
-          "url": "https://www.jreast.co.jp/akita/meettheheart/column/article88.html"
-        },
-        {
-          "label": "NAVITIME",
-          "url": "https://www.navitime.co.jp/category/0308/05201052000/"
-        }
-      ]
-    },
-    {
       "id": "dd18a05a-2221-4cbf-ada6-1216b50e46d4",
       "lat": 39.720024,
       "lng": 140.116653,
@@ -566,6 +137,435 @@
         {
           "label": "HOT PEPPER グルメ",
           "url": "https://www.hotpepper.jp/strJ000101249/"
+        }
+      ]
+    },
+    {
+      "id": "2f3cfed1-c0e5-4264-94fa-12d74f130ff4",
+      "lat": 39.714325,
+      "lng": 140.115799,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-24",
+      "is_published": true,
+      "updated_at": "2026-11-24T14:00:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "美酒王国秋田 Sake-Navi",
+      "slug": "sake-navi",
+      "category": "izakaya",
+      "description": "秋田県内35蔵から仕入れた地酒と、おばんざい料理を楽しめるお店。2023年2月にリニューアルしました。赤れんが館通り沿いにあり、秋田の日本酒の飲み比べにも。",
+      "address": "秋田県秋田市大町5-2-1",
+      "phone": "018-853-5530",
+      "business_hours": "17:00〜24:00（料理L.O.23:00、ドリンクL.O.23:30）",
+      "closed_days": "日曜日",
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "17:00",
+              "close": "24:00"
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "label": "JR東日本「歓楽街・川反の歴史と地酒が楽しめる人気店」",
+          "url": "https://www.jreast.co.jp/akita/meettheheart/column/article88.html"
+        },
+        {
+          "label": "NAVITIME",
+          "url": "https://www.navitime.co.jp/category/0308/05201052000/"
+        }
+      ]
+    },
+    {
+      "id": "8b417a8c-6e58-4c66-aa49-c365c42f4720",
+      "lat": 39.714325,
+      "lng": 140.115799,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-24",
+      "is_published": true,
+      "updated_at": "2026-11-24T14:00:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "や台ずし 秋田川反町",
+      "slug": "yataizushi-kawabata",
+      "category": "izakaya",
+      "description": "名古屋発の寿司居酒屋「や台ずし」の秋田のお店。2025年6月にオープンしました。お寿司と居酒屋メニューを、手ごろな価格で楽しめます。",
+      "address": "秋田県秋田市大町5-2-32",
+      "phone": "018-866-0528",
+      "business_hours": "16:00〜翌1:00",
+      "closed_days": "年中無休（年末年始はお店にお問い合わせください）",
+      "hours": {
+        "0": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "16:00",
+              "close": "01:00"
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "label": "や台ずし 公式",
+          "url": "https://yossix-shop.com/detail/20036/"
+        },
+        {
+          "label": "ぐるなび",
+          "url": "https://r.gnavi.co.jp/3tgxbrrs0000/"
+        },
+        {
+          "label": "あきたタウン情報",
+          "url": "https://web.akita-townjoho.jp/post-category/post-open/20250724-yataizushi/"
+        }
+      ]
+    },
+    {
+      "id": "9d116ace-7c10-42f4-92ba-0770e6da567a",
+      "lat": 39.716991,
+      "lng": 140.116745,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-24",
+      "is_published": true,
+      "updated_at": "2026-11-24T14:00:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "秋田 すし匠",
+      "slug": "sushi-takumi",
+      "category": "dining",
+      "description": "大町3丁目のお寿司屋さん。夜18時から営業しています（最終入店20:30）。",
+      "address": "秋田県秋田市大町3-2-36",
+      "phone": "018-866-0014",
+      "business_hours": "18:00〜22:00（最終入店20:30）",
+      "closed_days": "日曜日、祝日の月曜日",
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:00",
+              "close": "22:00"
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "label": "NAVITIME",
+          "url": "https://www.navitime.co.jp/category/0305001002/05201052000/"
+        }
+      ]
+    },
+    {
+      "id": "9c716e8c-30ef-43ff-b4ca-d7acfa976e32",
+      "lat": 39.715591,
+      "lng": 140.116257,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-24",
+      "is_published": true,
+      "updated_at": "2026-11-24T14:00:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "すし 暁",
+      "slug": "sushi-akatsuki",
+      "category": "dining",
+      "description": "深夜2時半まで開いているお寿司屋さん。飲んだあとの締めの一貫にも。",
+      "address": "秋田県秋田市大町4-2-26",
+      "phone": "018-862-1239",
+      "business_hours": "18:30〜翌2:30",
+      "closed_days": "日曜日・祝日",
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "18:30",
+              "close": "02:30"
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "label": "NAVITIME",
+          "url": "https://www.navitime.co.jp/category/0305001002/05201052000/"
         }
       ]
     },
