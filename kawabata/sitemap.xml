@@ -66,11 +66,6 @@
 <priority>0.7</priority>
 </url>
 <url>
-<loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/articles/kawabata-bonenkai</loc>
-<lastmod>2026-11-24T13:20:26.857Z</lastmod>
-<priority>0.8</priority>
-</url>
-<url>
 <loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/articles/akita-nomi-kawabata</loc>
 <lastmod>2026-11-23T03:00:00Z</lastmod>
 <priority>0.8</priority>
@@ -164,14 +159,6 @@
 <priority>0.5</priority>
 </url>
 <url>
-<loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/tag/bonenkai</loc>
-<priority>0.3</priority>
-</url>
-<url>
-<loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/tag/nijikai</loc>
-<priority>0.3</priority>
-</url>
-<url>
 <loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/tag/beginner</loc>
 <priority>0.3</priority>
 </url>
@@ -197,6 +184,10 @@
 </url>
 <url>
 <loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/tag/t-4ii3b7</loc>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>https://sereness25-cyber.github.io/sereness.main1/kawabata/tag/nijikai</loc>
 <priority>0.3</priority>
 </url>
 <url>
