@@ -1,9 +1,9 @@
 {
   "shops": [
     {
-      "id": "ba01c141-1edd-4510-a32f-baeed8911001",
-      "lat": 39.715462,
-      "lng": 140.116943,
+      "id": "8e29880a-661a-40cb-9b6d-517dcb11bfc2",
+      "lat": 39.713264,
+      "lng": 140.115463,
       "price_range": "",
       "budget_level": null,
       "payment_methods": "",
@@ -28,227 +28,21 @@
       "shop_confirmed": false,
       "specials": [],
       "features": [],
-      "name": "博多長浜屋台ラーメン あぁ博多人情（秋田店）",
-      "slug": "aa-hakata-ninjo-akita",
-      "category": "ramen",
-      "description": "博多長浜の屋台ラーメンのお店。夜7時から深夜3時まで営業しています。",
-      "address": "秋田県秋田市大町4-1-13",
-      "phone": "018-866-0759",
-      "business_hours": "19:00〜翌3:00",
-      "closed_days": "日曜日",
-      "hours": {
-        "0": {
-          "closed": true,
-          "ranges": []
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "03:00"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "NAVITIME",
-          "url": "https://www.navitime.co.jp/category/0304001/05201052000/"
-        }
-      ]
-    },
-    {
-      "id": "5e15e49c-869a-4d1e-9d98-995a664ff55e",
-      "lat": 39.714108,
-      "lng": 140.114487,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-25",
-      "is_published": true,
-      "updated_at": "2026-11-25T03:24:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "小高屋しじみ王（第3NKビル店）",
-      "slug": "kodakaya-shijimiou",
-      "category": "ramen",
-      "description": "夜7時から朝5時まで開いているラーメン店。飲んだあとの締めの一杯に。",
-      "address": "秋田県秋田市大町5-4-19 第3NKビル1F",
-      "phone": "018-893-5677",
-      "business_hours": "19:00〜翌5:00",
-      "closed_days": "日曜日・祝日",
-      "hours": {
-        "0": {
-          "closed": true,
-          "ranges": []
-        },
-        "1": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        },
-        "2": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        },
-        "3": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        },
-        "4": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        },
-        "5": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        },
-        "6": {
-          "closed": false,
-          "ranges": [
-            {
-              "open": "19:00",
-              "close": "05:00"
-            }
-          ]
-        }
-      },
-      "sources": [
-        {
-          "label": "NAVITIME",
-          "url": "https://www.navitime.co.jp/category/0304001/05201052000/"
-        }
-      ]
-    },
-    {
-      "id": "c5f724b9-bf96-4a8f-a8cf-0fb6c5dd1e92",
-      "lat": 39.715462,
-      "lng": 140.116943,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
-      "seats": "",
-      "solo_ok": null,
-      "non_alcohol": null,
-      "beginner_welcome": false,
-      "sns": {
-        "instagram": "",
-        "x": "",
-        "facebook": "",
-        "youtube": ""
-      },
-      "website": null,
-      "image": null,
-      "image_alt": "",
-      "photo_permission": false,
-      "gallery": [],
-      "verified_at": "2026-11-25",
-      "is_published": true,
-      "updated_at": "2026-11-25T03:24:00Z",
-      "shop_confirmed": false,
-      "specials": [],
-      "features": [],
-      "name": "STEPS BAR",
-      "slug": "steps-bar",
-      "category": "bar",
-      "description": "深夜まで開いているダイニングバー。飲んだあとの締めの一杯にも。",
-      "address": "秋田県秋田市大町4-1-6 コンコルドビル2F",
-      "phone": "018-896-7557",
-      "business_hours": "19:00〜翌3:00（木・金・土は翌4:00まで）",
-      "closed_days": "なし",
+      "name": "炭火焼 志庵",
+      "slug": "sumibiyaki-shian",
+      "category": "izakaya",
+      "description": "炭火焼のお店。夕方6時から朝6時まで開いていて、二次会や、遅い時間の食事にも。",
+      "address": "秋田県秋田市大町5-3-13 加納ビル1F",
+      "phone": "018-863-7366",
+      "business_hours": "18:00〜翌6:00（L.O. 翌5:30）",
+      "closed_days": "年中無休",
       "hours": {
         "0": {
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "03:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -256,8 +50,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "03:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -265,8 +59,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "03:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -274,8 +68,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "03:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -283,8 +77,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "04:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -292,8 +86,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "04:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         },
@@ -301,24 +95,24 @@
           "closed": false,
           "ranges": [
             {
-              "open": "19:00",
-              "close": "04:00"
+              "open": "18:00",
+              "close": "06:00"
             }
           ]
         }
       },
       "sources": [
-        {
-          "label": "食べログ",
-          "url": "https://tabelog.com/akita/A0501/A050101/5002660/"
-        },
         {
           "label": "ぐるなび",
-          "url": "https://r.gnavi.co.jp/rmt9bf1g0000/"
+          "url": "https://r.gnavi.co.jp/h4fa99r30000/"
         },
         {
-          "label": "Retty",
-          "url": "https://retty.me/area/PRE05/ARE160/SUB16001/100000349146/"
+          "label": "Yahoo!マップ",
+          "url": "https://map.yahoo.co.jp/v3/place/vQXOCXDksDM"
+        },
+        {
+          "label": "じゃらん",
+          "url": "https://www.jalan.net/gourmet/grm_foomoojH000211122/"
         }
       ]
     },
@@ -439,9 +233,9 @@
       ]
     },
     {
-      "id": "8e29880a-661a-40cb-9b6d-517dcb11bfc2",
-      "lat": 39.713264,
-      "lng": 140.115463,
+      "id": "c5f724b9-bf96-4a8f-a8cf-0fb6c5dd1e92",
+      "lat": 39.715462,
+      "lng": 140.116943,
       "price_range": "",
       "budget_level": null,
       "payment_methods": "",
@@ -466,21 +260,21 @@
       "shop_confirmed": false,
       "specials": [],
       "features": [],
-      "name": "炭火焼 志庵",
-      "slug": "sumibiyaki-shian",
-      "category": "izakaya",
-      "description": "炭火焼のお店。夕方6時から朝6時まで開いていて、二次会や、遅い時間の食事にも。",
-      "address": "秋田県秋田市大町5-3-13 加納ビル1F",
-      "phone": "018-863-7366",
-      "business_hours": "18:00〜翌6:00（L.O. 翌5:30）",
-      "closed_days": "年中無休",
+      "name": "STEPS BAR",
+      "slug": "steps-bar",
+      "category": "bar",
+      "description": "深夜まで開いているダイニングバー。飲んだあとの締めの一杯にも。",
+      "address": "秋田県秋田市大町4-1-6 コンコルドビル2F",
+      "phone": "018-896-7557",
+      "business_hours": "19:00〜翌3:00（木・金・土は翌4:00まで）",
+      "closed_days": "なし",
       "hours": {
         "0": {
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "03:00"
             }
           ]
         },
@@ -488,8 +282,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "03:00"
             }
           ]
         },
@@ -497,8 +291,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "03:00"
             }
           ]
         },
@@ -506,8 +300,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "03:00"
             }
           ]
         },
@@ -515,8 +309,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "04:00"
             }
           ]
         },
@@ -524,8 +318,8 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "04:00"
             }
           ]
         },
@@ -533,24 +327,230 @@
           "closed": false,
           "ranges": [
             {
-              "open": "18:00",
-              "close": "06:00"
+              "open": "19:00",
+              "close": "04:00"
             }
           ]
         }
       },
       "sources": [
         {
+          "label": "食べログ",
+          "url": "https://tabelog.com/akita/A0501/A050101/5002660/"
+        },
+        {
           "label": "ぐるなび",
-          "url": "https://r.gnavi.co.jp/h4fa99r30000/"
+          "url": "https://r.gnavi.co.jp/rmt9bf1g0000/"
         },
         {
-          "label": "Yahoo!マップ",
-          "url": "https://map.yahoo.co.jp/v3/place/vQXOCXDksDM"
+          "label": "Retty",
+          "url": "https://retty.me/area/PRE05/ARE160/SUB16001/100000349146/"
+        }
+      ]
+    },
+    {
+      "id": "5e15e49c-869a-4d1e-9d98-995a664ff55e",
+      "lat": 39.714108,
+      "lng": 140.114487,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-25",
+      "is_published": true,
+      "updated_at": "2026-11-25T03:24:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "小高屋しじみ王（第3NKビル店）",
+      "slug": "kodakaya-shijimiou",
+      "category": "ramen",
+      "description": "夜7時から朝5時まで開いているラーメン店。飲んだあとの締めの一杯に。",
+      "address": "秋田県秋田市大町5-4-19 第3NKビル1F",
+      "phone": "018-893-5677",
+      "business_hours": "19:00〜翌5:00",
+      "closed_days": "日曜日・祝日",
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
         },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "05:00"
+            }
+          ]
+        }
+      },
+      "sources": [
         {
-          "label": "じゃらん",
-          "url": "https://www.jalan.net/gourmet/grm_foomoojH000211122/"
+          "label": "NAVITIME",
+          "url": "https://www.navitime.co.jp/category/0304001/05201052000/"
+        }
+      ]
+    },
+    {
+      "id": "ba01c141-1edd-4510-a32f-baeed8911001",
+      "lat": 39.715462,
+      "lng": 140.116943,
+      "price_range": "",
+      "budget_level": null,
+      "payment_methods": "",
+      "seats": "",
+      "solo_ok": null,
+      "non_alcohol": null,
+      "beginner_welcome": false,
+      "sns": {
+        "instagram": "",
+        "x": "",
+        "facebook": "",
+        "youtube": ""
+      },
+      "website": null,
+      "image": null,
+      "image_alt": "",
+      "photo_permission": false,
+      "gallery": [],
+      "verified_at": "2026-11-25",
+      "is_published": true,
+      "updated_at": "2026-11-25T03:24:00Z",
+      "shop_confirmed": false,
+      "specials": [],
+      "features": [],
+      "name": "博多長浜屋台ラーメン あぁ博多人情（秋田店）",
+      "slug": "aa-hakata-ninjo-akita",
+      "category": "ramen",
+      "description": "博多長浜の屋台ラーメンのお店。夜7時から深夜3時まで営業しています。",
+      "address": "秋田県秋田市大町4-1-13",
+      "phone": "018-866-0759",
+      "business_hours": "19:00〜翌3:00",
+      "closed_days": "日曜日",
+      "hours": {
+        "0": {
+          "closed": true,
+          "ranges": []
+        },
+        "1": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "2": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "3": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "4": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "5": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        },
+        "6": {
+          "closed": false,
+          "ranges": [
+            {
+              "open": "19:00",
+              "close": "03:00"
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "label": "NAVITIME",
+          "url": "https://www.navitime.co.jp/category/0304001/05201052000/"
         }
       ]
     },
@@ -1153,7 +1153,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-13",
       "is_published": true,
-      "updated_at": "2026-11-22T10:46:10.544Z",
+      "updated_at": "2026-11-25T18:14:38.778Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -1256,7 +1256,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-12",
       "is_published": true,
-      "updated_at": "2026-11-22T10:46:57.742Z",
+      "updated_at": "2026-11-25T18:14:45.687Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -1357,7 +1357,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-12",
       "is_published": true,
-      "updated_at": "2026-11-22T10:47:33.521Z",
+      "updated_at": "2026-11-25T18:14:53.263Z",
       "sources": [],
       "shop_confirmed": false,
       "gallery": [],
@@ -1457,7 +1457,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-16T02:26:28.041Z",
+      "updated_at": "2026-11-25T18:15:00.853Z",
       "sources": [
         {
           "label": "Café & Bar Sereness 公式サイト（運営元）",
@@ -1634,7 +1634,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-22T10:48:53.347Z",
+      "updated_at": "2026-11-25T18:15:08.623Z",
       "sources": [
         {
           "label": "秋田川反漁屋酒場 公式ページ",
@@ -1879,7 +1879,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-22T10:49:36.726Z",
+      "updated_at": "2026-11-25T18:15:15.998Z",
       "sources": [
         {
           "label": "BAR ル・ヴェール 公式サイト",
@@ -1988,7 +1988,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-22T10:50:08.385Z",
+      "updated_at": "2026-11-25T18:15:25.010Z",
       "sources": [
         {
           "label": "BARアラジン 公式サイト",
@@ -2104,7 +2104,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-22T10:51:37.823Z",
+      "updated_at": "2026-11-25T18:14:23.261Z",
       "sources": [
         {
           "label": "一の酉 秋田川反店 公式ページ",
@@ -2218,7 +2218,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-09",
       "is_published": true,
-      "updated_at": "2026-11-22T10:52:17.145Z",
+      "updated_at": "2026-11-25T18:15:32.381Z",
       "sources": [
         {
           "label": "NAVITIME（秋田市大町の居酒屋一覧）",
@@ -2326,7 +2326,7 @@
       "photo_permission": true,
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-22T10:53:14.277Z",
+      "updated_at": "2026-11-25T18:15:39.856Z",
       "sources": [
         {
           "label": "半兵ヱ 公式サイト（店舗案内）",
