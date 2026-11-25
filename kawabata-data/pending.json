@@ -333,7 +333,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T08:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -431,7 +431,7 @@
       "lng": null,
       "price_range": "",
       "budget_level": null,
-      "payment_methods": "クレジットカード、電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）、PayPay",
+      "payment_methods": "クレジットカード／電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）／QRコード決済（PayPay）",
       "seats": "",
       "solo_ok": null,
       "non_alcohol": null,
@@ -449,7 +449,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -565,7 +565,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T08:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -681,7 +681,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T08:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -784,7 +784,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T08:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -1116,7 +1116,7 @@
       "lng": null,
       "price_range": "",
       "budget_level": null,
-      "payment_methods": "クレジットカード（Visa・Mastercard・AMEX・Diners・JCB・銀聯）、電子マネー、QRコード決済",
+      "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners・銀聯）／電子マネー／QRコード決済",
       "seats": "88席（カウンター10・テーブル27・掘りごたつ51）",
       "solo_ok": null,
       "non_alcohol": null,
@@ -1134,7 +1134,7 @@
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -1490,7 +1490,7 @@
     {
       "key": "no-snack-2026-11-25",
       "file": "articles",
-      "updated_at": "2026-11-25T06:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "replace": [
         [
           "居酒屋、BAR、スナックが歩ける範囲に集まっています",
@@ -1562,7 +1562,7 @@
       "key": "bar-guide-2026-11-25",
       "file": "articles",
       "id": "draft-bar-and-snack",
-      "updated_at": "2026-11-25T06:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "title": "はじめてのBAR ― 川反でBARを楽しむコツ",
         "slug": "bar-guide",
@@ -1589,7 +1589,7 @@
       "key": "official-bar-aladdin-2026-11-25",
       "file": "shops",
       "id": "shop-bar-aladdin",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "20:00〜翌5:00",
         "closed_days": "無休",
@@ -1678,13 +1678,13 @@
       "key": "official-toriichizu-akita-omachi-2026-11-25",
       "file": "shops",
       "id": "6b78aa61-ffea-4c7e-a57a-6cc44631edb1",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "月〜金 17:00〜翌5:00／土・日 13:00〜翌5:00",
         "closed_days": "なし",
         "website": "https://toriichizu.net/shoplist/3741/",
         "address": "秋田県秋田市大町4-2-19 七宝第二ビル1F",
-        "payment_methods": "クレジットカード、電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）、PayPay",
+        "payment_methods": "クレジットカード／電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）／QRコード決済（PayPay）",
         "hours": {
           "0": {
             "closed": false,
@@ -1757,12 +1757,12 @@
       "key": "official-yataizushi-kawabata-2026-11-25",
       "file": "shops",
       "id": "8b417a8c-6e58-4c66-aa49-c365c42f4720",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "16:00〜翌1:00",
         "website": "https://yossix-shop.com/detail/20036/",
         "seats": "88席（カウンター10・テーブル27・掘りごたつ51）",
-        "payment_methods": "クレジットカード（Visa・Mastercard・AMEX・Diners・JCB・銀聯）、電子マネー、QRコード決済",
+        "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners・銀聯）／電子マネー／QRコード決済",
         "verified_at": "2026-11-25"
       }
     },
@@ -1770,7 +1770,7 @@
       "key": "official-kawabata-isariya-sakaba-2026-11-25",
       "file": "shops",
       "id": "shop-kawabata-isariya-sakaba",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "16:45〜24:00（L.O. 23:30、ドリンクL.O. 23:45）※12月31日は22:00閉店",
         "closed_days": "なし",
@@ -1875,13 +1875,13 @@
       "key": "official-ichinotori-kawabata-2026-11-25",
       "file": "shops",
       "id": "shop-ichinotori-kawabata",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "月〜土・祝前日 17:00〜24:00（料理L.O. 23:00、ドリンクL.O. 23:30）／日・祝 17:00〜23:00（料理L.O. 22:00、ドリンクL.O. 22:30）",
         "closed_days": "なし",
         "website": "https://ichinotori-akita.owst.jp/",
         "seats": "86席（半個室2部屋・5名用と8名用）",
-        "payment_methods": "クレジットカード（VISA・Mastercard・AMEX・Diners・JCB）",
+        "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners）／電子マネー（iD）",
         "hours": {
           "0": {
             "closed": false,
@@ -1964,7 +1964,7 @@
       "key": "official-hanbee-kawabata-2026-11-25",
       "file": "shops",
       "id": "shop-hanbee-kawabata",
-      "updated_at": "2026-11-25T10:00:00Z",
+      "updated_at": "2026-11-25T03:24:00Z",
       "set": {
         "business_hours": "毎日 17:00〜24:00",
         "closed_days": "年中無休",
@@ -1978,6 +1978,174 @@
           }
         ],
         "verified_at": "2026-11-25"
+      }
+    },
+    {
+      "key": "payment-toriichizu-akita-omachi-2026-11-25",
+      "file": "shops",
+      "id": "6b78aa61-ffea-4c7e-a57a-6cc44631edb1",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード、電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）、PayPay"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード／電子マネー（iD・QUICPay・交通系IC・楽天Edy・nanaco・WAON）／QRコード決済（PayPay）"
+      }
+    },
+    {
+      "key": "payment-yataizushi-kawabata-2026-11-25",
+      "file": "shops",
+      "id": "8b417a8c-6e58-4c66-aa49-c365c42f4720",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード（Visa・Mastercard・AMEX・Diners・JCB・銀聯）、電子マネー、QRコード決済"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners・銀聯）／電子マネー／QRコード決済"
+      }
+    },
+    {
+      "key": "payment-post-mwe8crbn-2026-11-25",
+      "file": "shops",
+      "id": "d8b53dcf-bd65-4057-93e9-af903bc4ce09",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金/クレジット/電子マネー"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード／電子マネー"
+      }
+    },
+    {
+      "key": "payment-stand-up-boss-2026-11-25",
+      "file": "shops",
+      "id": "e12d8217-f193-4332-aafa-486ddd3d9c1c",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード/電子決済"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード／電子決済"
+      }
+    },
+    {
+      "key": "payment-1980-2026-11-25",
+      "file": "shops",
+      "id": "c421e849-e21e-482c-a323-9a5a99f08792",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金/クレジットカード"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード"
+      }
+    },
+    {
+      "key": "payment-cafe-bar-sereness-2026-11-25",
+      "file": "shops",
+      "id": "shop-cafe-bar-sereness",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金・クレジットカード・バーコード決済"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード／QRコード決済"
+      }
+    },
+    {
+      "key": "payment-kawabata-isariya-sakaba-2026-11-25",
+      "file": "shops",
+      "id": "shop-kawabata-isariya-sakaba",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners・Discover・銀聯）／電子マネー（交通系IC・iD・QUICPay・楽天Edy・WAON・nanaco）／QRコード決済（PayPay・d払い・au PAY・楽天ペイ・メルペイ・Alipay・WeChat Pay）"
+      }
+    },
+    {
+      "key": "payment-bar-le-verre-2026-11-25",
+      "file": "shops",
+      "id": "shop-bar-le-verre",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金/クレジットカード"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード（JCB・AMEX・Diners）"
+      }
+    },
+    {
+      "key": "payment-bar-aladdin-2026-11-25",
+      "file": "shops",
+      "id": "shop-bar-aladdin",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金/カード/QR決済/電子マネー"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード／電子マネー／QRコード決済"
+      }
+    },
+    {
+      "key": "payment-ichinotori-kawabata-2026-11-25",
+      "file": "shops",
+      "id": "shop-ichinotori-kawabata",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード（VISA・Mastercard・AMEX・Diners・JCB）"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード（VISA・Mastercard・JCB・AMEX・Diners）／電子マネー（iD）"
+      }
+    },
+    {
+      "key": "payment-irori-ya-kawabata-2026-11-25",
+      "file": "shops",
+      "id": "shop-irori-ya-kawabata",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "現金/クレジットカード/電子マネー"
+        ]
+      },
+      "set": {
+        "payment_methods": "現金／クレジットカード／電子マネー"
+      }
+    },
+    {
+      "key": "payment-hanbee-kawabata-2026-11-25",
+      "file": "shops",
+      "id": "shop-hanbee-kawabata",
+      "updated_at": "2026-11-25T03:24:00Z",
+      "when": {
+        "payment_methods": [
+          "クレジットカード/QRコード"
+        ]
+      },
+      "set": {
+        "payment_methods": "クレジットカード／QRコード決済"
       }
     }
   ]

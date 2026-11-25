@@ -67,7 +67,7 @@ export default async function ShopPage({ params }: Props) {
     ["営業時間", shop.business_hours || "—"],
     ["定休日", shop.closed_days || "—"],
     ["料金", shop.price_range || (shop.budget_level ? BUDGET_LABELS[shop.budget_level] : "—")],
-    ["支払方法", shop.payment_methods || "—"],
+    ["支払方法", shop.payment_methods || "お店にお問い合わせください"],
     ["席数", shop.seats || "—"],
   ];
 

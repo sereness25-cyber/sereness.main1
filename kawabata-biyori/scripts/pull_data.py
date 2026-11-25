@@ -118,7 +118,10 @@ def main():
         for x in payload.get(patch.get("file"), []) or []:
             if not isinstance(x, dict) or (patch.get("id") and x.get("id") != patch["id"]):
                 continue
-            if patch.get("set") and str(x.get("updated_at") or "") < str(patch.get("updated_at") or ""):
+            if patch.get("when"):
+                if all(x.get(f) in vals for f, vals in patch["when"].items()):
+                    x.update(patch.get("set") or {})
+            elif patch.get("set") and str(x.get("updated_at") or "") < str(patch.get("updated_at") or ""):
                 x.update(patch["set"])
             for old, new in patch.get("replace") or []:
                 for f in TEXT_FIELDS:

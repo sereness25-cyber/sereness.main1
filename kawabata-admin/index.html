@@ -335,7 +335,8 @@ async function applyPending() {
       if (pt.id && x.id !== pt.id) continue;
       const y = JSON.parse(JSON.stringify(x));
       let changed = false;
-      if (pt.set && String(x.updated_at || "") < String(pt.updated_at || "")) { Object.assign(y, pt.set); changed = true; }
+      if (pt.when) { if (Object.entries(pt.when).every(([f, vals]) => vals.includes(x[f])) && Object.entries(pt.set || {}).some(([f, val]) => JSON.stringify(x[f]) !== JSON.stringify(val))) { Object.assign(y, pt.set); changed = true; } }
+      else if (pt.set && String(x.updated_at || "") < String(pt.updated_at || "")) { Object.assign(y, pt.set); changed = true; }
       for (const [o, n] of pt.replace || []) for (const f of FIELDS) if (typeof y[f] === "string" && y[f].includes(o)) { y[f] = y[f].split(o).join(n); changed = true; }
       if (!changed) continue;
       y.updated_at = nowIso();
@@ -831,7 +832,7 @@ views["shops:edit"] = async (el, id) => {
         <section class="panel stack"><h2>営業・料金</h2>
           <div class="grid2">${t("s-hours", "営業時間", s.business_hours)}${t("s-closed", "定休日", s.closed_days)}${t("s-price", "料金", s.price_range, "例：チャージ500円＋ドリンク、セット3,000円/90分")}
             <label class="f"><span>予算の目安（検索用）</span><select id="s-budget">${BUDGETS.map(([v, l]) => `<option value="${v}" ${String(s.budget_level ?? "") === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
-            ${t("s-pay", "支払方法", s.payment_methods)}${t("s-seats", "席数", s.seats)}
+            ${t("s-pay", "支払方法", s.payment_methods, "例：現金／クレジットカード（VISA・JCB）／電子マネー（iD）／QRコード決済（PayPay）")}${t("s-seats", "席数", s.seats)}
             <label class="f"><span>一人での利用</span>${triSel("s-solo", s.solo_ok, "OK", "グループ向け")}</label>
             <label class="f"><span>ノンアル対応</span>${triSel("s-nonalc", s.non_alcohol, "あり", "なし")}</label></div>
         </section>
