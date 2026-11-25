@@ -339,12 +339,12 @@ async function applyPending() {
       for (const [o, n] of pt.replace || []) for (const f of FIELDS) if (typeof y[f] === "string" && y[f].includes(o)) { y[f] = y[f].split(o).join(n); changed = true; }
       if (!changed) continue;
       y.updated_at = nowIso();
-      try { status("記事を直しています…"); await saveItem(pt.file + ".json", pt.file, y, ""); fixed++; } catch { ok = false; }
+      try { status("編集部からの更新を入れています…"); await saveItem(pt.file + ".json", pt.file, y, ""); fixed++; } catch { ok = false; }
     }
     if (ok) appliedPending.push(mark);
   }
   try { localStorage.setItem("kb-pending-applied", JSON.stringify(appliedPending.slice(-200))); } catch {}
-  if (fixed) status(`${fixed}件の記事を直しました。`, "ok", 4000);
+  if (fixed) status(`${fixed}件の記事・お店を更新しました。`, "ok", 4000);
 }
 
 /* Apps Script（保存先）が古いままだと、写真の差し替えなどが保存されない */
@@ -779,7 +779,7 @@ views.shops = async (el) => {
     <div class="row between"><div><h1>お店</h1><p class="lead">お店に確認できた内容だけを載せましょう。確認前の情報は「公開情報をもとに掲載」と表示されます。</p></div>
     <button class="btn primary" type="button" data-new="shop">お店を追加</button></div>
     <div class="table-wrap"><table class="list"><thead><tr><th>店名</th><th>業種</th><th>公開</th><th>お店に確認</th><th>確認日</th></tr></thead><tbody>
-    ${shops.map((s) => `<tr><td><button class="linkbtn" data-shop="${esc(s.id)}">${esc(s.name)}</button><span class="sub">${esc(s.address)}</span></td><td>${esc(cat[s.category] || "")}</td><td>${s.is_published ? "公開" : "非公開"}</td><td>${s.shop_confirmed ? '<span class="pill published">確認済み</span>' : '<span class="pill draft">未確認</span>'}</td><td class="sub">${esc(s.verified_at || "—")}</td></tr>`).join("") || '<tr><td colspan="5" class="sub">まだお店がありません。</td></tr>'}
+    ${shops.map((s) => `<tr><td><button class="linkbtn" data-shop="${esc(s.id)}">${esc(s.name)}</button><span class="sub">${esc(s.address)}</span></td><td>${esc(cat[s.category] || "")}</td><td>${s.is_published ? '<span class="pill published">公開中</span>' : '<span class="pill draft">下書き</span>'}</td><td>${s.shop_confirmed ? '<span class="pill published">確認済み</span>' : '<span class="pill draft">未確認</span>'}</td><td class="sub">${esc(s.verified_at || "—")}</td></tr>`).join("") || '<tr><td colspan="5" class="sub">まだお店がありません。</td></tr>'}
     </tbody></table></div>`;
   bindCommon(el);
   $$("[data-shop]", el).forEach((b) => b.addEventListener("click", () => go("shops:edit", b.dataset.shop)));
@@ -865,11 +865,13 @@ views["shops:edit"] = async (el, id) => {
       </div>
       <aside class="side stack">
         <div class="panel stack">
-          <label class="f"><span>情報の確認日</span><input type="date" id="s-verified" value="${esc(s.verified_at || "")}"><span class="hint">公開には必須です</span></label>
+          <label class="f"><span>情報の確認日</span><input type="date" id="s-verified" value="${esc(s.verified_at || "")}"><span class="hint">公開には必須です（下書きなら空でも大丈夫）</span></label>
           <label class="check"><input type="checkbox" id="s-confirmed" ${s.shop_confirmed ? "checked" : ""}><span>掲載内容をお店に確認済み（外すと「公開情報をもとに掲載」と表示）</span></label>
-          <label class="check"><input type="checkbox" id="s-pub" ${s.is_published ? "checked" : ""}><span>サイトに公開する</span></label>
+          <p class="sub">いまの状態：${src && s.is_published ? '<span class="pill published">公開中</span>' : '<span class="pill draft">下書き</span>'}</p>
           <div id="s-msg"></div>
-          <button class="btn primary" type="button" id="s-save">保存</button>
+          <button class="btn primary" type="button" id="s-save">${src && s.is_published ? "保存（公開のまま）" : "公開する"}</button>
+          <button class="btn" type="button" id="s-draft">${src && s.is_published ? "非公開にして下書きへ" : "下書き保存"}</button>
+          <p class="sub">下書きは公開ページに出ません。あとで「公開する」を押すと載ります。</p>
         </div>
         <div class="panel stack"><h2 style="margin:0">初心者歓迎マーク</h2>
           <p class="hint" style="margin:0">次の4点をすべて、お店に確認できた場合だけ付けてください。</p>
@@ -974,12 +976,12 @@ views["shops:edit"] = async (el, id) => {
     } catch (e) { status("発行できませんでした：" + e.message, "err", 8000); }
     finally { $("#s-key").disabled = false; }
   };
-  $("#s-save").onclick = async () => {
+  const saveShop = async (pub) => {
     const err = (m) => ($("#s-msg").innerHTML = `<p class="note err">${esc(m)}</p>`);
     $("#s-msg").innerHTML = "";
     const name = v("s-name");
     if (!name) return err("店名を入力してください。");
-    const pub = $("#s-pub").checked, verified = v("s-verified") || null;
+    const verified = v("s-verified") || null;
     if (pub && !verified) return err("公開するには情報の確認日を入力してください。");
     if ((s.image || s.gallery.length) && !$("#s-perm").checked) return err("写真を載せるときは、「お店から写真を使う許可を得た」にチェックを入れてください。");
     if ($("#s-bw").checked && !$$(".bw", el).every((x) => x.checked)) return err("初心者歓迎マークは、4項目をすべて確認してから付けてください。");
@@ -1014,10 +1016,15 @@ views["shops:edit"] = async (el, id) => {
       hours: hoursEd ? hoursEd.get() : s.hours || null, specials: spEd ? spEd.get() : s.specials || [],
       features: $$(".s-feat", el).filter((x) => x.checked).map((x) => x.value), lat, lng,
     };
-    $("#s-save").disabled = true; status("保存しています…");
-    try { await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false; status("保存しました。10〜15分ほどで公開ページに反映されます。", "ok", 5000); go("shops:edit", item.id); }
-    catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#s-save").disabled = false; }
+    $("#s-save").disabled = $("#s-draft").disabled = true; status("保存しています…");
+    try {
+      await saveItem("shops.json", "shops", item, `お店を保存: ${name}`); dirty = false;
+      status(pub ? "保存しました。10〜15分ほどで公開ページに反映されます。" : "下書きとして保存しました（公開ページには出ません）。", "ok", 5000);
+      go("shops:edit", item.id);
+    } catch (e) { status("保存できませんでした：" + e.message, "err", 8000); $("#s-save").disabled = $("#s-draft").disabled = false; }
   };
+  $("#s-save").onclick = () => saveShop(true);
+  $("#s-draft").onclick = () => saveShop(false);
   if ($("#s-del")) $("#s-del").onclick = async () => {
     if (!confirm("このお店を削除します。よろしいですか？")) return;
     try { await saveItem("shops.json", "shops", s, `お店を削除: ${s.name}`, { remove: true }); dirty = false; status("削除しました。", "ok", 4000); go("shops"); }
