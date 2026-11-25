@@ -10,7 +10,7 @@ const shopInput = z.object({
   id: z.string().uuid().optional(),
   name: z.string().trim().min(1, "店舗名を入力してください。").max(100),
   slug: z.string().trim().max(80),
-  category: z.enum(["izakaya", "bar", "snack", "dining", "karaoke", "other"]),
+  category: z.enum(["izakaya", "bar", "snack", "dining", "karaoke", "other", "ramen"]),
   description: z.string().trim().max(3000),
   address: opt,
   lat: z.number().min(-90).max(90).nullable(),

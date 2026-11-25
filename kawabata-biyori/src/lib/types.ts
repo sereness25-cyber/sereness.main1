@@ -36,7 +36,7 @@ export type Article = {
   is_sample?: boolean;
 };
 
-export type ShopCategory = "izakaya" | "bar" | "snack" | "dining" | "karaoke" | "other";
+export type ShopCategory = "izakaya" | "bar" | "snack" | "dining" | "karaoke" | "other" | "ramen";
 
 export type ShopPhoto = { url: string; caption: string };
 

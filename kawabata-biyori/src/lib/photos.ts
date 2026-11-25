@@ -49,7 +49,7 @@ const BY_CATEGORY: Record<string, PhotoKey> = {
   future: "street",
 };
 
-const BY_SHOP: Record<string, PhotoKey> = { izakaya: "izakaya", bar: "bar", dining: "beef", karaoke: "snack", other: "whisky" };
+const BY_SHOP: Record<string, PhotoKey> = { izakaya: "izakaya", bar: "bar", dining: "beef", karaoke: "snack", ramen: "street", other: "whisky" };
 
 export const photoForCategory = (slug?: string): PhotoKey => (slug && BY_CATEGORY[slug]) || "street";
 export const photoForShop = (category: string): PhotoKey => BY_SHOP[category] ?? "whisky";

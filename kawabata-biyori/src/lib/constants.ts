@@ -21,6 +21,7 @@ export const SHOP_CATEGORIES: { value: ShopCategory; label: string; en: string }
   { value: "bar", label: "BAR", en: "BAR" },
   { value: "dining", label: "ダイニング", en: "DINING" },
   { value: "karaoke", label: "カラオケ", en: "KARAOKE" },
+  { value: "ramen", label: "ラーメン", en: "RAMEN" },
   { value: "other", label: "その他", en: "OTHERS" },
 ];
 

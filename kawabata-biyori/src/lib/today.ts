@@ -8,6 +8,7 @@ const POOL: Record<string, PhotoKey[]> = {
   izakaya: ["izakaya", "beef", "street"],
   dining: ["beef", "izakaya"],
   karaoke: ["snack", "cocktail"],
+  ramen: ["street", "river"],
 };
 export type TodayShop = {
   slug: string;
