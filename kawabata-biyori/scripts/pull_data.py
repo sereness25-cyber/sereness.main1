@@ -110,6 +110,21 @@ def main():
             elif str(item.get("updated_at") or "") > str(payload[k][idx].get("updated_at") or ""):
                 payload[k][idx] = item
 
+    # 文の置き換え・項目の書き換え（pending.json の patches）。ドライブの最新の記事に当てる
+    #  - replace は毎回当てる（同じ文がなければ何もしない）
+    #  - set は、ドライブ側がそれより前に更新されたものだけに当てる（あとで管理画面で直した内容は上書きしない）
+    TEXT_FIELDS = ("title", "excerpt", "content", "seo_title", "seo_description")
+    for patch in pending.get("patches") or []:
+        for x in payload.get(patch.get("file"), []) or []:
+            if not isinstance(x, dict) or (patch.get("id") and x.get("id") != patch["id"]):
+                continue
+            if patch.get("set") and str(x.get("updated_at") or "") < str(patch.get("updated_at") or ""):
+                x.update(patch["set"])
+            for old, new in patch.get("replace") or []:
+                for f in TEXT_FIELDS:
+                    if isinstance(x.get(f), str):
+                        x[f] = x[f].replace(old, new)
+
     text = json.dumps(payload, ensure_ascii=False)
     img_dir = os.path.join(data_dir, "images", "drive")
     for file_id in sorted(set(DRIVE_URL.findall(text))):

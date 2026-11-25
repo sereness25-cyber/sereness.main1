@@ -176,7 +176,7 @@ const API = "https://script.google.com/macros/s/AKfycbwOwYiigmue3tHoj_PnGPtxaWkt
 const SITE = "https://sereness25-cyber.github.io/sereness.main1/kawabata";
 const SHOP_FEATURES = [["karaoke", "カラオケあり"], ["darts", "ダーツあり"], ["card", "カード払い可"], ["smoke_free", "禁煙"]];
 const SERENESS = "cafe-bar-sereness";
-const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["snack","スナック"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
+const SHOP_CATS = [["izakaya","居酒屋"],["bar","BAR"],["dining","ダイニング"],["karaoke","カラオケ"],["other","その他"]];
 const BUDGETS = [["","未設定"],["1","〜3,000円"],["2","3,000〜5,000円"],["3","5,000〜8,000円"],["4","8,000円〜"]];
 const STATUS = { draft: "下書き", published: "公開", scheduled: "予約公開", private: "非公開" };
 
@@ -324,6 +324,27 @@ async function applyPending() {
   }
   try { localStorage.setItem("kb-pending-applied", JSON.stringify(appliedPending.slice(-200))); } catch {}
   if (todo.length) status(`${todo.length}件の新しい記事などを入れました。`, "ok", 4000);
+  // 文の置き換え・項目の書き換え（編集部から。1回だけ）
+  const FIELDS = ["title", "excerpt", "content", "seo_title", "seo_description"];
+  let fixed = 0;
+  for (const pt of pending.patches || []) {
+    const mark = "patch:" + pt.key;
+    if (appliedPending.includes(mark)) continue;
+    let ok = true;
+    for (const x of [...(cache[pt.file] || [])]) {
+      if (pt.id && x.id !== pt.id) continue;
+      const y = JSON.parse(JSON.stringify(x));
+      let changed = false;
+      if (pt.set && String(x.updated_at || "") < String(pt.updated_at || "")) { Object.assign(y, pt.set); changed = true; }
+      for (const [o, n] of pt.replace || []) for (const f of FIELDS) if (typeof y[f] === "string" && y[f].includes(o)) { y[f] = y[f].split(o).join(n); changed = true; }
+      if (!changed) continue;
+      y.updated_at = nowIso();
+      try { status("記事を直しています…"); await saveItem(pt.file + ".json", pt.file, y, ""); fixed++; } catch { ok = false; }
+    }
+    if (ok) appliedPending.push(mark);
+  }
+  try { localStorage.setItem("kb-pending-applied", JSON.stringify(appliedPending.slice(-200))); } catch {}
+  if (fixed) status(`${fixed}件の記事を直しました。`, "ok", 4000);
 }
 
 /* Apps Script（保存先）が古いままだと、写真の差し替えなどが保存されない */
@@ -1191,7 +1212,7 @@ const STOCK = [
   ["river", "川沿いの夜景", "「川反の歴史」「川反ニュース」の記事"],
   ["izakaya", "居酒屋のカウンター", "居酒屋のお店"],
   ["bar", "BAR", "BARのお店"],
-  ["snack", "スナック", "スナック・カラオケのお店"],
+  ["snack", "カラオケの店内", "カラオケのお店"],
   ["whisky", "ウイスキー", "その他のお店"],
 ];
 views.photos = async (el) => {

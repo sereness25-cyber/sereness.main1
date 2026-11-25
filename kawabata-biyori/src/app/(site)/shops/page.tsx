@@ -8,8 +8,8 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { IS_STATIC, shopText } from "@/lib/static-site";
 
 export const metadata: Metadata = {
-  title: "川反の飲み屋を探す｜秋田市の居酒屋・BAR・スナック",
-  description: "秋田市・川反（かわばた）の飲み屋を探すなら。居酒屋、BAR、スナック、ダイニングを、予算や「一人で飲める」「ノンアル対応」で探せます。",
+  title: "川反の飲み屋を探す｜秋田市の居酒屋・BAR",
+  description: "秋田市・川反（かわばた）の飲み屋を探すなら。居酒屋、BAR、ダイニングを、予算や「一人で飲める」「ノンアル対応」で探せます。",
   alternates: { canonical: "/shops" },
 };
 

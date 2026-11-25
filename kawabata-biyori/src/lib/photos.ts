@@ -17,7 +17,7 @@ const DEFAULT_PHOTOS = {
   portrait: { src: "/images/photos/portrait.webp", alt: "カウンターで笑う女性（イメージ）" },
   izakaya: { src: "/images/photos/izakaya.webp", alt: "居酒屋のカウンター（イメージ）" },
   bar: { src: "/images/photos/bar.webp", alt: "BARのカクテル（イメージ）" },
-  snack: { src: "/images/photos/snack.webp", alt: "スナックの店内（イメージ）" },
+  snack: { src: "/images/photos/snack.webp", alt: "カラオケのあるお店の店内（イメージ）" },
   whisky: { src: "/images/photos/whisky.webp", alt: "ウイスキーのグラス（イメージ）" },
 } as const;
 export type PhotoKey = keyof typeof DEFAULT_PHOTOS;
@@ -49,7 +49,7 @@ const BY_CATEGORY: Record<string, PhotoKey> = {
   future: "street",
 };
 
-const BY_SHOP: Record<string, PhotoKey> = { izakaya: "izakaya", bar: "bar", snack: "snack", dining: "beef", karaoke: "snack", other: "whisky" };
+const BY_SHOP: Record<string, PhotoKey> = { izakaya: "izakaya", bar: "bar", dining: "beef", karaoke: "snack", other: "whisky" };
 
 export const photoForCategory = (slug?: string): PhotoKey => (slug && BY_CATEGORY[slug]) || "street";
 export const photoForShop = (category: string): PhotoKey => BY_SHOP[category] ?? "whisky";

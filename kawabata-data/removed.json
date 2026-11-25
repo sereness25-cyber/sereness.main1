@@ -1,11 +1,17 @@
 {
   "_説明": "削除したお店・記事・イベントの id。公開ページへの取り込みで除外し、管理画面を開いたときに保存先（ドライブ）からも消す",
   "shops": [
-    "shop-kawabata-ken",
-    "shop-chawanya",
-    "shop-kawabata-hinata",
+    "2b74c6e4-d8de-415c-8b0c-2ac3330e541b",
+    "4a502eb8-c329-4e4b-bc9f-30b4b69a9340",
+    "7a54fd80-cdeb-4700-a653-0f42c030bbd7",
+    "8bde9486-c251-47bb-86aa-3654280b515c",
+    "dbb97f4e-faaf-4917-a725-54e4adceb359",
+    "fb9d782a-2902-4e7e-ad87-949a14349fc6",
     "shop-beniga-raya",
-    "shop-ichirakudo"
+    "shop-chawanya",
+    "shop-ichirakudo",
+    "shop-kawabata-hinata",
+    "shop-kawabata-ken"
   ],
   "articles": [
     "draft-people-of-kawabata"

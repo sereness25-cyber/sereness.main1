@@ -15,7 +15,7 @@ export const revalidate = 60;
 
 const GUIDE_STEPS = [
   { title: "川反ってどんな街？", body: "旭川沿いに広がる、秋田いちばんの繁華街。", href: "/guide#step1" },
-  { title: "お店の種類を知ろう", body: "居酒屋、BAR、スナック。それぞれの楽しみ方。", href: "/guide#step2" },
+  { title: "お店の種類を知ろう", body: "居酒屋、BAR、ダイニング。それぞれの楽しみ方。", href: "/guide#step2" },
   { title: "料金システムを知ろう", body: "チャージ、セット料金。注文の前に知っておくと安心。", href: "/guide#step3" },
   { title: "自分に合うお店を探そう", body: "一人飲みも、お酒を飲まない夜も。", href: "/guide#step4" },
   { title: "川反を楽しもう", body: "早めの一軒目から、帰り道まで気持ちよく。", href: "/guide#step5" },
@@ -176,7 +176,7 @@ export default async function HomePage() {
           <div className="min-w-0 md:border-r md:border-navy/15 md:pr-8">
             <HeadingScript ja="お店ガイド" en="Shop Guide" />
             <ul className="grid grid-cols-3 gap-2 md:gap-4">
-              {SHOP_CATEGORIES.filter((c) => ["izakaya", "bar", "snack"].includes(c.value)).map((c) => (
+              {SHOP_CATEGORIES.filter((c) => ["izakaya", "bar", "dining"].includes(c.value)).map((c) => (
                 <li key={c.value}>
                   <Link href={`/shops?category=${c.value}`} className="group relative block">
                     <Thumb src={null} alt={`${c.label}のお店`} photo={photoForShop(c.value)} className="aspect-[16/10]" sizes="(min-width:768px) 240px, 33vw" />

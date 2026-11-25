@@ -8,7 +8,7 @@ export const SITE = {
   /** 検索結果に出るタイトル（「秋田」「川反」「飲み」で探す人に届くように） */
   seoTitle: "秋田・川反の飲み屋・居酒屋・BARガイド",
   description:
-    "秋田で飲むなら川反（かわばた）へ。秋田市大町の飲み屋街・川反の居酒屋、BAR、スナック、今日営業しているお店、はじめての飲み方までを紹介する地域Webマガジン。",
+    "秋田で飲むなら川反（かわばた）へ。秋田市大町の飲み屋街・川反の居酒屋、BAR、今日営業しているお店、はじめての飲み方までを紹介する地域Webマガジン。",
   operator: "Café & Bar Sereness",
 } as const;
 
@@ -19,7 +19,6 @@ export function siteUrl(): string {
 export const SHOP_CATEGORIES: { value: ShopCategory; label: string; en: string }[] = [
   { value: "izakaya", label: "居酒屋", en: "IZAKAYA" },
   { value: "bar", label: "BAR", en: "BAR" },
-  { value: "snack", label: "スナック", en: "SNACK" },
   { value: "dining", label: "ダイニング", en: "DINING" },
   { value: "karaoke", label: "カラオケ", en: "KARAOKE" },
   { value: "other", label: "その他", en: "OTHERS" },

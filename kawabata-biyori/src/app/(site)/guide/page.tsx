@@ -38,14 +38,13 @@ export default async function GuidePage() {
           {[
             ["居酒屋", "食事とお酒をしっかり。グループにも。"],
             ["BAR", "カウンターで一杯をゆっくり。一人でも。"],
-            ["スナック", "ママとの会話やカラオケを楽しむ。"],
             ["ダイニング", "食事が主役。落ち着いた空間で。"],
           ].map(([k, v]) => (
             <li key={k} className="border-l-2 border-rose bg-ivory px-4 py-3"><strong className="font-maru text-navy">{k}</strong><br /><span className="text-sm">{v}</span></li>
           ))}
         </ul>
       ),
-      links: ["bar-and-snack"],
+      links: ["bar-guide"],
     },
     {
       id: "step3",
@@ -56,7 +55,7 @@ export default async function GuidePage() {
           <ul className="list-disc pl-5">
             <li><strong>注文した分だけ</strong>：居酒屋など。メニューの金額の合計。</li>
             <li><strong>チャージ（席料）＋注文分</strong>：BARなど。お通しが付くお店も。</li>
-            <li><strong>セット料金</strong>：スナックなど。一定時間の飲み放題などがセットに。</li>
+            <li><strong>セット料金・飲み放題</strong>：一定時間の飲み放題などがセットになったお店も。</li>
           </ul>
           <p>わからないときは、注文前に「料金のしくみを教えてください」と聞いて大丈夫です。</p>
         </>

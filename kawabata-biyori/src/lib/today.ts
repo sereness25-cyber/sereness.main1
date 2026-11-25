@@ -7,7 +7,6 @@ const POOL: Record<string, PhotoKey[]> = {
   bar: ["bar", "cocktail", "whisky"],
   izakaya: ["izakaya", "beef", "street"],
   dining: ["beef", "izakaya"],
-  snack: ["snack", "whisky"],
   karaoke: ["snack", "cocktail"],
 };
 export type TodayShop = {
