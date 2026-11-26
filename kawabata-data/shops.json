@@ -4,9 +4,9 @@
       "id": "8e29880a-661a-40cb-9b6d-517dcb11bfc2",
       "lat": 39.713264,
       "lng": 140.115463,
-      "price_range": "",
-      "budget_level": null,
-      "payment_methods": "",
+      "price_range": "平均4,000円",
+      "budget_level": 2,
+      "payment_methods": "クレジットカード",
       "seats": "",
       "solo_ok": null,
       "non_alcohol": null,
@@ -18,20 +18,20 @@
         "youtube": ""
       },
       "website": null,
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1Pm86nV9TF3vaFfzqZZRO3yRzTR8WA7Tr.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T03:24:00Z",
+      "updated_at": "2026-11-26T03:37:45.281Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
       "name": "炭火焼 志庵",
       "slug": "sumibiyaki-shian",
       "category": "izakaya",
-      "description": "炭火焼のお店。夕方6時から朝6時まで開いていて、二次会や、遅い時間の食事にも。",
+      "description": "炭火焼のお店。夕方6時から朝6時まで開いていて、二次会や、遅い時間の食事にも。\n飲み放題付きボリューム満点でお得なコースが充実◎",
       "address": "秋田県秋田市大町5-3-13 加納ビル1F",
       "phone": "018-863-7366",
       "business_hours": "18:00〜翌6:00（L.O. 翌5:30）",
@@ -114,7 +114,8 @@
           "label": "じゃらん",
           "url": "https://www.jalan.net/gourmet/grm_foomoojH000211122/"
         }
-      ]
+      ],
+      "google_maps_url": null
     },
     {
       "id": "6b78aa61-ffea-4c7e-a57a-6cc44631edb1",
@@ -929,7 +930,7 @@
       "non_alcohol": null,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "",
+        "instagram": "https://www.instagram.com/susisho.akita/",
         "x": "",
         "facebook": "",
         "youtube": ""
@@ -1147,7 +1148,7 @@
         "facebook": "",
         "youtube": ""
       },
-      "website": null,
+      "website": "https://t236648.gorp.jp/",
       "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1X0o6nfK7szi06aDdsTwkaBL5A7ZXUSNG.webp",
       "image_alt": "",
       "photo_permission": true,
@@ -1623,7 +1624,7 @@
       "non_alcohol": null,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "",
+        "instagram": "https://www.instagram.com/akitakawabataisariyasakaba/",
         "x": "",
         "facebook": "",
         "youtube": ""
@@ -1753,7 +1754,7 @@
       "non_alcohol": true,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "",
+        "instagram": "https://www.instagram.com/akitakiritanpoya_oomachi/",
         "x": "",
         "facebook": "",
         "youtube": ""
@@ -1977,7 +1978,7 @@
       "non_alcohol": true,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "https://www.instagram.com/arajin_akita?cplk=MTExYXE1NzdnaHl6Yw%3D%3D&utm_source=qr",
+        "instagram": "https://www.instagram.com/arajin_akita/",
         "x": "",
         "facebook": "",
         "youtube": ""
@@ -2207,7 +2208,7 @@
       "non_alcohol": null,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "",
+        "instagram": "https://www.instagram.com/iroriya_akita/",
         "x": "",
         "facebook": "",
         "youtube": ""
@@ -2315,7 +2316,7 @@
       "non_alcohol": null,
       "beginner_welcome": false,
       "sns": {
-        "instagram": "",
+        "instagram": "https://www.instagram.com/hanbee_akita/",
         "x": "",
         "facebook": "",
         "youtube": ""
