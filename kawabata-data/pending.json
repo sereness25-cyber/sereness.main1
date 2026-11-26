@@ -2147,6 +2147,84 @@
       "set": {
         "payment_methods": "クレジットカード／QRコード決済"
       }
+    },
+    {
+      "key": "links-kawabata-isariya-sakaba-2026-11-26",
+      "file": "shops",
+      "id": "shop-kawabata-isariya-sakaba",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "sns.instagram": "https://www.instagram.com/akitakawabataisariyasakaba/"
+      }
+    },
+    {
+      "key": "links-hanbee-kawabata-2026-11-26",
+      "file": "shops",
+      "id": "shop-hanbee-kawabata",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "sns.instagram": "https://www.instagram.com/hanbee_akita/"
+      }
+    },
+    {
+      "key": "links-irori-ya-kawabata-2026-11-26",
+      "file": "shops",
+      "id": "shop-irori-ya-kawabata",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "sns.instagram": "https://www.instagram.com/iroriya_akita/"
+      }
+    },
+    {
+      "key": "links-akita-kiritanpoya-omachi-2026-11-26",
+      "file": "shops",
+      "id": "shop-akita-kiritanpoya-omachi",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "sns.instagram": "https://www.instagram.com/akitakiritanpoya_oomachi/"
+      }
+    },
+    {
+      "key": "links-sushi-takumi-2026-11-26",
+      "file": "shops",
+      "id": "9d116ace-7c10-42f4-92ba-0770e6da567a",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "sns.instagram": "https://www.instagram.com/susisho.akita/"
+      }
+    },
+    {
+      "key": "links-post-mwe8crbn-2026-11-26",
+      "file": "shops",
+      "id": "d8b53dcf-bd65-4057-93e9-af903bc4ce09",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "fill": {
+        "website": "https://t236648.gorp.jp/"
+      }
+    },
+    {
+      "key": "links-bar-aladdin-2026-11-26",
+      "file": "shops",
+      "id": "shop-bar-aladdin",
+      "updated_at": "2026-11-26T03:34:05Z",
+      "when": {
+        "sns": [
+          {
+            "instagram": "https://www.instagram.com/arajin_akita?cplk=MTExYXE1NzdnaHl6Yw%3D%3D&utm_source=qr",
+            "x": "",
+            "facebook": "",
+            "youtube": ""
+          }
+        ]
+      },
+      "set": {
+        "sns": {
+          "instagram": "https://www.instagram.com/arajin_akita/",
+          "x": "",
+          "facebook": "",
+          "youtube": ""
+        }
+      }
     }
   ]
 }

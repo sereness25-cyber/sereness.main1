@@ -123,6 +123,15 @@ def main():
                     x.update(patch.get("set") or {})
             elif patch.get("set") and str(x.get("updated_at") or "") < str(patch.get("updated_at") or ""):
                 x.update(patch["set"])
+            for path, val in (patch.get("fill") or {}).items():
+                *parents, last = path.split(".")
+                obj = x
+                for p in parents:
+                    if not isinstance(obj.get(p), dict):
+                        obj[p] = {}
+                    obj = obj[p]
+                if not obj.get(last):
+                    obj[last] = val
             for old, new in patch.get("replace") or []:
                 for f in TEXT_FIELDS:
                     if isinstance(x.get(f), str):

@@ -335,7 +335,13 @@ async function applyPending() {
       if (pt.id && x.id !== pt.id) continue;
       const y = JSON.parse(JSON.stringify(x));
       let changed = false;
-      if (pt.when) { if (Object.entries(pt.when).every(([f, vals]) => vals.includes(x[f])) && Object.entries(pt.set || {}).some(([f, val]) => JSON.stringify(x[f]) !== JSON.stringify(val))) { Object.assign(y, pt.set); changed = true; } }
+      for (const [path, val] of Object.entries(pt.fill || {})) {
+        const keys = path.split("."), last = keys.pop();
+        let obj = y;
+        for (const k of keys) { if (!obj[k] || typeof obj[k] !== "object") obj[k] = {}; obj = obj[k]; }
+        if (!obj[last]) { obj[last] = val; changed = true; }
+      }
+      if (pt.when) { if (Object.entries(pt.when).every(([f, vals]) => vals.some((w) => JSON.stringify(w) === JSON.stringify(x[f]))) && Object.entries(pt.set || {}).some(([f, val]) => JSON.stringify(x[f]) !== JSON.stringify(val))) { Object.assign(y, pt.set); changed = true; } }
       else if (pt.set && String(x.updated_at || "") < String(pt.updated_at || "")) { Object.assign(y, pt.set); changed = true; }
       for (const [o, n] of pt.replace || []) for (const f of FIELDS) if (typeof y[f] === "string" && y[f].includes(o)) { y[f] = y[f].split(o).join(n); changed = true; }
       if (!changed) continue;
