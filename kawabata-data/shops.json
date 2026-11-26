@@ -135,20 +135,20 @@
         "youtube": ""
       },
       "website": "https://toriichizu.net/shoplist/3741/",
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1KxVAg30KVbEW1QRlQFJ5KjPqjMQzQCSt.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T03:24:00Z",
+      "updated_at": "2026-11-26T03:40:05.180Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
       "name": "個室完備 大衆とり酒場 とりいちず 秋田大町店",
       "slug": "toriichizu-akita-omachi",
       "category": "izakaya",
-      "description": "水炊きや焼き鳥の「とりいちず」の秋田大町店。2026年にオープンしました。個室があり、朝5時まで営業しています。",
+      "description": "◆からあげグランプリ金賞受賞◆\n\n― コース新価格(税込)―\n➀2時間単品飲み放題1,089円から\n➁2時間宴会コース2,200円から\n\n― 水炊き・焼き鳥が自慢の鶏料理専門店―\n鶏ガラと水を8時間以上じっくり炊いた\n水炊きはコラーゲンたっぷりで絶品♪\n名物！今治焼鳥は串に刺さずに鉄板で焼く珍しい焼鳥です！\n秘伝の骨付鳥・何個でもいけちゃう♪手羽唐あてチキ！\n高クオリティの鶏料理をリーズナブルに楽しめます☆彡",
       "address": "秋田県秋田市大町4-2-19 七宝第二ビル1F",
       "phone": "018-838-0750",
       "business_hours": "月〜金 17:00〜翌5:00／土・日 13:00〜翌5:00",
@@ -231,14 +231,15 @@
           "label": "ぐるなび",
           "url": "https://r.gnavi.co.jp/ekxktwc70000/"
         }
-      ]
+      ],
+      "google_maps_url": null
     },
     {
       "id": "c5f724b9-bf96-4a8f-a8cf-0fb6c5dd1e92",
       "lat": 39.715462,
       "lng": 140.116943,
-      "price_range": "",
-      "budget_level": null,
+      "price_range": "平均4,000円",
+      "budget_level": 2,
       "payment_methods": "",
       "seats": "",
       "solo_ok": null,
@@ -251,13 +252,13 @@
         "youtube": ""
       },
       "website": null,
-      "image": null,
+      "image": "https://sereness25-cyber.github.io/sereness.main1/kawabata-data/images/drive/1_DAnhLpnS_3LOoSE4b1h8fhe3OZTcK8B.webp",
       "image_alt": "",
-      "photo_permission": false,
+      "photo_permission": true,
       "gallery": [],
       "verified_at": "2026-11-25",
       "is_published": true,
-      "updated_at": "2026-11-25T03:24:00Z",
+      "updated_at": "2026-11-26T03:42:53.436Z",
       "shop_confirmed": false,
       "specials": [],
       "features": [],
@@ -347,7 +348,8 @@
           "label": "Retty",
           "url": "https://retty.me/area/PRE05/ARE160/SUB16001/100000349146/"
         }
-      ]
+      ],
+      "google_maps_url": null
     },
     {
       "id": "5e15e49c-869a-4d1e-9d98-995a664ff55e",
